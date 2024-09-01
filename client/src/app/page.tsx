@@ -1,3 +1,7 @@
 export default function Home() {
-  return <div>인덱스 페이지</div>;
+  return (
+    <div>
+      <h1 data-cy="testHeading">안녕</h1>
+    </div>
+  );
 }

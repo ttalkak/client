@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
+    "cypress": "npx cypress open",
+    "test": "cypress run",
     "build-storybook": "storybook build"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cypress": "^13.14.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
     "eslint-plugin-storybook": "^0.8.0",
