@@ -8,8 +8,7 @@ import Image from "next/image";
 import { FiMenu, FiX } from "react-icons/fi";
 
 const navItems = [
-  { name: "개요", path: routes.overview },
-  { name: "배포", path: routes.deploy },
+  { name: "내 프로젝트", path: routes.overview },
   { name: "사용량", path: routes.usage },
   { name: "활동내역", path: routes.activity },
   { name: "가이드", path: routes.guide },

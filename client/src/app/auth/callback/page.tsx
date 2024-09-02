@@ -12,7 +12,6 @@ export default function CallbackPage() {
 
     if (accessToken) {
       sessionStorage.setItem("accessToken", accessToken);
-      console.log("이거보세요", urlParams);
       router.push("/");
     } else {
       console.error("url에서 accessToken 찾을 수 없음");
