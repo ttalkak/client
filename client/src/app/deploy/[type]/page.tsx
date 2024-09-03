@@ -1,13 +1,17 @@
 "use client";
 
+type DeployType = "frontend" | "backend" | null;
+
 import { useState, useEffect } from "react";
-import { Repository, FileContent } from "./types";
-import { SearchBar } from "./components/SearchBar";
-import { RepoList } from "./components/RepoList";
-import { DirectoryNavigator } from "./components/DirectoryNavigator";
-import { FileList } from "./components/FileList";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { Repository, FileContent } from "../types";
+import { SearchBar } from "../components/SearchBar";
+import { RepoList } from "../components/RepoList";
+import { DirectoryNavigator } from "../components/DirectoryNavigator";
+import { FileList } from "../components/FileList";
 import { LiaGithubAlt } from "react-icons/lia";
 import Button from "@/components/Button";
+import useDeployStore from "@/store/useDeployStore";
 
 export default function GitHubRepositories() {
   const [repos, setRepos] = useState<Repository[]>([]); // 모든 레포지토리 목록
@@ -19,6 +23,17 @@ export default function GitHubRepositories() {
   const [currentPath, setCurrentPath] = useState<string>(""); // 현재 탐색 중인 경로
   const [repoContents, setRepoContents] = useState<FileContent[]>([]); // 현재 경로의 파일/폴더 목록
   const [fileContent, setFileContent] = useState<string | null>(null); // 선택된 파일의 내용
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const projectId = searchParams.get("projectId"); // 프로젝트 ID
+  const deployTypeMatch = pathname.match(/\/deploy\/(frontend|backend)/);
+  const deployType: DeployType = deployTypeMatch
+    ? (deployTypeMatch[1] as DeployType)
+    : null;
+  const setSelectedRepository = useDeployStore(
+    (state) => state.setSelectedRepository
+  );
 
   // 컴포넌트 마운트시 전체 레포지토리 조회
   useEffect(() => {
@@ -178,6 +193,19 @@ export default function GitHubRepositories() {
     });
   };
 
+  // 선택완료 버튼 클릭 핸들러
+  const handleSelectComplete = () => {
+    if (selectedRepo) {
+      // 여기서 url보고 필요한거 넘기면 될듯
+      console.log(selectedRepo);
+      console.log(projectId);
+      console.log(deployType);
+      // zustand에 저장하고 라우터 이동시키는데, 뭘 보낼지 잘 생각해보고 보내셈, zustand persist설정도 하기
+      // setSelectedRepository(selectedRepo);
+      // router.push(`/deploy/form?projectId=${projectId}&type=${deployType}`);
+    }
+  };
+
   if (error) {
     return <div>에러...</div>;
   }
@@ -185,7 +213,8 @@ export default function GitHubRepositories() {
   return (
     <div className="container mx-auto font-sans">
       <h2 className="text-2xl font-bold mb-4">
-        프론트엔드 코드가 포함된 저장소를 선택해주세요
+        {deployType === "frontend" ? "프론트엔드" : "백엔드"} 코드가 포함된
+        저장소를 선택해주세요
       </h2>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <div className="flex bg-white rounded-lg border">
@@ -259,7 +288,7 @@ export default function GitHubRepositories() {
           label={"선택완료"}
           size="medium"
           primary
-          onClick={() => console.log("딸깍")}
+          onClick={handleSelectComplete}
         />
       </div>
     </div>
