@@ -1,16 +1,16 @@
-interface PathBreadcrumbProps {
+interface DirectoryNavigatorProps {
   repoName: string | undefined;
   currentPath: string;
   onPathClick: (path: string) => void;
   onRepoClick: () => void;
 }
 
-export function PathBreadcrumb({
+export function DirectoryNavigator({
   repoName,
   currentPath,
   onPathClick,
   onRepoClick,
-}: PathBreadcrumbProps) {
+}: DirectoryNavigatorProps) {
   const pathParts = currentPath.split("/").filter(Boolean);
 
   return (

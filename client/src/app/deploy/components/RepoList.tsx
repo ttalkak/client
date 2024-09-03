@@ -24,9 +24,9 @@ export function RepoList({ repos, selectedRepo, onRepoSelect }: RepoListProps) {
               <Image
                 src={repo.owner.avatar_url}
                 alt={`${repo.owner.login}'s avatar`}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-full"
+                width={32}
+                height={32}
+                className="rounded-full object-cover"
               />
             </div>
             <div className="font-semibold">{repo.full_name}</div>

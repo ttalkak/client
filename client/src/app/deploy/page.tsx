@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { Repository, FileContent } from "./types";
 import { SearchBar } from "./components/SearchBar";
 import { RepoList } from "./components/RepoList";
-import { PathBreadcrumb } from "./components/PathBreadcrumb";
+import { DirectoryNavigator } from "./components/DirectoryNavigator";
 import { FileList } from "./components/FileList";
+import { LiaGithubAlt } from "react-icons/lia";
 
 export default function GitHubRepositories() {
   const [repos, setRepos] = useState<Repository[]>([]); // 모든 레포지토리 목록
@@ -25,6 +26,7 @@ export default function GitHubRepositories() {
 
   // 검색어 변경시 레포지토리 필터링
   useEffect(() => {
+    // setSelectedRepo(null);
     setFilteredRepos(
       repos.filter((repo) =>
         repo.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -54,6 +56,12 @@ export default function GitHubRepositories() {
       const data: Repository[] = await response.json();
       setRepos(data);
       setFilteredRepos(data);
+
+      // 초기에 맨 위의 저장소 선택
+      if (data.length > 0) {
+        setSelectedRepo(data[0]);
+        fetchRepoContents(data[0]);
+      }
     } catch (error) {
       setError("전체 repo 조회 에러");
       console.error("전체 repo 조회 에러", error);
@@ -181,22 +189,42 @@ export default function GitHubRepositories() {
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <div className="flex bg-white rounded-lg border">
         <div
-          className="w-1/3 border-r overflow-y-auto"
-          style={{ maxHeight: "calc(100vh - 400px)" }}
+          className={`w-1/3 border-r overflow-y-auto ${
+            !isLoading && filteredRepos.length === 0
+              ? "flex items-center justify-center"
+              : ""
+          }`}
+          style={{
+            maxHeight: "calc(100vh - 400px)",
+            minHeight: "calc(100vh - 400px)",
+          }}
         >
-          <RepoList
-            repos={filteredRepos}
-            selectedRepo={selectedRepo}
-            onRepoSelect={fetchRepoContents}
-          />
+          {!isLoading && filteredRepos.length === 0 ? (
+            <div className="text-center p-4 flex flex-col items-center">
+              <LiaGithubAlt className="w-20 h-20" />
+              <p className="text-lg mb-2">검색한 저장소를 찾을 수가 없어요.</p>
+              <p className="text-gray-600">
+                다른 검색어로 검색을 해보시겠어요?
+              </p>
+            </div>
+          ) : (
+            <RepoList
+              repos={filteredRepos}
+              selectedRepo={selectedRepo}
+              onRepoSelect={fetchRepoContents}
+            />
+          )}
         </div>
         <div
           className="w-2/3 p-4 overflow-y-auto"
-          style={{ maxHeight: "calc(100vh - 400px)" }}
+          style={{
+            maxHeight: "calc(100vh - 400px)",
+            minHeight: "calc(100vh - 400px)",
+          }}
         >
           {selectedRepo && (
             <div>
-              <PathBreadcrumb
+              <DirectoryNavigator
                 repoName={selectedRepo.name}
                 currentPath={currentPath}
                 onPathClick={handlePathClick}
