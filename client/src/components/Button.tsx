@@ -5,6 +5,7 @@ interface ButtonProps {
   size?: "small" | "medium" | "large";
   label: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 }
 
 export default function Button({
@@ -12,6 +13,7 @@ export default function Button({
   size = "medium",
   label,
   onClick,
+  type = "button",
 }: ButtonProps) {
   const baseStyles = "font-bold rounded-md";
   const sizeStyled = {
@@ -24,7 +26,11 @@ export default function Button({
     : "bg-white text-black border border-gray-400";
 
   return (
-    <button className={`${baseStyles} ${sizeStyled[size]} ${colorStyles}`}>
+    <button
+      type={type}
+      className={`${baseStyles} ${sizeStyled[size]} ${colorStyles}`}
+      onClick={onClick}
+    >
       {label}
     </button>
   );

@@ -1,5 +1,9 @@
+"use client";
+
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
+import Modal from "@/app/projects/components/Modal";
+import { useState } from "react";
 
 const mockProjects = [
   {
@@ -53,7 +57,14 @@ const mockProjects = [
   },
 ];
 
-export default function OverviewPage() {
+export default function ProjectsPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleCreateProject = (projectName: string) => {
+    // 여기에 프로젝트 생성 api요청
+    console.log("프로젝트 생성", projectName);
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -72,8 +83,15 @@ export default function OverviewPage() {
           <FaSort className="absolute right-3 top-3 text-gray-400" />
         </div>
       </div>
-
-      <h1 className="text-2xl font-bold mb-6">Projects</h1>
+      <div className="flex justify-between mb-3">
+        <h1 className="text-2xl font-bold">Projects</h1>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="border border rounded-lg px-4 py-2"
+        >
+          생성
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mockProjects.map((project) => (
@@ -123,6 +141,12 @@ export default function OverviewPage() {
           </button>
         </nav>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateProject}
+      />
     </div>
   );
 }

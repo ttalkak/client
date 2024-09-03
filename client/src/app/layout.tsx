@@ -22,7 +22,7 @@ export default function RootLayout({
         <header>
           <NavBar />
         </header>
-        <main className="flex-grow container mx-auto px-12 py-12">
+        <main className="flex-grow container mx-auto px-10 py-10">
           {children}
         </main>
         <Footer />

@@ -9,6 +9,7 @@ export function SearchBar({ searchTerm, setSearchTerm }: SearchBarProps) {
   return (
     <div className="mb-4 relative">
       <input
+        data-cy="repo-search"
         type="text"
         placeholder="저장소를 검색해주세요"
         value={searchTerm}

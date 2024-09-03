@@ -16,7 +16,7 @@ export function FileList({
   formatDate,
 }: FileListProps) {
   return (
-    <table className="w-full">
+    <table className="w-full" data-cy="file-list">
       <thead className="border border-gray bg-gray-100">
         <tr>
           <th className="text-left px-3 py-3">파일 / 폴더명</th>
@@ -30,6 +30,7 @@ export function FileList({
             key={item.path}
             className="cursor-pointer hover:bg-gray-100 border border-gray"
             onClick={() => onItemClick(item)}
+            data-cy="file-item"
           >
             <td className="py-2 px-3 flex items-center gap-2">
               {item.type === "file" ? (
@@ -37,10 +38,12 @@ export function FileList({
               ) : (
                 <FaFolder className="text-blue-400 w-5 h-5" />
               )}
-              {item.name}
+              <span data-cy="file-name">{item.name}</span>
             </td>
-            <td className="py-2 text-gray-600">Update {item.name}</td>
-            <td className="py-2 text-gray-600">
+            <td className="py-2 text-gray-600" data-cy="file-commit-message">
+              Update {item.name}
+            </td>
+            <td className="py-2 text-gray-600" data-cy="file-commit-date">
               {formatDate(selectedRepo.updated_at)}
             </td>
           </tr>

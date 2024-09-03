@@ -7,6 +7,7 @@ import { RepoList } from "./components/RepoList";
 import { DirectoryNavigator } from "./components/DirectoryNavigator";
 import { FileList } from "./components/FileList";
 import { LiaGithubAlt } from "react-icons/lia";
+import Button from "@/components/Button";
 
 export default function GitHubRepositories() {
   const [repos, setRepos] = useState<Repository[]>([]); // 모든 레포지토리 목록
@@ -182,7 +183,7 @@ export default function GitHubRepositories() {
   }
 
   return (
-    <div className="container mx-auto p-4 font-sans">
+    <div className="container mx-auto font-sans">
       <h2 className="text-2xl font-bold mb-4">
         프론트엔드 코드가 포함된 저장소를 선택해주세요
       </h2>
@@ -235,7 +236,10 @@ export default function GitHubRepositories() {
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
                 </div>
               ) : fileContent ? (
-                <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto">
+                <pre
+                  data-cy="file-content"
+                  className="bg-gray-100 p-4 rounded-lg overflow-x-auto"
+                >
                   <code>{fileContent}</code>
                 </pre>
               ) : (
@@ -249,6 +253,14 @@ export default function GitHubRepositories() {
             </div>
           )}
         </div>
+      </div>
+      <div className="text-right mt-6">
+        <Button
+          label={"선택완료"}
+          size="medium"
+          primary
+          onClick={() => console.log("딸깍")}
+        />
       </div>
     </div>
   );

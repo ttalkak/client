@@ -14,7 +14,10 @@ export function DirectoryNavigator({
   const pathParts = currentPath.split("/").filter(Boolean);
 
   return (
-    <div className="flex items-center mb-4 flex-wrap">
+    <div
+      data-cy="directory-navigator"
+      className="flex items-center mb-4 flex-wrap"
+    >
       <button
         onClick={onRepoClick}
         className="text-blue-500 hover:underline ml-1"
