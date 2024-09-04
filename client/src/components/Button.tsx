@@ -18,7 +18,7 @@ export default function Button({
   const baseStyles = "font-bold rounded-md";
   const sizeStyled = {
     small: "px-3 py-1 text-sm",
-    medium: "px-3 py-1",
+    medium: "px-3 py-2",
     large: "px-16 py-3",
   };
   const colorStyles = primary

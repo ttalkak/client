@@ -27,7 +27,9 @@ export default function GitHubRepos() {
   const pathname = usePathname();
   const router = useRouter();
   const projectId = searchParams.get("projectId"); // 프로젝트 ID
-  const deployTypeMatch = pathname.match(/\/deploy\/(frontend|backend)/);
+  const deployTypeMatch = pathname.match(
+    /\/deploy\/create\/(frontend|backend)/
+  );
   const deployType: DeployType = deployTypeMatch
     ? (deployTypeMatch[1] as DeployType)
     : null;
