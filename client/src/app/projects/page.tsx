@@ -4,64 +4,59 @@ import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
 import Modal from "@/app/projects/components/Modal";
 import { useState } from "react";
+import Link from "next/link";
 
 const mockProjects = [
   {
     id: 1,
     name: "leadMe",
     domain: "leadme.ttalkak.app",
-    status: "실행중",
     time: "4시간 전",
   },
   {
     id: 2,
     name: "ssapick",
     domain: "ssapick.ttalkak.app",
-    status: "실행중",
     time: "1일 전",
   },
   {
     id: 3,
     name: "storyboard",
     domain: "storyboard.ttalkak.app",
-    status: "실행중",
     time: "3일 전",
   },
   {
     id: 4,
     name: "eclipse",
     domain: "eclipse.ttalkak.app",
-    status: "종료",
     time: "2주 전",
   },
   {
     id: 5,
     name: "eclipse",
     domain: "eclipse.ttalkak.app",
-    status: "종료",
     time: "2주 전",
   },
   {
     id: 6,
     name: "eclipse",
     domain: "eclipse.ttalkak.app",
-    status: "실행중",
     time: "2주 전",
   },
   {
     id: 7,
     name: "eclipse",
     domain: "eclipse.ttalkak.app",
-    status: "종료",
     time: "2주 전",
   },
 ];
 
 export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleCreateProject = (projectName: string) => {
+  const handleCreateProject = (projectName: string, domainName: string) => {
     // 여기에 프로젝트 생성 api요청
-    console.log("프로젝트 생성", projectName);
+    console.log("프로젝트명", projectName);
+    console.log("도메인명", domainName);
     setIsModalOpen(false);
   };
 
@@ -95,27 +90,22 @@ export default function ProjectsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mockProjects.map((project) => (
-          <div key={project.id} className="border rounded-lg p-6 shadow-sm">
-            <div className="flex items-center mb-2">
+          <Link
+            href={`/projects/${project.id}`}
+            key={project.id}
+            className="border rounded-lg p-6"
+          >
+            <div className="flex items-center mb-2 cursor-pointer">
               <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
               <div>
                 <h2 className="font-semibold">{project.name}</h2>
                 <p className="text-sm text-gray-500">{project.domain}</p>
               </div>
             </div>
-            <div className="flex justify-between items-center mt-6">
-              <span
-                className={`px-2 py-1 rounded-full text-xs ${
-                  project.status === "실행중"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
-                }`}
-              >
-                {project.status}
-              </span>
+            <div className="flex justify-end items-center mt-6">
               <span className="text-sm text-gray-500">{project.time}</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

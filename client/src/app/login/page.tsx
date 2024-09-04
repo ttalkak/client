@@ -22,7 +22,7 @@ export default function LoginPage() {
         className="flex items-center font-semibold px-16 py-3 bg-black text-white rounded-md"
       >
         {isLoading ? (
-          "Loading..."
+          "로그인 중"
         ) : (
           <>
             <svg
