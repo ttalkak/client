@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getUserInfo } from "@/apis/user/user";
+import { getUserInfo } from "@/apis/user/useGetUserInfo";
 
 export default function CallbackPage() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function CallbackPage() {
         const response = await getUserInfo();
         const userInfo = response.data;
         setUserInfo(userInfo);
-        console.log(userInfo);
+        console.log(response);
         setIsLogin(true);
         router.push("/");
       } catch (error) {

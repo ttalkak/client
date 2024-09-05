@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +20,15 @@ export default function RootLayout({
   return (
     <html lang="kr" className="h-full">
       <body className={`${inter.className} flex flex-col min-h-full`}>
-        <header>
-          <NavBar />
-        </header>
-        <main className="flex-grow container mx-auto px-10 py-10">
-          {children}
-        </main>
-        <Footer />
+        <ReactQueryProvider>
+          <header>
+            <NavBar />
+          </header>
+          <main className="flex-grow container mx-auto px-10 py-10">
+            {children}
+          </main>
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );

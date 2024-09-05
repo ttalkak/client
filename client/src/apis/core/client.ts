@@ -91,7 +91,7 @@ const createApiMethod =
     return axiosInstance({
       ...config, // 전달받은 설정을 그대로 사용하고
       method: methodType, // HTTP 메서드만 지정된 것으로 덮어씀
-    });
+    }).then((res) => res.data);
   };
 
 // HTTP 메서드 정의
