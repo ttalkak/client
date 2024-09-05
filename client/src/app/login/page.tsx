@@ -10,7 +10,7 @@ export default function LoginPage() {
     const redirectUri = encodeURIComponent(
       "http://localhost:3000/auth/callback"
     );
-    window.location.href = `https://www.ttalkak.kro.kr/auth/authorization/github?oauth_redirect_uri=${redirectUri}`;
+    window.location.href = `https://ttalkak.com/v1/auth/authorization/github?oauth_redirect_uri=${redirectUri}`;
   };
 
   return (

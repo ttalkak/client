@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Repository } from "@/app/deploy/types";
+import { Repository } from "@/app/deploy/create/[type]/types";
 
 interface DeployStoreState {
   depolyType: "frontend" | "backend" | null;

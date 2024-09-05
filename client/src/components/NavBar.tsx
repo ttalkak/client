@@ -6,7 +6,8 @@ import NavLink from "@/components/NavLink";
 import Link from "next/link";
 import Image from "next/image";
 import { FiMenu, FiX } from "react-icons/fi";
-
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 const navItems = [
   { name: "내 프로젝트", path: routes.projects },
   { name: "사용량", path: routes.usage },
@@ -16,6 +17,9 @@ const navItems = [
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const isLogin = useAuthStore((state) => state.isLogin);
+  const logout = useAuthStore((state) => state.logout);
+  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
@@ -24,6 +28,28 @@ export default function NavBar() {
       document.body.style.overflow = "unset";
     }
   }, [isOpen]);
+
+  const handleLogout = () => {
+    logout();
+    router.push(routes.home);
+  };
+
+  const AuthButton = () =>
+    isLogin ? (
+      <button
+        onClick={handleLogout}
+        className="bg-black px-3 py-1 rounded-md font-bold text-white"
+      >
+        로그아웃
+      </button>
+    ) : (
+      <Link
+        href={routes.login}
+        className="bg-black px-3 py-1 rounded-md font-bold text-white"
+      >
+        로그인
+      </Link>
+    );
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -44,10 +70,8 @@ export default function NavBar() {
               ))}
             </div>
           </div>
-          <div className="hidden lg:block bg-black px-3 py-1 rounded-md font-bold">
-            <Link href={routes.login} className="text-white">
-              로그인
-            </Link>
+          <div className="hidden lg:block">
+            <AuthButton />
           </div>
           <div className="lg:hidden">
             <button
@@ -88,9 +112,7 @@ export default function NavBar() {
           </div>
           <div className="p-4">
             <div className="bg-black px-3 py-3 rounded-md font-bold text-center cursor-pointer">
-              <Link href={routes.login} className="text-white">
-                로그인
-              </Link>
+              <AuthButton />
             </div>
           </div>
         </div>
