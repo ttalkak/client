@@ -10,11 +10,11 @@ import { RepoList } from "./RepoList";
 import { DirectoryNavigator } from "./DirectoryNavigator";
 import { FileList } from "./FileList";
 import { LiaGithubAlt } from "react-icons/lia";
+import useGetRepos from "@/apis/repo/useGetRepos";
 import Button from "@/components/Button";
 import useDeployStore from "@/store/useDeployStore";
 
 export default function GitHubRepos() {
-  const [repos, setRepos] = useState<Repository[]>([]); // 모든 레포지토리 목록
   const [filteredRepos, setFilteredRepos] = useState<Repository[]>([]); // 검색 필터링된 레포지토리 목록
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 메시지
@@ -33,60 +33,35 @@ export default function GitHubRepos() {
   const deployType: DeployType = deployTypeMatch
     ? (deployTypeMatch[1] as DeployType)
     : null;
+
   const setSelectedRepository = useDeployStore(
     (state) => state.setSelectedRepository
   );
 
-  // 컴포넌트 마운트시 전체 레포지토리 조회
-  useEffect(() => {
-    fetchAllRepos();
-  }, []);
+  const {
+    data: repos,
+    isLoading: isReposLoading,
+    error: reposError,
+  } = useGetRepos();
 
   // 검색어 변경시 레포지토리 필터링
   useEffect(() => {
     // setSelectedRepo(null);
-    setFilteredRepos(
-      repos.filter((repo) =>
-        repo.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
+    if (repos) {
+      setFilteredRepos(
+        repos.filter((repo) =>
+          repo.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
   }, [searchTerm, repos]);
 
-  // 전체 레포지토리 조회 함수
-  const fetchAllRepos = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `https://api.github.com/user/repos?type=public&per_page=100`,
-        {
-          headers: {
-            Authorization: `Bearer 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`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("전체 레포지토리 조회 실패");
-      }
-
-      const data: Repository[] = await response.json();
-      setRepos(data);
-      setFilteredRepos(data);
-
-      // 초기에 맨 위의 저장소 선택
-      if (data.length > 0) {
-        setSelectedRepo(data[0]);
-        fetchRepoContents(data[0]);
-      }
-    } catch (error) {
-      setError("전체 repo 조회 에러");
-      console.error("전체 repo 조회 에러", error);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (repos && repos.length > 0 && !selectedRepo) {
+      setSelectedRepo(repos[0]);
+      fetchRepoContents(repos[0]);
     }
-  };
+  }, [repos]);
 
   // 레포지토리 내용 조회 함수
   const fetchRepoContents = async (repo: Repository, path: string = "") => {
@@ -99,7 +74,7 @@ export default function GitHubRepos() {
         `https://api.github.com/repos/${repo.full_name}/contents/${path}`,
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer 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`,
           },
         }
       );
@@ -144,7 +119,7 @@ export default function GitHubRepos() {
         `https://api.github.com/repos/${selectedRepo!.full_name}/contents/${file.path}`,
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer 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`,
             Accept: "application/vnd.github.v3.raw",
           },
         }
