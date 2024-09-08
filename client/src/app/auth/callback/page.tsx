@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import { getUserInfo } from "@/apis/user/useGetUserInfo";
+import getUserInfo from "@/apis/user/useGetUserInfo";
 
 export default function CallbackPage() {
   const router = useRouter();

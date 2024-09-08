@@ -4,11 +4,11 @@ type DeployType = "frontend" | "backend" | null;
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Repository, FileContent } from "../types";
-import { SearchBar } from "./SearchBar";
-import { RepoList } from "./RepoList";
-import { DirectoryNavigator } from "./DirectoryNavigator";
-import { FileList } from "./FileList";
+import { Repository, FileContent } from "@/types/repo";
+import { SearchBar } from "@/app/deploy/create/[type]/components/SearchBar";
+import { RepoList } from "@/app/deploy/create/[type]/components/RepoList";
+import { DirectoryNavigator } from "@/app/deploy/create/[type]/components/DirectoryNavigator";
+import { FileList } from "@/app/deploy/create/[type]/components/FileList";
 import { LiaGithubAlt } from "react-icons/lia";
 import useGetRepos from "@/apis/repo/useGetRepos";
 import Button from "@/components/Button";

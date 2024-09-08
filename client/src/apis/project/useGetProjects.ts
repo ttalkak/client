@@ -1,0 +1,27 @@
+import client from "@/apis/core/client";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { getProjectsParams, ProjectResponse } from "@/types/project";
+
+const getProjects = async (
+  params: getProjectsParams
+): Promise<ProjectResponse> => {
+  const response = await client.get<ProjectResponse>({
+    url: "/project/search",
+    params,
+  });
+  // 필요한 데이터만 추출해서 반환
+  console.log(response);
+  const { content, totalPages, totalElements } = response.data;
+  return { content, totalPages, totalElements };
+};
+
+const useGetProjects = (
+  params: getProjectsParams
+): UseQueryResult<ProjectResponse, Error> => {
+  return useQuery({
+    queryKey: ["projects", params] as const,
+    queryFn: () => getProjects(params),
+  });
+};
+
+export default useGetProjects;

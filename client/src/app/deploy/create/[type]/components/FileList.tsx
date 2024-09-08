@@ -1,6 +1,6 @@
 import { AiOutlineFile } from "react-icons/ai";
 import { FaFolder } from "react-icons/fa";
-import { FileContent, Repository } from "../types";
+import { Repository, FileContent } from "@/types/repo";
 
 interface FileListProps {
   repoContents: FileContent[];

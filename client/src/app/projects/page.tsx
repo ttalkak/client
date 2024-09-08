@@ -2,63 +2,50 @@
 
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
-import Modal from "@/app/projects/components/Modal";
 import { useState } from "react";
 import Link from "next/link";
-
-const mockProjects = [
-  {
-    id: 1,
-    name: "leadMe",
-    domain: "leadme.ttalkak.app",
-    time: "4시간 전",
-  },
-  {
-    id: 2,
-    name: "ssapick",
-    domain: "ssapick.ttalkak.app",
-    time: "1일 전",
-  },
-  {
-    id: 3,
-    name: "storyboard",
-    domain: "storyboard.ttalkak.app",
-    time: "3일 전",
-  },
-  {
-    id: 4,
-    name: "eclipse",
-    domain: "eclipse.ttalkak.app",
-    time: "2주 전",
-  },
-  {
-    id: 5,
-    name: "eclipse",
-    domain: "eclipse.ttalkak.app",
-    time: "2주 전",
-  },
-  {
-    id: 6,
-    name: "eclipse",
-    domain: "eclipse.ttalkak.app",
-    time: "2주 전",
-  },
-  {
-    id: 7,
-    name: "eclipse",
-    domain: "eclipse.ttalkak.app",
-    time: "2주 전",
-  },
-];
+import Modal from "@/app/projects/components/Modal";
+import useGetProjects from "@/apis/project/useGetProjects";
+import useCreateProject from "@/apis/project/useCreateProject";
+import { useAuthStore } from "@/store/useAuthStore";
+import { getProjectsParams, Project } from "@/types/project";
 
 export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleCreateProject = (projectName: string, domainName: string) => {
-    // 여기에 프로젝트 생성 api요청
-    console.log("프로젝트명", projectName);
-    console.log("도메인명", domainName);
-    setIsModalOpen(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [sortOrder, setSortOrder] = useState("createdAt,desc");
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const userInfo = useAuthStore((state) => state.userInfo);
+  const createProjectMutation = useCreateProject();
+
+  const params: getProjectsParams = {
+    page: currentPage,
+    size: 9,
+    sort: sortOrder,
+    userId: userInfo?.userId ?? 0, // 타입때문에 임시조치. 비로그인 접근을 막아야됨
+    searchKeyword,
   };
+
+  const handleCreateProject = (projectName: string, domainName: string) => {
+    createProjectMutation.mutate(
+      { projectName, domainName },
+      {
+        onSuccess: () => {
+          console.log("프로젝트 생성 성공");
+          setIsModalOpen(false);
+        },
+        onError: (error) => {
+          console.error("프로젝트 생성 오류", error);
+        },
+      }
+    );
+  };
+
+  const { data, isLoading, error } = useGetProjects(params);
+
+  if (isLoading) return <div>로딩중..</div>;
+  if (error) return <div>에러 : {error.message}</div>;
 
   return (
     <div>
@@ -67,13 +54,19 @@ export default function ProjectsPage() {
           <input
             className="pl-10 pr-4 py-2 border rounded-lg w-full"
             placeholder="프로젝트를 검색해주세요"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <IoIosSearch className="absolute left-3 top-2.5 text-gray-400 text-xl" />
         </div>
         <div className="relative">
-          <select className="appearance-none bg-white border rounded-lg px-4 py-2 pr-8 text-gray-700">
-            <option>날짜 순</option>
-            <option>이름 순</option>
+          <select
+            className="appearance-none bg-white border rounded-lg px-4 py-2 pr-8 text-gray-700"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="createdAt,desc">최신순</option>
+            <option value="createdAt,asc">오래된순</option>
           </select>
           <FaSort className="absolute right-3 top-3 text-gray-400" />
         </div>
@@ -89,7 +82,7 @@ export default function ProjectsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockProjects.map((project) => (
+        {data?.content.map((project: Project) => (
           <Link
             href={`/projects/${project.id}`}
             key={project.id}
@@ -98,12 +91,12 @@ export default function ProjectsPage() {
             <div className="flex items-center mb-2 cursor-pointer">
               <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
               <div>
-                <h2 className="font-semibold">{project.name}</h2>
-                <p className="text-sm text-gray-500">{project.domain}</p>
+                <h2 className="font-semibold">{project.projectName}</h2>
+                <p className="text-sm text-gray-500">{project.domainName}</p>
               </div>
             </div>
             <div className="flex justify-end items-center mt-6">
-              <span className="text-sm text-gray-500">{project.time}</span>
+              <span className="text-sm text-gray-500">{project.createdAt}</span>
             </div>
           </Link>
         ))}
@@ -111,22 +104,37 @@ export default function ProjectsPage() {
 
       <div className="flex justify-center mt-8">
         <nav className="inline-flex rounded-md gap-2">
-          <button className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+            disabled={currentPage === 0}
+            className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
             이전
           </button>
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              className={`px-3 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium ${
-                page === 2
-                  ? "text-gray-500 bg-gray-200"
-                  : "text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <button className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          {Array.from({ length: data?.totalPages || 0 }, (_, i) => i + 1).map(
+            (page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page - 1)}
+                className={`px-3 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium ${
+                  page === currentPage + 1
+                    ? "text-gray-500 bg-gray-200"
+                    : "text-gray-500 hover:bg-gray-50"
+                }`}
+              >
+                {page}
+              </button>
+            )
+          )}
+          <button
+            onClick={() =>
+              setCurrentPage((prev) =>
+                Math.min((data?.totalPages ?? 1) - 1, prev + 1)
+              )
+            }
+            disabled={currentPage === (data?.totalPages ?? 1) - 1}
+            className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+          >
             다음
           </button>
         </nav>

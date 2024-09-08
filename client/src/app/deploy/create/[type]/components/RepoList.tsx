@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Repository } from "../types";
+import { Repository } from "@/types/repo";
 
 interface RepoListProps {
   repos: Repository[];

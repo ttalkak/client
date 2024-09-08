@@ -2,8 +2,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, Method } from "axios";
 // qs는 쿼리 문자열을 파싱하고 문자열화하는 라이브러리
 import qs from "qs";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 import { ApiResponse } from "@/apis/core/type";
 
 // axios 인스턴스 생성
@@ -15,7 +15,7 @@ const axiosInstance: AxiosInstance = axios.create({
   timeout: 10000,
   // 기본 헤더 설정. JSON 형식의 데이터를 주고받겠다고 명시
   headers: { "Content-Type": "application/json" },
-  // 파라미터를 직렬화하는 방법 정의. qs.stringify를 사용하여 객체를 쿼리 문자열로 변환
+  // 파라미터 직렬화. qs.stringify를 사용하여 객체를 쿼리 문자열로 변환
   // arrayFormat: "repeat"는 배열 파라미터를 반복하여 표현 (ex: arr=1&arr=2&arr=3).
   // ex) const params={name:'John',hobbies:['reading','swimming','cycling']}
   // => name=John&hobbies=reading&hobbies=wimming&hobbies=cycling

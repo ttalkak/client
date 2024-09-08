@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import GitHubRepos from "./components/githubRepos";
+import GitHubRepos from "@/app/deploy/create/[type]/components/githubRepos";
 import SkeletonUI from "@/app/deploy/create/[type]/components/SkeletonUI";
 
 export default function GitHubRepositoriesPage() {
