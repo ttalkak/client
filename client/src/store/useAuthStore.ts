@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { UserInfo } from "@/types/userInfo";
+import { setCookie, removeCookie } from "@/utils/cookies";
 
 interface AuthState {
   accessToken: string | null; // 액세스 토큰을 저장할 변수
@@ -15,7 +16,7 @@ interface AuthState {
 }
 
 // zustand 스토어 생성
-export const useAuthStore = create<AuthState>()(
+const useAuthStore = create<AuthState>()(
   // 상태를 지속적으로 저장하기 위해 persist 미들웨어 사용
   persist(
     (set) => ({
@@ -25,21 +26,34 @@ export const useAuthStore = create<AuthState>()(
       userInfo: null,
       isLogin: false,
       setAccessToken: (token) => set({ accessToken: token }),
-      setRefreshToken: (token) => set({ refreshToken: token }),
+      setRefreshToken: (token) => {
+        if (token) {
+          setCookie("refreshToken", token, 7);
+        } else {
+          removeCookie("refreshToken");
+        }
+      },
       setUserInfo: (info) => set({ userInfo: info }),
       setIsLogin: (status) => set({ isLogin: status }),
-      logout: () =>
+      logout: () => {
         set({
           accessToken: null,
-          refreshToken: null,
           userInfo: null,
           isLogin: false,
-        }),
+        });
+        removeCookie("refreshToken");
+      },
     }),
     {
-      // persist 미들웨어 설정 정의
-      name: "auth-storage", // 저장소 이름
-      storage: createJSONStorage(() => sessionStorage), //세션스토리지에 상태를 JSON형식으로 저장
+      name: "auth-storage",
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        userInfo: state.userInfo,
+        isLogin: state.isLogin,
+      }),
     }
   )
 );
+
+export default useAuthStore;

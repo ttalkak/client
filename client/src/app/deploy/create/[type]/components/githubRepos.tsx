@@ -1,9 +1,10 @@
 "use client";
 
-type DeployType = "frontend" | "backend" | null;
+type DeployType = "FRONTEND" | "BACKEND" | null;
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+
 import { Repository, FileContent } from "@/types/repo";
 import { SearchBar } from "@/app/deploy/create/[type]/components/SearchBar";
 import { RepoList } from "@/app/deploy/create/[type]/components/RepoList";
@@ -13,6 +14,7 @@ import { LiaGithubAlt } from "react-icons/lia";
 import useGetRepos from "@/apis/repo/useGetRepos";
 import Button from "@/components/Button";
 import useDeployStore from "@/store/useDeployStore";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function GitHubRepos() {
   const [filteredRepos, setFilteredRepos] = useState<Repository[]>([]); // 검색 필터링된 레포지토리 목록
@@ -31,12 +33,13 @@ export default function GitHubRepos() {
     /\/deploy\/create\/(frontend|backend)/
   );
   const deployType: DeployType = deployTypeMatch
-    ? (deployTypeMatch[1] as DeployType)
+    ? (deployTypeMatch[1].toUpperCase() as DeployType)
     : null;
 
-  const setSelectedRepository = useDeployStore(
-    (state) => state.setSelectedRepository
-  );
+  const { setGithubRepositoryRequest, setProjectId, setServiceType } =
+    useDeployStore();
+
+  const githubApiKey = useAuthStore((state) => state.userInfo?.accessToken);
 
   const {
     data: repos,
@@ -74,7 +77,7 @@ export default function GitHubRepos() {
         `https://api.github.com/repos/${repo.full_name}/contents/${path}`,
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${githubApiKey}`,
           },
         }
       );
@@ -103,7 +106,7 @@ export default function GitHubRepos() {
         await fetchFileContent(data);
       }
     } catch (error) {
-      setError("Error fetching repository contents. Please try again later.");
+      setError("레포지토리 내용 조회 에러.");
       console.error("Error fetching repository contents:", error);
     } finally {
       setIsLoading(false);
@@ -119,7 +122,7 @@ export default function GitHubRepos() {
         `https://api.github.com/repos/${selectedRepo!.full_name}/contents/${file.path}`,
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${githubApiKey}`,
             Accept: "application/vnd.github.v3.raw",
           },
         }
@@ -172,13 +175,21 @@ export default function GitHubRepos() {
 
   // 선택완료 버튼 클릭 핸들러
   const handleSelectComplete = () => {
-    if (selectedRepo) {
-      // 여기서 url보고 필요한거 넘기면 될듯
-      console.log(selectedRepo);
-      console.log(projectId);
-      console.log(deployType);
-      // zustand에 저장하고 라우터 이동시키는데, 뭘 보낼지 잘 생각해보고 보내셈, zustand persist설정도 하기
-      // setSelectedRepository(selectedRepo);
+    if (selectedRepo && projectId && deployType) {
+      setGithubRepositoryRequest({
+        repositoryName: selectedRepo.name,
+        repositoryUrl: selectedRepo.html_url,
+        repositoryLastCommitMessage:
+          selectedRepo.description || "No description",
+        repositoryLastCommitUserProfile: selectedRepo.owner.avatar_url,
+        repositoryLastCommitUserName: selectedRepo.owner.login,
+        rootDirectory: "./",
+        branch: "main",
+      });
+
+      setProjectId(parseInt(projectId));
+      setServiceType(deployType);
+
       router.push(`/deploy/form?projectId=${projectId}&type=${deployType}`);
     }
   };
@@ -190,7 +201,7 @@ export default function GitHubRepos() {
   return (
     <div className="container mx-auto font-sans">
       <h2 className="text-2xl font-bold mb-4">
-        {deployType === "frontend" ? "프론트엔드" : "백엔드"} 코드가 포함된
+        {deployType === "FRONTEND" ? "프론트엔드" : "백엔드"} 코드가 포함된
         저장소를 선택해주세요
       </h2>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

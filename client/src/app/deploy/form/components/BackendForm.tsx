@@ -2,18 +2,28 @@
 
 import { useEffect } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
+import useDeployStore from "@/store/useDeployStore";
+
+type DatabaseType = "MYSQL" | "MARIADB" | "MONGODB" | "POSTGRESQL" | "REDIS";
 
 interface FormData {
   port: string;
   rootDir: string;
   useDatabase: boolean;
-  databaseType?: string;
+  databaseType?: DatabaseType;
   databasePort?: string;
   databaseUsername?: string;
   databasePassword?: string;
 }
 
 export default function BackendForm() {
+  const {
+    setFramework,
+    setHostingCreateRequest,
+    setGithubRepositoryRequest,
+    setDatabaseCreateRequests,
+  } = useDeployStore();
+
   const {
     control,
     handleSubmit,
@@ -29,37 +39,49 @@ export default function BackendForm() {
   });
 
   const useDatabase = watch("useDatabase");
-  const databaseType = useWatch({ control, name: "databaseType" });
+  const databaseType = useWatch({ control, name: "databaseType" }) as
+    | DatabaseType
+    | undefined;
 
   useEffect(() => {
     if (useDatabase) {
-      setValue("databaseType", "MySQL");
-      setValue("databasePort", "");
+      setValue("databaseType", "MYSQL");
+      setValue("databasePort", undefined);
     } else {
-      setValue("databaseType", "");
-      setValue("databasePort", "");
-      setValue("databaseUsername", "");
-      setValue("databasePassword", "");
+      setValue("databaseType", undefined);
+      setValue("databasePort", undefined);
+      setValue("databaseUsername", undefined);
+      setValue("databasePassword", undefined);
     }
   }, [useDatabase, setValue]);
 
   useEffect(() => {
-    if (databaseType === "Redis") {
-      setValue("databaseUsername", "");
-      setValue("databasePassword", "");
+    if (databaseType === "REDIS") {
+      setValue("databaseUsername", undefined);
+      setValue("databasePassword", undefined);
     }
   }, [databaseType, setValue]);
 
   const onSubmit = (data: FormData) => {
     // 프레임워크 부트로 고정
-    const sumbittedData = {
-      ...data,
-      framework: "SpringBoot",
-      port: Number(data.port),
-      databasePort: useDatabase ? Number(data.databasePort) : undefined,
-    };
-    console.log(sumbittedData);
-    // 폼 제출 api
+    setFramework("SPRINGBOOT");
+
+    setHostingCreateRequest({ hostingPort: Number(data.port) });
+
+    setGithubRepositoryRequest({ rootDirectory: data.rootDir });
+
+    if (data.useDatabase && data.databaseType) {
+      setDatabaseCreateRequests([
+        {
+          databaseName: data.databaseType,
+          databasePort: Number(data.databasePort),
+          username: data.databaseUsername || "",
+          password: data.databasePassword || "",
+        },
+      ]);
+    } else {
+      setDatabaseCreateRequests(null);
+    }
   };
 
   return (
@@ -175,17 +197,17 @@ export default function BackendForm() {
                       id="databaseType"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="MySQL">MySQL</option>
-                      <option value="MariaDB">MariaDB</option>
-                      <option value="MongoDB">MongoDB</option>
-                      <option value="PostgreSQL">PostgreSQL</option>
-                      <option value="Redis">Redis</option>
+                      <option value="MYSQL">MySQL</option>
+                      <option value="MARIADB">MariaDB</option>
+                      <option value="MONGODB">MongoDB</option>
+                      <option value="POSTGRESQL">PostgreSQL</option>
+                      <option value="REDIS">Redis</option>
                     </select>
                   </div>
                 )}
               />
 
-              {databaseType !== "Redis" && (
+              {databaseType !== "REDIS" && (
                 <Controller
                   name="databaseUsername"
                   control={control}

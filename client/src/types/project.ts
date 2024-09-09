@@ -8,7 +8,7 @@ export interface Project {
   deployments: null | any;
 }
 
-export interface ProjectResponse {
+export interface ProjectsResponse {
   content: Project[];
   totalPages: number;
   totalElements: number;

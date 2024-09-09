@@ -1,48 +1,42 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import DeploymentStatus from "@/app/projects/[id]/components/DeploymentStatus";
-import { Project } from "./types";
+import useGetProject from "@/apis/project/useGetProject";
+import { Deployment } from "@/types/deploy";
 
-// 프로젝트 데이터를 가져오는 함수 (실제로는 API 호출)
-async function getProject(id: string): Promise<Project | null> {
-  const projects: Record<string, Project> = {
-    "1": {
-      id: "1",
-      name: "LeadMe",
-      frontendDeploy: null,
-      backendDeploy: null,
-    },
-    "2": {
-      id: "2",
-      name: "ssapick",
-      frontendDeploy: {
-        status: "Ready",
-        name: "ssapick_front",
-        lastUpdated: "3일 전",
-      },
-      backendDeploy: null,
-    },
-  };
+export default function ProjectPage({ params }: { params: { id: string } }) {
+  const { data: project, isLoading, error } = useGetProject(Number(params.id));
 
-  return projects[id] || null;
-}
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const project = await getProject(params.id);
+  if (error) {
+    return <div>에러 발생: {error.message}</div>;
+  }
 
   if (!project) {
     notFound();
   }
 
+  const getLatestDeploy = (
+    deployments: Deployment[],
+    type: "FRONTEND" | "BACKEND"
+  ): Deployment | null => {
+    return (
+      deployments
+        .filter((deploy) => deploy.serviceType === type)
+        .sort((a, b) => b.deploymentId - a.deploymentId)[0] || null
+    );
+  };
+
   return (
     <div className="container mx-auto my-10 p-6 border rounded-lg overflow-hidden">
       <div className="flex items-center gap-3">
-        <h1 className="text-3xl font-bold mb-3">{project.name}</h1>
+        <h1 className="text-3xl font-bold mb-3">{project.projectName}</h1>
         <FaRegEdit className="w-6 h-6 cursor-pointer" />
         <RiDeleteBin5Line className="w-7 h-7 cursor-pointer" />
       </div>
@@ -52,12 +46,12 @@ export default async function ProjectPage({
             <div className="grid grid-cols-2 gap-4">
               <DeploymentStatus
                 type="Frontend"
-                deploy={project.frontendDeploy}
+                deploy={getLatestDeploy(project.deployments, "FRONTEND")}
                 projectId={project.id}
               />
               <DeploymentStatus
                 type="Backend"
-                deploy={project.backendDeploy}
+                deploy={getLatestDeploy(project.deployments, "BACKEND")}
                 projectId={project.id}
               />
             </div>

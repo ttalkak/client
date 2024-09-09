@@ -3,9 +3,10 @@
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import { LuMinusCircle } from "react-icons/lu";
+import useDeployStore from "@/store/useDeployStore";
 
 interface FormData {
-  framework: string;
+  framework: "REACT" | "NEXTJS";
   port: number;
   rootDir: string;
   envVars: { key: string; value: string }[];
@@ -13,12 +14,19 @@ interface FormData {
 
 export default function FrontendForm() {
   const {
+    setFramework,
+    setHostingCreateRequest,
+    setGithubRepositoryRequest,
+    setEnvironment,
+  } = useDeployStore();
+
+  const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      framework: "",
+      framework: "REACT",
       port: 3000,
       rootDir: "/",
       envVars: [],
@@ -31,8 +39,16 @@ export default function FrontendForm() {
   });
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
-    // 폼 제출 api
+    setFramework(data.framework);
+
+    setHostingCreateRequest({ hostingPort: data.port });
+
+    setGithubRepositoryRequest({ rootDirectory: data.rootDir });
+
+    const envString = data.envVars
+      .map(({ key, value }) => `${key}=${value}`)
+      .join("\n");
+    setEnvironment(envString);
   };
 
   return (
@@ -59,8 +75,8 @@ export default function FrontendForm() {
                   id="framework"
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none"
                 >
-                  <option value="nextjs">Next.js</option>
-                  <option value="react">React.js</option>
+                  <option value="REACT">React.js</option>
+                  <option value="NEXTJS">Next.js</option>
                   {/* 다른 프레임워크 옵션들 추가 */}
                 </select>
               </div>

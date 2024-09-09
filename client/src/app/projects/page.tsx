@@ -7,7 +7,8 @@ import Link from "next/link";
 import Modal from "@/app/projects/components/Modal";
 import useGetProjects from "@/apis/project/useGetProjects";
 import useCreateProject from "@/apis/project/useCreateProject";
-import { useAuthStore } from "@/store/useAuthStore";
+import useAuthStore from "@/store/useAuthStore";
+import getRelativeTime from "@/utils/getRelativeTime";
 import { getProjectsParams, Project } from "@/types/project";
 
 export default function ProjectsPage() {
@@ -32,20 +33,14 @@ export default function ProjectsPage() {
       { projectName, domainName },
       {
         onSuccess: () => {
-          console.log("프로젝트 생성 성공");
           setIsModalOpen(false);
-        },
-        onError: (error) => {
-          console.error("프로젝트 생성 오류", error);
         },
       }
     );
   };
 
-  const { data, isLoading, error } = useGetProjects(params);
-
-  if (isLoading) return <div>로딩중..</div>;
-  if (error) return <div>에러 : {error.message}</div>;
+  const { data, isLoading, error, isFetching } = useGetProjects(params);
+  // isLoading일때 suspense fallback으로 skeletonUI 만들기
 
   return (
     <div>
@@ -96,7 +91,9 @@ export default function ProjectsPage() {
               </div>
             </div>
             <div className="flex justify-end items-center mt-6">
-              <span className="text-sm text-gray-500">{project.createdAt}</span>
+              <span className="text-sm text-gray-500">
+                {getRelativeTime(project.createdAt)}
+              </span>
             </div>
           </Link>
         ))}

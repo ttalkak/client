@@ -2,9 +2,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, Method } from "axios";
 // qs는 쿼리 문자열을 파싱하고 문자열화하는 라이브러리
 import qs from "qs";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore";
 import { ApiResponse } from "@/apis/core/type";
+import useAuthStore from "@/store/useAuthStore";
+import { getCookie } from "@/utils/cookies";
 
 // axios 인스턴스 생성
 // axios.create()를 사용해서 커스텀 설정을 가진 새로운 axios 인스턴스 생성
@@ -15,6 +15,8 @@ const axiosInstance: AxiosInstance = axios.create({
   timeout: 10000,
   // 기본 헤더 설정. JSON 형식의 데이터를 주고받겠다고 명시
   headers: { "Content-Type": "application/json" },
+  // 모든 요청에 쿠키를 포함
+  withCredentials: true,
   // 파라미터 직렬화. qs.stringify를 사용하여 객체를 쿼리 문자열로 변환
   // arrayFormat: "repeat"는 배열 파라미터를 반복하여 표현 (ex: arr=1&arr=2&arr=3).
   // ex) const params={name:'John',hobbies:['reading','swimming','cycling']}
@@ -55,12 +57,19 @@ axiosInstance.interceptors.response.use(
       // 재시도 하자마자 _retry는 true로 바꿔서 다음 요청부터는 더이상 재시도 하지 않도록
 
       try {
-        // 리프레시 토큰을 사용하여 새로운 액세스 토큰 요청
-        const refreshToken = useAuthStore.getState().refreshToken;
-        const response = await axios.post("리프레시토큰발급 엔드포인트", {
-          refreshToken,
-        });
-        const { accessToken } = response.data;
+        const refreshToken = getCookie("refreshToken");
+
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
+        const response = await axiosInstance.post<
+          ApiResponse<{
+            accessToken: string;
+          }>
+        >("/auth/refresh", { refreshToken });
+        const {
+          data: { accessToken },
+        } = response.data;
 
         // 새로운 액세스 토큰 저장
         useAuthStore.getState().setAccessToken(accessToken);
@@ -70,11 +79,12 @@ axiosInstance.interceptors.response.use(
 
         // 원래 요청 재시도
         return axiosInstance(originalRequest);
-      } catch (refreshToken) {
+      } catch (refreshError) {
         // 리프레시 토큰도 만료된 경우 로그아웃 처리 & 로그인 페이지로 이동
+        console.log(refreshError, "왜 여기로 들어오냐;");
         useAuthStore.getState().logout();
-        const router = useRouter();
-        router.push("/login");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
     }
     // 인터셉터에서 에러 처리를 못했을때, 에러를 호출했던 곳으로 다시 던짐

@@ -6,7 +6,7 @@ import NavLink from "@/components/NavLink";
 import Link from "next/link";
 import Image from "next/image";
 import { FiMenu, FiX } from "react-icons/fi";
-import { useAuthStore } from "@/store/useAuthStore";
+import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 const navItems = [
   { name: "내 프로젝트", path: routes.projects },

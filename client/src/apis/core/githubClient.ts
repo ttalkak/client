@@ -1,10 +1,12 @@
 import axios from "axios";
 
-const githubClient = axios.create({
-  baseURL: "https://api.github.com",
-  headers: {
-    Authorization: `Bearer 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`,
-  },
-});
+const githubClient = (githubApiKey: string) => {
+  return axios.create({
+    baseURL: "https://api.github.com",
+    headers: {
+      Authorization: `Bearer ${githubApiKey}`,
+    },
+  });
+};
 
 export default githubClient;

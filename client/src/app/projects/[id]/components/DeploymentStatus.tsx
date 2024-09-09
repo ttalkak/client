@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { DeployInfo } from "../types";
 import { HiOutlineX } from "react-icons/hi";
+import { Deployment } from "@/types/deploy";
 
 interface DeploymentStatusProps {
   type: "Frontend" | "Backend";
-  deploy: DeployInfo | null;
-  projectId: string;
+  deploy: Deployment | null;
+  projectId: number | string;
 }
 
 export default function DeploymentStatus({
@@ -14,18 +14,22 @@ export default function DeploymentStatus({
   projectId,
 }: DeploymentStatusProps) {
   if (deploy) {
+    const hosting = deploy.hostingResponses[0]; // 첫 번째 호스팅 정보 사용
     return (
       <div className="flex flex-col gap-4 border rounded-lg p-6">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold text-lg">{type}</h3>
           <HiOutlineX className="w-5 h-5 cursor-pointer" />
         </div>
-        <p className="text-md">{deploy.name}</p>
+        <p className="text-md">{deploy.repositoryName}</p>
         <div className="flex justify-between">
           <span className="text-md">상태: {deploy.status}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm text-gray-500">{deploy.lastUpdated}</span>
+          <span className="text-sm text-gray-500">
+            {deploy.repositoryLastCommitUserName} -{" "}
+            {deploy.repositoryLastCommitMessage}
+          </span>
           <Link
             href={`/deploy/${projectId}`}
             className="font-semibold w-32 bg-black text-center text-white px-4 py-2 rounded-lg text-md"

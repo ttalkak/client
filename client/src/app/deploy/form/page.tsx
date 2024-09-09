@@ -10,14 +10,14 @@ export default function deployFormPage({
 }) {
   const type = searchParams.type as string | undefined;
 
-  if (!type || (type !== "backend" && type !== "frontend")) {
+  if (!type || (type !== "BACKEND" && type !== "FRONTEND")) {
     notFound();
   }
 
   return (
     <div>
       <Suspense fallback={<SkeletonUI />}>
-        {type === "backend" ? <BackendForm /> : <FrontendForm />}
+        {type === "BACKEND" ? <BackendForm /> : <FrontendForm />}
       </Suspense>
     </div>
   );
