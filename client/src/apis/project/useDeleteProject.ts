@@ -21,7 +21,7 @@ const useDeleteProject = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("프로젝트가 성공적으로 삭제되었습니다.");
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast.error(error.message);
     },
   });
