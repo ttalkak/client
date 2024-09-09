@@ -22,7 +22,12 @@ export interface getProjectsParams {
   searchKeyword?: string;
 }
 
-export interface CreateProjectParams {
+export interface ProjectData {
   projectName: string;
   domainName: string;
+}
+
+export interface patchProjectParams {
+  projectId: number;
+  data: ProjectData;
 }

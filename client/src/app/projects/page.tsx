@@ -18,7 +18,7 @@ export default function ProjectsPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const userInfo = useAuthStore((state) => state.userInfo);
-  const createProjectMutation = useCreateProject();
+  const { mutate: createProject } = useCreateProject();
 
   const params: getProjectsParams = {
     page: currentPage,
@@ -29,7 +29,7 @@ export default function ProjectsPage() {
   };
 
   const handleCreateProject = (projectName: string, domainName: string) => {
-    createProjectMutation.mutate(
+    createProject(
       { projectName, domainName },
       {
         onSuccess: () => {

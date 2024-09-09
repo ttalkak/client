@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import useDeployStore from "@/store/useDeployStore";
-
-type DatabaseType = "MYSQL" | "MARIADB" | "MONGODB" | "POSTGRESQL" | "REDIS";
+import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
+import { DatabaseType } from "@/types/deploy";
 
 interface FormData {
   port: string;
@@ -17,12 +17,9 @@ interface FormData {
 }
 
 export default function BackendForm() {
-  const {
-    setFramework,
-    setHostingCreateRequest,
-    setGithubRepositoryRequest,
-    setDatabaseCreateRequests,
-  } = useDeployStore();
+  const { mutate: createDeploy } = useCreateDeploy();
+  const { projectId, serviceType, githubRepositoryRequest, reset } =
+    useDeployStore();
 
   const {
     control,
@@ -63,25 +60,40 @@ export default function BackendForm() {
   }, [databaseType, setValue]);
 
   const onSubmit = (data: FormData) => {
-    // 프레임워크 부트로 고정
-    setFramework("SPRINGBOOT");
+    const databaseCreateRequests =
+      data.useDatabase && data.databaseType
+        ? [
+            {
+              databaseName: data.databaseType,
+              databasePort: Number(data.databasePort),
+              username:
+                data.databaseType === "REDIS"
+                  ? ""
+                  : data.databaseUsername || "",
+              password: data.databasePassword || "",
+            },
+          ]
+        : null;
 
-    setHostingCreateRequest({ hostingPort: Number(data.port) });
-
-    setGithubRepositoryRequest({ rootDirectory: data.rootDir });
-
-    if (data.useDatabase && data.databaseType) {
-      setDatabaseCreateRequests([
-        {
-          databaseName: data.databaseType,
-          databasePort: Number(data.databasePort),
-          username: data.databaseUsername || "",
-          password: data.databasePassword || "",
+    createDeploy(
+      {
+        projectId,
+        framework: "SPRINGBOOT",
+        serviceType: serviceType!,
+        githubRepositoryRequest: {
+          ...githubRepositoryRequest,
+          rootDirectory: data.rootDir,
         },
-      ]);
-    } else {
-      setDatabaseCreateRequests(null);
-    }
+        databaseCreateRequests,
+        hostingCreateRequest: { hostingPort: Number(data.port) },
+        env: null,
+      },
+      {
+        onSuccess: () => {
+          reset();
+        },
+      }
+    );
   };
 
   return (

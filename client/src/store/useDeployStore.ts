@@ -1,45 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-type DeployType = "FRONTEND" | "BACKEND" | null;
-type DatabaseType =
-  | "MYSQL"
-  | "MARIADB"
-  | "MONGODB"
-  | "POSTGRESQL"
-  | "REDIS"
-  | null;
-type Framework = "REACT" | "NEXTJS" | "SPRINGBOOT" | null;
-
-interface GithubRepositoryRequest {
-  repositoryName: string;
-  repositoryUrl: string;
-  repositoryLastCommitMessage: string;
-  repositoryLastCommitUserProfile: string;
-  repositoryLastCommitUserName: string;
-  rootDirectory: string;
-  branch: string;
-}
-interface DatabaseCreateRequest {
-  databaseName: DatabaseType;
-  databasePort: number;
-  username: string;
-  password: string;
-}
-
-interface HostingCreateRequest {
-  hostingPort: number;
-}
-
-interface DeployData {
-  projectId: number;
-  framework: Framework;
-  serviceType: DeployType;
-  githubRepositoryRequest: GithubRepositoryRequest;
-  databaseCreateRequests: DatabaseCreateRequest[] | null;
-  hostingCreateRequest: HostingCreateRequest;
-  env: string | null;
-}
+import {
+  DeployData,
+  Framework,
+  DeployType,
+  GithubRepositoryRequest,
+  DatabaseCreateRequest,
+  HostingCreateRequest,
+} from "@/types/deploy";
 
 interface DeployStoreState extends DeployData {
   setProjectId: (projectId: number) => void;
@@ -104,7 +72,10 @@ const useDeployStore = create(
         })),
       setHostingCreateRequest: (data) => set({ hostingCreateRequest: data }),
       setEnvironment: (env) => set({ env }),
-      reset: () => set(initialState),
+      reset: () => {
+        set(initialState);
+        sessionStorage.removeItem("deploy-storage");
+      },
     }),
     {
       name: "deploy-storage",

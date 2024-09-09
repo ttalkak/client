@@ -4,6 +4,7 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import { LuMinusCircle } from "react-icons/lu";
 import useDeployStore from "@/store/useDeployStore";
+import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 
 interface FormData {
   framework: "REACT" | "NEXTJS";
@@ -13,11 +14,14 @@ interface FormData {
 }
 
 export default function FrontendForm() {
+  const { mutate: createDeploy } = useCreateDeploy();
+
   const {
-    setFramework,
-    setHostingCreateRequest,
-    setGithubRepositoryRequest,
-    setEnvironment,
+    projectId,
+    serviceType,
+    githubRepositoryRequest,
+    databaseCreateRequests,
+    reset,
   } = useDeployStore();
 
   const {
@@ -39,16 +43,29 @@ export default function FrontendForm() {
   });
 
   const onSubmit = (data: FormData) => {
-    setFramework(data.framework);
-
-    setHostingCreateRequest({ hostingPort: data.port });
-
-    setGithubRepositoryRequest({ rootDirectory: data.rootDir });
-
     const envString = data.envVars
       .map(({ key, value }) => `${key}=${value}`)
       .join("\n");
-    setEnvironment(envString);
+
+    createDeploy(
+      {
+        projectId,
+        framework: data.framework,
+        serviceType: serviceType!,
+        githubRepositoryRequest: {
+          ...githubRepositoryRequest,
+          rootDirectory: data.rootDir,
+        },
+        databaseCreateRequests,
+        hostingCreateRequest: { hostingPort: data.port },
+        env: envString,
+      },
+      {
+        onSuccess: () => {
+          reset();
+        },
+      }
+    );
   };
 
   return (
@@ -77,7 +94,6 @@ export default function FrontendForm() {
                 >
                   <option value="REACT">React.js</option>
                   <option value="NEXTJS">Next.js</option>
-                  {/* 다른 프레임워크 옵션들 추가 */}
                 </select>
               </div>
             )}

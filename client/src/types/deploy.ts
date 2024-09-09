@@ -8,7 +8,7 @@ export interface Hosting {
 export interface Deployment {
   deploymentId: number;
   projectId: number;
-  status: "PENDING" | "READY" | "FAILED";
+  status: "STOP" | "RUNNING" | "ERROR" | "DELETED" | "PENDING";
   serviceType: "FRONTEND" | "BACKEND";
   repositoryName: string;
   repositoryUrl: string;
@@ -24,8 +24,7 @@ export type DatabaseType =
   | "MARIADB"
   | "MONGODB"
   | "POSTGRESQL"
-  | "REDIS"
-  | null;
+  | "REDIS";
 export type Framework = "REACT" | "NEXTJS" | "SPRINGBOOT" | null;
 
 export interface GithubRepositoryRequest {
