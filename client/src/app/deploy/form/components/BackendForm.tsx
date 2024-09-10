@@ -5,6 +5,7 @@ import { useForm, Controller, useWatch } from "react-hook-form";
 import useDeployStore from "@/store/useDeployStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import { DatabaseType } from "@/types/deploy";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   port: string;
@@ -17,6 +18,7 @@ interface FormData {
 }
 
 export default function BackendForm() {
+  const router = useRouter();
   const { mutate: createDeploy } = useCreateDeploy();
   const { projectId, serviceType, githubRepositoryRequest, reset } =
     useDeployStore();
@@ -91,6 +93,7 @@ export default function BackendForm() {
       {
         onSuccess: () => {
           reset();
+          router.push(`/projects/${projectId}`);
         },
       }
     );

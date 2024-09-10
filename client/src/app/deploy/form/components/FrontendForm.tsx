@@ -65,7 +65,7 @@ export default function FrontendForm() {
       {
         onSuccess: () => {
           reset();
-          router.push(`/project/${projectId}`);
+          router.push(`/projects/${projectId}`);
         },
       }
     );
