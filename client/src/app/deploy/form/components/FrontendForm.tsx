@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 interface FormData {
   framework: "REACT" | "NEXTJS";
   port: number;
-  rootDir: string;
   envVars: { key: string; value: string }[];
 }
 
@@ -34,7 +33,6 @@ export default function FrontendForm() {
     defaultValues: {
       framework: "REACT",
       port: 3000,
-      rootDir: "/",
       envVars: [],
     },
   });
@@ -54,10 +52,7 @@ export default function FrontendForm() {
         projectId,
         framework: data.framework,
         serviceType: serviceType!,
-        githubRepositoryRequest: {
-          ...githubRepositoryRequest,
-          rootDirectory: data.rootDir,
-        },
+        githubRepositoryRequest,
         databaseCreateRequests,
         hostingPort: Number(data.port),
         env: envString,
@@ -135,28 +130,22 @@ export default function FrontendForm() {
               </div>
             )}
           />
-          <Controller
-            name="rootDir"
-            control={control}
-            render={({ field }) => (
-              <div>
-                <label
-                  htmlFor="rootDir"
-                  className="block text-md font-semibold text-gray-700 mb-1"
-                >
-                  루트 디렉토리
-                </label>
-                <div className="flex">
-                  <input
-                    {...field}
-                    id="rootDir"
-                    type="text"
-                    className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-            )}
-          />
+
+          <div>
+            <label
+              htmlFor="rootDir"
+              className="block text-md font-semibold text-gray-700 mb-1"
+            >
+              루트 디렉토리
+            </label>
+            <input
+              id="rootDir"
+              type="text"
+              value={githubRepositoryRequest.rootDirectory}
+              readOnly
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none"
+            />
+          </div>
         </div>
 
         <div className="mt-8">

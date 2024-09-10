@@ -32,7 +32,6 @@ export default function BackendForm() {
   } = useForm<FormData>({
     defaultValues: {
       port: "8080",
-      rootDir: "/",
       useDatabase: false,
     },
   });
@@ -82,10 +81,7 @@ export default function BackendForm() {
         projectId,
         framework: "SPRINGBOOT",
         serviceType: serviceType!,
-        githubRepositoryRequest: {
-          ...githubRepositoryRequest,
-          rootDirectory: data.rootDir,
-        },
+        githubRepositoryRequest,
         databaseCreateRequests,
         hostingPort: Number(data.port),
         env: null,
@@ -151,26 +147,21 @@ export default function BackendForm() {
             )}
           />
 
-          <Controller
-            name="rootDir"
-            control={control}
-            render={({ field }) => (
-              <div>
-                <label
-                  htmlFor="rootDir"
-                  className="block text-md font-semibold text-gray-700 mb-1"
-                >
-                  루트 디렉토리
-                </label>
-                <input
-                  {...field}
-                  id="rootDir"
-                  type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            )}
-          />
+          <div>
+            <label
+              htmlFor="rootDir"
+              className="block text-md font-semibold text-gray-700 mb-1"
+            >
+              루트 디렉토리
+            </label>
+            <input
+              id="rootDir"
+              type="text"
+              value={githubRepositoryRequest.rootDirectory}
+              readOnly
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none"
+            />
+          </div>
 
           <Controller
             name="useDatabase"

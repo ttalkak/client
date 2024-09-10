@@ -27,12 +27,16 @@ export function DirectoryNavigator({
       {pathParts.map((part, index) => (
         <span key={index}>
           <span className="mx-1">/</span>
-          <button
-            onClick={() => onPathClick(part)}
-            className="text-blue-500 hover:underline"
-          >
-            {part}
-          </button>
+          {index < pathParts.length - 1 ? (
+            <button
+              onClick={() => onPathClick(part)}
+              className="text-blue-500 hover:underline"
+            >
+              {part}
+            </button>
+          ) : (
+            <span className="text-gray-700">{part}</span>
+          )}
         </span>
       ))}
     </div>
