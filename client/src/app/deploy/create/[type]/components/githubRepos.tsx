@@ -2,6 +2,16 @@
 
 type DeployType = "FRONTEND" | "BACKEND" | null;
 
+interface Commit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      date: string;
+    };
+  };
+}
+
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
@@ -25,6 +35,7 @@ export default function GitHubRepos() {
   const [currentPath, setCurrentPath] = useState<string>(""); // 현재 탐색 중인 경로
   const [repoContents, setRepoContents] = useState<FileContent[]>([]); // 현재 경로의 파일/폴더 목록
   const [fileContent, setFileContent] = useState<string | null>(null); // 선택된 파일의 내용
+  const [commits, setCommits] = useState<Record<string, Commit>>({});
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -66,6 +77,34 @@ export default function GitHubRepos() {
     }
   }, [repos]);
 
+  // 커밋 정보
+  const fetchCommits = async (repo: Repository, path: string) => {
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${repo.full_name}/commits?path=${path}`,
+        {
+          headers: {
+            Authorization: `Bearer ${githubApiKey}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch commit information");
+      }
+
+      const commitsData: Commit[] = await response.json();
+      const latestCommit = commitsData[0];
+
+      setCommits((prev) => ({
+        ...prev,
+        [path]: latestCommit,
+      }));
+    } catch (error) {
+      console.error("Error fetching commit information:", error);
+    }
+  };
+
   // 레포지토리 내용 조회 함수
   const fetchRepoContents = async (repo: Repository, path: string = "") => {
     setIsLoading(true);
@@ -101,9 +140,15 @@ export default function GitHubRepos() {
         setRepoContents(sortedData);
         setSelectedRepo(repo);
         setCurrentPath(path);
+
+        // 각 파일/폴더에 대한 커밋 정보 가져오기
+        sortedData.forEach((item) => {
+          fetchCommits(repo, item.path);
+        });
       } else {
         // 단일 파일인 경우 파일 내용 가져오기
         await fetchFileContent(data);
+        fetchCommits(repo, data.path);
       }
     } catch (error) {
       setError("레포지토리 내용 조회 에러.");
@@ -183,7 +228,7 @@ export default function GitHubRepos() {
           selectedRepo.description || "No description",
         repositoryLastCommitUserProfile: selectedRepo.owner.avatar_url,
         repositoryLastCommitUserName: selectedRepo.owner.login,
-        rootDirectory: "./",
+        rootDirectory: currentPath ? `./${currentPath}/` : "./",
         branch: "main",
       });
 
@@ -265,6 +310,7 @@ export default function GitHubRepos() {
                   selectedRepo={selectedRepo}
                   onItemClick={handleItemClick}
                   formatDate={formatDate}
+                  commits={commits}
                 />
               )}
             </div>
