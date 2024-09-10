@@ -85,7 +85,7 @@ export default function BackendForm() {
           rootDirectory: data.rootDir,
         },
         databaseCreateRequests,
-        hostingCreateRequest: { hostingPort: Number(data.port) },
+        hostingPort: Number(data.port),
         env: null,
       },
       {

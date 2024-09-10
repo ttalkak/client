@@ -43,16 +43,12 @@ export interface DatabaseCreateRequest {
   password: string;
 }
 
-export interface HostingCreateRequest {
-  hostingPort: number;
-}
-
 export interface DeployData {
   projectId: number;
   framework: Framework;
   serviceType: DeployType;
   githubRepositoryRequest: GithubRepositoryRequest;
   databaseCreateRequests: DatabaseCreateRequest[] | null;
-  hostingCreateRequest: HostingCreateRequest;
+  hostingPort: number;
   env: string | null;
 }

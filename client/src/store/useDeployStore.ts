@@ -6,7 +6,6 @@ import {
   DeployType,
   GithubRepositoryRequest,
   DatabaseCreateRequest,
-  HostingCreateRequest,
 } from "@/types/deploy";
 
 interface DeployStoreState extends DeployData {
@@ -17,7 +16,7 @@ interface DeployStoreState extends DeployData {
   setDatabaseCreateRequests: (data: DatabaseCreateRequest[] | null) => void;
   addDatabaseCreateRequest: (data: DatabaseCreateRequest) => void;
   removeDatabaseCreateRequest: (index: number) => void;
-  setHostingCreateRequest: (data: HostingCreateRequest) => void;
+  setHostingPort: (hostingPort: number) => void;
   setEnvironment: (env: string | null) => void;
   reset: () => void;
 }
@@ -36,9 +35,7 @@ const initialState: DeployData = {
     branch: "main",
   },
   databaseCreateRequests: null,
-  hostingCreateRequest: {
-    hostingPort: 3000,
-  },
+  hostingPort: 3000,
   env: null,
 };
 
@@ -70,7 +67,7 @@ const useDeployStore = create(
             ? state.databaseCreateRequests.filter((_, i) => i !== index)
             : null,
         })),
-      setHostingCreateRequest: (data) => set({ hostingCreateRequest: data }),
+      setHostingPort: (hostingPort) => set({ hostingPort }),
       setEnvironment: (env) => set({ env }),
       reset: () => {
         set(initialState);

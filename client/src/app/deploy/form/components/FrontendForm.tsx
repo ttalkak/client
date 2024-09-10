@@ -5,6 +5,7 @@ import { MdAdd } from "react-icons/md";
 import { LuMinusCircle } from "react-icons/lu";
 import useDeployStore from "@/store/useDeployStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   framework: "REACT" | "NEXTJS";
@@ -15,6 +16,7 @@ interface FormData {
 
 export default function FrontendForm() {
   const { mutate: createDeploy } = useCreateDeploy();
+  const router = useRouter();
 
   const {
     projectId,
@@ -57,12 +59,13 @@ export default function FrontendForm() {
           rootDirectory: data.rootDir,
         },
         databaseCreateRequests,
-        hostingCreateRequest: { hostingPort: data.port },
+        hostingPort: Number(data.port),
         env: envString,
       },
       {
         onSuccess: () => {
           reset();
+          router.push(`/project/${projectId}`);
         },
       }
     );
