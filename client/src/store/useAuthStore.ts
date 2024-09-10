@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { UserInfo } from "@/types/userInfo";
-import { setCookie, removeCookie } from "@/utils/cookies";
 
 interface AuthState {
   accessToken: string | null; // 액세스 토큰을 저장할 변수
@@ -9,7 +8,6 @@ interface AuthState {
   userInfo: UserInfo | null; // 유저 정보
   isLogin: boolean; // 로그인 여부
   setAccessToken: (token: string | null) => void; // 엑세스 토큰을 설정하는 함수
-  setRefreshToken: (token: string | null) => void; //리프레시 토큰을 설정하는 함수
   setUserInfo: (info: UserInfo | null) => void; // 유저정보를 설정하는 함수
   setIsLogin: (status: boolean) => void; // 로그인 상태를 설정하는 함수
   logout: () => void; // 로그아웃 함수
@@ -26,13 +24,6 @@ const useAuthStore = create<AuthState>()(
       userInfo: null,
       isLogin: false,
       setAccessToken: (token) => set({ accessToken: token }),
-      setRefreshToken: (token) => {
-        if (token) {
-          setCookie("refreshToken", token, 7);
-        } else {
-          removeCookie("refreshToken");
-        }
-      },
       setUserInfo: (info) => set({ userInfo: info }),
       setIsLogin: (status) => set({ isLogin: status }),
       logout: () => {
@@ -41,7 +32,6 @@ const useAuthStore = create<AuthState>()(
           userInfo: null,
           isLogin: false,
         });
-        removeCookie("refreshToken");
       },
     }),
     {

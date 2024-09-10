@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/store/useAuthStore";
 import getUserInfo from "@/apis/user/useGetUserInfo";
-import { setCookie } from "@/utils/cookies";
 
 export default function CallbackPage() {
   const router = useRouter();
@@ -13,11 +12,9 @@ export default function CallbackPage() {
   const fetchUserInfoAndSetState = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("accessToken");
-    const refreshToken = urlParams.get("refreshToken");
 
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       setAccessToken(accessToken);
-      setCookie("refreshToken", refreshToken, 7);
 
       try {
         const response = await getUserInfo();

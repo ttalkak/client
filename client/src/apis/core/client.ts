@@ -4,7 +4,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, Method } from "axios";
 import qs from "qs";
 import { ApiResponse } from "@/apis/core/type";
 import useAuthStore from "@/store/useAuthStore";
-import { getCookie } from "@/utils/cookies";
+import { toast } from "react-toastify";
 
 // axios 인스턴스 생성
 // axios.create()를 사용해서 커스텀 설정을 가진 새로운 axios 인스턴스 생성
@@ -47,7 +47,6 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     // 액세스 토큰이 만료되어 401 에러가 발생한 경우(401은 엑세스토큰이 없을때, 만료되었을때 등 인증 쪽 문제가 생겼을때 반환)
     if (error.response.status === 401 && !originalRequest._retry) {
       // originalRequest에 _retry 속성 추가
@@ -57,23 +56,22 @@ axiosInstance.interceptors.response.use(
       // 재시도 하자마자 _retry는 true로 바꿔서 다음 요청부터는 더이상 재시도 하지 않도록
 
       try {
-        const refreshToken = getCookie("refreshToken");
-
-        if (!refreshToken) {
-          throw new Error("No refresh token available");
-        }
         const response = await axiosInstance.post<
           ApiResponse<{
             accessToken: string;
           }>
-        >("/auth/refresh", { refreshToken });
+        >(`/auth/refresh`);
+
         const {
           data: { accessToken },
+          success,
         } = response.data;
 
+        if (!success) {
+          throw new Error("토큰 재발급 오류");
+        }
         // 새로운 액세스 토큰 저장
         useAuthStore.getState().setAccessToken(accessToken);
-
         // 원래 요청의 헤더 업데이트
         originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
 
@@ -81,7 +79,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         // 리프레시 토큰도 만료된 경우 로그아웃 처리 & 로그인 페이지로 이동
-        console.log(refreshError, "왜 여기로 들어오냐;");
+        toast.error("인증이 만료되었습니다");
         useAuthStore.getState().logout();
         window.location.href = "/login";
         return Promise.reject(refreshError);
