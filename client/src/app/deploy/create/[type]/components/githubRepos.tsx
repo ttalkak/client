@@ -7,9 +7,15 @@ interface Commit {
   commit: {
     message: string;
     author: {
+      name: string;
+      email: string;
       date: string;
     };
   };
+  author: {
+    login: string;
+    avatar_url: string;
+  } | null;
 }
 
 import { useState, useEffect } from "react";
@@ -35,7 +41,10 @@ export default function GitHubRepos() {
   const [currentPath, setCurrentPath] = useState<string>(""); // 현재 탐색 중인 경로
   const [repoContents, setRepoContents] = useState<FileContent[]>([]); // 현재 경로의 파일/폴더 목록
   const [fileContent, setFileContent] = useState<string | null>(null); // 선택된 파일의 내용
-  const [commits, setCommits] = useState<Record<string, Commit>>({});
+  const [commits, setCommits] = useState<Record<string, Commit>>({}); // 커밋정보
+  const [branches, setBranches] = useState<string[]>([]); // 브랜치 목록
+  const [selectedBranch, setSelectedBranch] = useState<string>(""); // 선택된 브랜치
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -52,11 +61,7 @@ export default function GitHubRepos() {
 
   const githubApiKey = useAuthStore((state) => state.userInfo?.accessToken);
 
-  const {
-    data: repos,
-    isLoading: isReposLoading,
-    error: reposError,
-  } = useGetRepos();
+  const { data: repos } = useGetRepos();
 
   // 검색어 변경시 레포지토리 필터링
   useEffect(() => {
@@ -72,8 +77,9 @@ export default function GitHubRepos() {
 
   useEffect(() => {
     if (repos && repos.length > 0 && !selectedRepo) {
-      setSelectedRepo(repos[0]);
-      fetchRepoContents(repos[0]);
+      const initialRepo = repos[0];
+      setSelectedRepo(initialRepo);
+      fetchBranches(initialRepo);
     }
   }, [repos]);
 
@@ -105,15 +111,53 @@ export default function GitHubRepos() {
     }
   };
 
+  // 브랜치 목록 가져오기
+  const fetchBranches = async (repo: Repository) => {
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${repo.full_name}/branches`,
+        {
+          headers: {
+            Authorization: `Bearer ${githubApiKey}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch branches");
+      }
+
+      const branchesData = await response.json();
+      const branchNames = branchesData.map(
+        (branch: { name: string }) => branch.name
+      );
+      setBranches(branchNames);
+
+      // 기본 브랜치 설정
+      const defaultBranch = repo.default_branch || branchNames[0];
+      setSelectedBranch(defaultBranch);
+
+      // 기본 브랜치의 콘텐츠 가져오기
+      await fetchRepoContents(repo, "", defaultBranch);
+    } catch (error) {
+      console.error("Error fetching branches:", error);
+      setError("브랜치 목록 가져오기 실패");
+    }
+  };
+
   // 레포지토리 내용 조회 함수
-  const fetchRepoContents = async (repo: Repository, path: string = "") => {
+  const fetchRepoContents = async (
+    repo: Repository,
+    path: string = "",
+    branch: string = "main"
+  ) => {
     setIsLoading(true);
     setError(null);
     setFileContent(null);
 
     try {
       const response = await fetch(
-        `https://api.github.com/repos/${repo.full_name}/contents/${path}`,
+        `https://api.github.com/repos/${repo.full_name}/contents/${path}?ref=${branch}`,
         {
           headers: {
             Authorization: `Bearer ${githubApiKey}`,
@@ -128,7 +172,6 @@ export default function GitHubRepos() {
       const data: FileContent | FileContent[] = await response.json();
 
       if (Array.isArray(data)) {
-        // 폴더를 먼저, 그 다음 파일 알파벳 순 정렬
         const sortedData = data.sort((a, b) => {
           if (a.type === b.type) {
             return a.name.localeCompare(b.name);
@@ -136,17 +179,14 @@ export default function GitHubRepos() {
           return a.type === "dir" ? -1 : 1;
         });
 
-        // 디렉토리 내용 설정
         setRepoContents(sortedData);
         setSelectedRepo(repo);
         setCurrentPath(path);
 
-        // 각 파일/폴더에 대한 커밋 정보 가져오기
         sortedData.forEach((item) => {
           fetchCommits(repo, item.path);
         });
       } else {
-        // 단일 파일인 경우 파일 내용 가져오기
         await fetchFileContent(data);
         fetchCommits(repo, data.path);
       }
@@ -164,7 +204,7 @@ export default function GitHubRepos() {
 
     try {
       const response = await fetch(
-        `https://api.github.com/repos/${selectedRepo!.full_name}/contents/${file.path}`,
+        `https://api.github.com/repos/${selectedRepo!.full_name}/contents/${file.path}?ref=${selectedBranch}`,
         {
           headers: {
             Authorization: `Bearer ${githubApiKey}`,
@@ -188,10 +228,19 @@ export default function GitHubRepos() {
     }
   };
 
+  // 브랜치 변경
+  const handleBranchChange = (branch: string) => {
+    setSelectedBranch(branch);
+    setCurrentPath(""); // 브랜치 변경하면 경로도 루트로 초기화
+    if (selectedRepo) {
+      fetchRepoContents(selectedRepo, "", branch);
+    }
+  };
+
   // 파일 또는 폴더 클릭 핸들러
   const handleItemClick = (item: FileContent) => {
     if (item.type === "dir") {
-      fetchRepoContents(selectedRepo!, item.path);
+      fetchRepoContents(selectedRepo!, item.path, selectedBranch);
     } else {
       fetchFileContent(item);
     }
@@ -204,7 +253,7 @@ export default function GitHubRepos() {
         .split("/")
         .slice(0, currentPath.split("/").indexOf(pathPart) + 1)
         .join("/");
-      fetchRepoContents(selectedRepo, newPath);
+      fetchRepoContents(selectedRepo, newPath, selectedBranch);
     }
   };
 
@@ -221,15 +270,28 @@ export default function GitHubRepos() {
   // 선택완료 버튼 클릭 핸들러
   const handleSelectComplete = () => {
     if (selectedRepo && projectId && deployType) {
+      const pathToUse = currentPath || "/";
+      const latestCommit = commits[pathToUse];
+
+      let commitMessage = "No commit message available";
+      let commitUserName = selectedRepo.owner.login;
+      let commitUserProfile = selectedRepo.owner.avatar_url;
+
+      if (latestCommit) {
+        commitMessage = latestCommit.commit.message;
+        commitUserName = latestCommit.commit.author.name;
+        commitUserProfile =
+          latestCommit.author?.avatar_url || selectedRepo.owner.avatar_url;
+      }
+
       setGithubRepositoryRequest({
         repositoryName: selectedRepo.name,
         repositoryUrl: selectedRepo.html_url,
-        repositoryLastCommitMessage:
-          selectedRepo.description || "No description",
-        repositoryLastCommitUserProfile: selectedRepo.owner.avatar_url,
-        repositoryLastCommitUserName: selectedRepo.owner.login,
+        repositoryLastCommitMessage: commitMessage,
+        repositoryLastCommitUserProfile: commitUserProfile,
+        repositoryLastCommitUserName: commitUserName,
         rootDirectory: currentPath ? `./${currentPath}/` : "./",
-        branch: "main",
+        branch: selectedBranch,
       });
 
       setProjectId(parseInt(projectId));
@@ -274,7 +336,10 @@ export default function GitHubRepos() {
             <RepoList
               repos={filteredRepos}
               selectedRepo={selectedRepo}
-              onRepoSelect={fetchRepoContents}
+              onRepoSelect={(repo) => {
+                setSelectedRepo(repo);
+                fetchBranches(repo);
+              }}
             />
           )}
         </div>
@@ -291,7 +356,12 @@ export default function GitHubRepos() {
                 repoName={selectedRepo.name}
                 currentPath={currentPath}
                 onPathClick={handlePathClick}
-                onRepoClick={() => fetchRepoContents(selectedRepo)}
+                onRepoClick={() =>
+                  fetchRepoContents(selectedRepo, "", selectedBranch)
+                }
+                branches={branches}
+                selectedBranch={selectedBranch}
+                onBranchChange={handleBranchChange}
               />
               {isLoading ? (
                 <div className="flex justify-center items-center h-64">
@@ -307,7 +377,6 @@ export default function GitHubRepos() {
               ) : (
                 <FileList
                   repoContents={repoContents}
-                  selectedRepo={selectedRepo}
                   onItemClick={handleItemClick}
                   formatDate={formatDate}
                   commits={commits}

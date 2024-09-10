@@ -133,6 +133,22 @@ export default function FrontendForm() {
 
           <div>
             <label
+              htmlFor="branch"
+              className="block text-md font-semibold text-gray-700 mb-1"
+            >
+              브랜치
+            </label>
+            <input
+              id="branch"
+              type="text"
+              value={githubRepositoryRequest.branch}
+              readOnly
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label
               htmlFor="rootDir"
               className="block text-md font-semibold text-gray-700 mb-1"
             >

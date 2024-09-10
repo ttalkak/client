@@ -11,6 +11,7 @@ export interface Repository {
     id: number;
     avatar_url: string;
   };
+  default_branch: string;
 }
 
 // 파일 또는 디렉토리 정보를 위한 인터페이스

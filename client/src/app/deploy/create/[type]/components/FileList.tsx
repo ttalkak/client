@@ -1,6 +1,6 @@
 import { AiOutlineFile } from "react-icons/ai";
 import { FaFolder } from "react-icons/fa";
-import { Repository, FileContent } from "@/types/repo";
+import { FileContent } from "@/types/repo";
 
 interface Commit {
   sha: string;
@@ -14,7 +14,6 @@ interface Commit {
 
 interface FileListProps {
   repoContents: FileContent[];
-  selectedRepo: Repository;
   onItemClick: (item: FileContent) => void;
   formatDate: (dateString: string) => string;
   commits: Record<string, Commit>;
@@ -22,7 +21,6 @@ interface FileListProps {
 
 export function FileList({
   repoContents,
-  selectedRepo,
   onItemClick,
   formatDate,
   commits,
