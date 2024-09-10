@@ -16,7 +16,7 @@ interface DeployStoreState extends DeployData {
   setDatabaseCreateRequests: (data: DatabaseCreateRequest[] | null) => void;
   addDatabaseCreateRequest: (data: DatabaseCreateRequest) => void;
   removeDatabaseCreateRequest: (index: number) => void;
-  setHostingPort: (hostingPort: number) => void;
+  setHostingPort: (hostingPort: number | null) => void;
   setEnvironment: (env: string | null) => void;
   reset: () => void;
 }
@@ -35,7 +35,7 @@ const initialState: DeployData = {
     branch: "main",
   },
   databaseCreateRequests: null,
-  hostingPort: 3000,
+  hostingPort: null,
   env: null,
 };
 
@@ -69,10 +69,13 @@ const useDeployStore = create(
         })),
       setHostingPort: (hostingPort) => set({ hostingPort }),
       setEnvironment: (env) => set({ env }),
-      reset: () => {
-        set(initialState);
-        sessionStorage.removeItem("deploy-storage");
-      },
+      reset: () =>
+        set((state) => ({
+          ...initialState,
+          projectId: state.projectId,
+          serviceType: state.serviceType,
+          githubRepositoryRequest: state.githubRepositoryRequest,
+        })),
     }),
     {
       name: "deploy-storage",

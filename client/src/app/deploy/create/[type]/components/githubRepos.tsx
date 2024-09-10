@@ -44,6 +44,7 @@ export default function GitHubRepos() {
   const [commits, setCommits] = useState<Record<string, Commit>>({}); // 커밋정보
   const [branches, setBranches] = useState<string[]>([]); // 브랜치 목록
   const [selectedBranch, setSelectedBranch] = useState<string>(""); // 선택된 브랜치
+  const [isFileSelected, setIsFileSelected] = useState(false); // 파일을 볼때 선택완료 버튼 disable
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -139,6 +140,8 @@ export default function GitHubRepos() {
 
       // 기본 브랜치의 콘텐츠 가져오기
       await fetchRepoContents(repo, "", defaultBranch);
+      // 루트 경로의 커밋 정보 가져오기
+      await fetchCommits(repo, "");
     } catch (error) {
       console.error("Error fetching branches:", error);
       setError("브랜치 목록 가져오기 실패");
@@ -201,6 +204,7 @@ export default function GitHubRepos() {
   // 파일 내용 가져오기 함수
   const fetchFileContent = async (file: FileContent) => {
     setIsLoading(true);
+    setIsFileSelected(true);
 
     try {
       const response = await fetch(
@@ -232,6 +236,7 @@ export default function GitHubRepos() {
   const handleBranchChange = (branch: string) => {
     setSelectedBranch(branch);
     setCurrentPath(""); // 브랜치 변경하면 경로도 루트로 초기화
+    setIsFileSelected(false); // 브랜치 변경하면 파일 선택 상태 false
     if (selectedRepo) {
       fetchRepoContents(selectedRepo, "", branch);
     }
@@ -241,6 +246,7 @@ export default function GitHubRepos() {
   const handleItemClick = (item: FileContent) => {
     if (item.type === "dir") {
       fetchRepoContents(selectedRepo!, item.path, selectedBranch);
+      setIsFileSelected(false); // 디렉토리를 선택하면 파일 선택 상태 false
     } else {
       fetchFileContent(item);
     }
@@ -254,6 +260,7 @@ export default function GitHubRepos() {
         .slice(0, currentPath.split("/").indexOf(pathPart) + 1)
         .join("/");
       fetchRepoContents(selectedRepo, newPath, selectedBranch);
+      setIsFileSelected(false); // 경로를 변경하면 파일 선택 상태 false
     }
   };
 
@@ -271,7 +278,7 @@ export default function GitHubRepos() {
   const handleSelectComplete = () => {
     if (selectedRepo && projectId && deployType) {
       const pathToUse = currentPath || "/";
-      const latestCommit = commits[pathToUse];
+      const latestCommit = commits[pathToUse] || commits[""];
 
       let commitMessage = "No commit message available";
       let commitUserName = selectedRepo.owner.login;
@@ -308,8 +315,7 @@ export default function GitHubRepos() {
   return (
     <div className="container mx-auto font-sans">
       <h2 className="text-2xl font-bold mb-4">
-        {deployType === "FRONTEND" ? "프론트엔드" : "백엔드"} 코드가 포함된
-        저장소를 선택해주세요
+        저장소, 브랜치, 루트 디렉토리를 선택해주세요
       </h2>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <div className="flex bg-white rounded-lg border">
@@ -392,6 +398,7 @@ export default function GitHubRepos() {
           size="medium"
           primary
           onClick={handleSelectComplete}
+          disabled={isFileSelected}
         />
       </div>
     </div>

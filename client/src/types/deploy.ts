@@ -49,6 +49,6 @@ export interface DeployData {
   serviceType: DeployType;
   githubRepositoryRequest: GithubRepositoryRequest;
   databaseCreateRequests: DatabaseCreateRequest[] | null;
-  hostingPort: number;
+  hostingPort: number | null;
   env: string | null;
 }

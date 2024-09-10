@@ -17,13 +17,8 @@ export default function FrontendForm() {
   const { mutate: createDeploy } = useCreateDeploy();
   const router = useRouter();
 
-  const {
-    projectId,
-    serviceType,
-    githubRepositoryRequest,
-    databaseCreateRequests,
-    reset,
-  } = useDeployStore();
+  const { projectId, serviceType, githubRepositoryRequest, reset } =
+    useDeployStore();
 
   const {
     control,
@@ -53,7 +48,7 @@ export default function FrontendForm() {
         framework: data.framework,
         serviceType: serviceType!,
         githubRepositoryRequest,
-        databaseCreateRequests,
+        databaseCreateRequests: null,
         hostingPort: Number(data.port),
         env: envString,
       },

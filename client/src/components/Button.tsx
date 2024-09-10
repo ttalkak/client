@@ -6,6 +6,7 @@ interface ButtonProps {
   label: string;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   label,
   onClick,
   type = "button",
+  disabled,
 }: ButtonProps) {
   const baseStyles = "font-bold rounded-md";
   const sizeStyled = {
@@ -25,11 +27,16 @@ export default function Button({
     ? "bg-black text-white"
     : "bg-white text-black border border-gray-400";
 
+  const disabledStyles = disabled
+    ? "opacity-50 cursor-not-allowed"
+    : "hover:opacity-80";
+
   return (
     <button
       type={type}
-      className={`${baseStyles} ${sizeStyled[size]} ${colorStyles}`}
+      className={`${baseStyles} ${sizeStyled[size]} ${colorStyles} ${disabledStyles}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {label}
     </button>
