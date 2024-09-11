@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/store/useAuthStore";
 import getUserInfo from "@/apis/user/useGetUserInfo";
-
+import { toast } from "react-toastify";
 export default function CallbackPage() {
   const router = useRouter();
   const { setAccessToken, setUserInfo, setIsLogin } = useAuthStore();
@@ -22,9 +22,11 @@ export default function CallbackPage() {
         setUserInfo(userInfo);
         console.log(response);
         setIsLogin(true);
+
         router.push("/");
+        toast.success("로그인에 성공했습니다.");
       } catch (error) {
-        console.error("유저 정보 요청 실패:", error);
+        toast.success("로그인에 실패했습니다.");
         useAuthStore.getState().logout();
         router.push("/login");
       }
@@ -36,7 +38,6 @@ export default function CallbackPage() {
 
   useEffect(() => {
     fetchUserInfoAndSetState();
-  }, []);
-
+  }, [router, setAccessToken, setUserInfo, setIsLogin]);
   return <div>로그인중</div>;
 }

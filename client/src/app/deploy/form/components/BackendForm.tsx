@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import useDeployStore from "@/store/useDeployStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import { DatabaseType } from "@/types/deploy";
 import { useRouter } from "next/navigation";
 
+interface DatabaseForm {
+  databaseType: DatabaseType;
+  databasePort: string;
+  databaseUsername?: string;
+  databasePassword?: string;
+}
+
 interface FormData {
   port: string;
   rootDir: string;
   useDatabase: boolean;
-  databaseType?: DatabaseType;
-  databasePort?: string;
-  databaseUsername?: string;
-  databasePassword?: string;
+  databases: DatabaseForm[];
 }
 
 export default function BackendForm() {
@@ -33,48 +37,40 @@ export default function BackendForm() {
     defaultValues: {
       port: "8080",
       useDatabase: false,
+      databases: [{ databaseType: "MYSQL", databasePort: "" }],
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "databases",
+  });
+
   const useDatabase = watch("useDatabase");
-  const databaseType = useWatch({ control, name: "databaseType" }) as
-    | DatabaseType
-    | undefined;
+  const databaseTypes = useWatch({
+    control,
+    name: "databases",
+    defaultValue: [],
+  });
 
   useEffect(() => {
-    if (useDatabase) {
-      setValue("databaseType", "MYSQL");
-      setValue("databasePort", undefined);
-    } else {
-      setValue("databaseType", undefined);
-      setValue("databasePort", undefined);
-      setValue("databaseUsername", undefined);
-      setValue("databasePassword", undefined);
+    if (!useDatabase) {
+      setValue("databases", []);
+    } else if (fields.length === 0) {
+      append({ databaseType: "MYSQL", databasePort: "" });
     }
-  }, [useDatabase, setValue]);
-
-  useEffect(() => {
-    if (databaseType === "REDIS") {
-      setValue("databaseUsername", undefined);
-      setValue("databasePassword", undefined);
-    }
-  }, [databaseType, setValue]);
+  }, [useDatabase, setValue, fields.length, append]);
 
   const onSubmit = (data: FormData) => {
-    const databaseCreateRequests =
-      data.useDatabase && data.databaseType
-        ? [
-            {
-              databaseName: data.databaseType,
-              databasePort: Number(data.databasePort),
-              username:
-                data.databaseType === "REDIS"
-                  ? ""
-                  : data.databaseUsername || "",
-              password: data.databasePassword || "",
-            },
-          ]
-        : null;
+    const databaseCreateRequests = data.useDatabase
+      ? data.databases.map((db) => ({
+          databaseName: db.databaseType,
+          databasePort: Number(db.databasePort),
+          username:
+            db.databaseType === "REDIS" ? "" : db.databaseUsername || "",
+          password: db.databasePassword || "",
+        }))
+      : null;
 
     createDeploy(
       {
@@ -202,123 +198,168 @@ export default function BackendForm() {
 
           {useDatabase && (
             <div className="space-y-4">
-              <Controller
-                name="databaseType"
-                control={control}
-                render={({ field }) => (
-                  <div>
-                    <label
-                      htmlFor="databaseType"
-                      className="block text-md font-semibold text-gray-700 mb-1"
-                    >
-                      데이터베이스
-                    </label>
-                    <select
-                      {...field}
-                      id="databaseType"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="MYSQL">MySQL</option>
-                      <option value="MARIADB">MariaDB</option>
-                      <option value="MONGODB">MongoDB</option>
-                      <option value="POSTGRESQL">PostgreSQL</option>
-                      <option value="REDIS">Redis</option>
-                    </select>
-                  </div>
-                )}
-              />
-
-              {databaseType !== "REDIS" && (
-                <Controller
-                  name="databaseUsername"
-                  control={control}
-                  rules={{
-                    pattern: {
-                      value: /^[A-Za-z0-9]+$/,
-                      message: "영어와 숫자만 입력 가능합니다.",
-                    },
-                  }}
-                  render={({ field }) => (
-                    <div>
-                      <label
-                        htmlFor="databaseUsername"
-                        className="block text-md font-semibold text-gray-700 mb-1"
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="p-4 border border-gray-300 rounded-md"
+                >
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-lg font-semibold">
+                      Database {index + 1}
+                    </h3>
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="py-2 px-4 border border-red-500 text-red-500 rounded-md focus:outline-none"
                       >
-                        데이터베이스 아이디
-                      </label>
-                      <input
-                        {...field}
-                        id="databaseUsername"
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      {errors.databaseUsername && (
-                        <p className="text-red-500 text-sm mt-2">
-                          {errors.databaseUsername.message}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                />
-              )}
-
-              <Controller
-                name="databasePassword"
-                control={control}
-                render={({ field }) => (
-                  <div>
-                    <label
-                      htmlFor="databasePassword"
-                      className="block text-md font-semibold text-gray-700 mb-1"
-                    >
-                      데이터베이스 비밀번호
-                    </label>
-                    <input
-                      {...field}
-                      id="databasePassword"
-                      type="password"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                )}
-              />
-
-              <Controller
-                name="databasePort"
-                control={control}
-                rules={{
-                  validate: (value) => {
-                    if (useDatabase) {
-                      if (!value) return "포트번호를 입력해주세요.";
-                      if (!/^\d+$/.test(value)) return "숫자만 입력가능합니다.";
-                    }
-                    return true;
-                  },
-                }}
-                render={({ field, fieldState: { error } }) => (
-                  <div>
-                    <label
-                      htmlFor="databasePort"
-                      className="block text-md font-semibold text-gray-700 mb-1"
-                    >
-                      데이터베이스 포트번호
-                    </label>
-                    <input
-                      {...field}
-                      id="databasePort"
-                      type="number"
-                      min="0"
-                      max="65535"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {error && (
-                      <p className="text-red-500 text-sm mt-2">
-                        {error.message}
-                      </p>
+                        삭제
+                      </button>
                     )}
                   </div>
-                )}
-              />
+                  <div className="space-y-4">
+                    <Controller
+                      name={`databases.${index}.databaseType`}
+                      control={control}
+                      render={({ field }) => (
+                        <div>
+                          <label
+                            htmlFor={`databases.${index}.databaseType`}
+                            className="block text-md font-semibold text-gray-700 mb-1"
+                          >
+                            데이터베이스
+                          </label>
+                          <select
+                            {...field}
+                            id={`databases.${index}.databaseType`}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="MYSQL">MySQL</option>
+                            <option value="MARIADB">MariaDB</option>
+                            <option value="MONGODB">MongoDB</option>
+                            <option value="POSTGRESQL">PostgreSQL</option>
+                            <option value="REDIS">Redis</option>
+                          </select>
+                        </div>
+                      )}
+                    />
+
+                    {databaseTypes[index]?.databaseType !== "REDIS" && (
+                      <Controller
+                        name={`databases.${index}.databaseUsername`}
+                        control={control}
+                        rules={{
+                          required: "데이터베이스 아이디를 입력해주세요.",
+                          pattern: {
+                            value: /^[A-Za-z0-9]+$/,
+                            message: "영어와 숫자만 입력 가능합니다.",
+                          },
+                        }}
+                        render={({ field }) => (
+                          <div>
+                            <label
+                              htmlFor={`databases.${index}.databaseUsername`}
+                              className="block text-md font-semibold text-gray-700 mb-1"
+                            >
+                              데이터베이스 아이디
+                            </label>
+                            <input
+                              {...field}
+                              id={`databases.${index}.databaseUsername`}
+                              type="text"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            {errors.databases?.[index]?.databaseUsername && (
+                              <p className="text-red-500 text-sm mt-2">
+                                {
+                                  errors.databases[index].databaseUsername
+                                    ?.message
+                                }
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      />
+                    )}
+
+                    <Controller
+                      name={`databases.${index}.databasePassword`}
+                      control={control}
+                      rules={{
+                        required: "데이터베이스 비밀번호를 입력해주세요.",
+                      }}
+                      render={({ field }) => (
+                        <div>
+                          <label
+                            htmlFor={`databases.${index}.databasePassword`}
+                            className="block text-md font-semibold text-gray-700 mb-1"
+                          >
+                            데이터베이스 비밀번호
+                          </label>
+                          <input
+                            {...field}
+                            id={`databases.${index}.databasePassword`}
+                            type="password"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          {errors.databases?.[index]?.databasePassword && (
+                            <p className="text-red-500 text-sm mt-2">
+                              {
+                                errors.databases[index].databasePassword
+                                  ?.message
+                              }
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    />
+
+                    <Controller
+                      name={`databases.${index}.databasePort`}
+                      control={control}
+                      rules={{
+                        required: "포트번호를 입력해주세요.",
+                        pattern: {
+                          value: /^\d+$/,
+                          message: "숫자만 입력가능합니다.",
+                        },
+                      }}
+                      render={({ field, fieldState: { error } }) => (
+                        <div>
+                          <label
+                            htmlFor={`databases.${index}.databasePort`}
+                            className="block text-md font-semibold text-gray-700 mb-1"
+                          >
+                            데이터베이스 포트번호
+                          </label>
+                          <input
+                            {...field}
+                            id={`databases.${index}.databasePort`}
+                            type="number"
+                            min="0"
+                            max="65535"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          {error && (
+                            <p className="text-red-500 text-sm mt-2">
+                              {error.message}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  append({ databaseType: "MYSQL", databasePort: "" })
+                }
+                className="mt-4 py-2 px-4 border text-black rounded-md focus:outline-none"
+              >
+                추가
+              </button>
             </div>
           )}
         </div>
@@ -327,7 +368,7 @@ export default function BackendForm() {
         <button
           type="submit"
           form="form"
-          className="py-2 px-4 border rounded-md text-md font-medium text-black focus:outline-none"
+          className="py-2 px-4 bg-black border rounded-md text-md font-medium text-white focus:outline-none"
         >
           다음
         </button>
