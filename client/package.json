@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@octokit/rest": "^21.0.2",
     "@tanstack/react-query": "^5.54.1",
     "axios": "^1.7.7",
     "next": "14.2.6",
