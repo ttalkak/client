@@ -4,10 +4,7 @@ import { toast } from "react-toastify";
 
 const deleteDeploy = async (deploymentId: number): Promise<void> => {
   const response = await client.delete({
-    url: "deployment",
-    data: {
-      deploymentId: deploymentId,
-    },
+    url: `/deployment/${deploymentId}`,
   });
 
   if (!response.success) {

@@ -38,14 +38,14 @@ export default function NavBar() {
     isLogin ? (
       <button
         onClick={handleLogout}
-        className="bg-black px-3 py-1 rounded-md font-bold text-white"
+        className="bg-black px-3 py-2 rounded-md font-bold text-white"
       >
         로그아웃
       </button>
     ) : (
       <Link
         href={routes.login}
-        className="bg-black px-3 py-1 rounded-md font-bold text-white"
+        className="bg-black px-3 py-2 rounded-md font-bold text-white"
       >
         로그인
       </Link>

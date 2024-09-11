@@ -39,8 +39,8 @@ export default function DeploymentStatus({
           <div className="flex justify-between">
             <span className="text-md">상태: {deploy.status}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-gray-500">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500 max-w-[60%] truncate">
               {deploy.repositoryLastCommitUserName} -{" "}
               {deploy.repositoryLastCommitMessage}
             </span>
