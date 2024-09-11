@@ -24,7 +24,6 @@ export default function DeploymentStatus({
   };
 
   if (deploy) {
-    const hosting = deploy.hostingResponses[0]; // 첫 번째 호스팅 정보 사용
     return (
       <>
         <div className="flex flex-col gap-4 border rounded-lg p-6">

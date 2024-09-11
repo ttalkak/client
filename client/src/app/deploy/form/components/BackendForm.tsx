@@ -3,7 +3,9 @@
 import { useEffect } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import useDeployStore from "@/store/useDeployStore";
+import useGitHubWebhookStore from "@/store/useGitHubWebhookStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
+import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
 import { DatabaseType } from "@/types/deploy";
 import { useRouter } from "next/navigation";
 
@@ -24,8 +26,19 @@ interface FormData {
 export default function BackendForm() {
   const router = useRouter();
   const { mutate: createDeploy } = useCreateDeploy();
-  const { projectId, serviceType, githubRepositoryRequest, reset } =
-    useDeployStore();
+  const { mutate: createWebhook } = useCreateWebhook();
+
+  const {
+    projectId,
+    serviceType,
+    githubRepositoryRequest,
+    reset: resetDeployStore,
+  } = useDeployStore();
+  const {
+    owner,
+    repositoryName,
+    reset: resetGitHubWebhookStore,
+  } = useGitHubWebhookStore();
 
   const {
     control,
@@ -83,8 +96,21 @@ export default function BackendForm() {
         env: null,
       },
       {
-        onSuccess: () => {
-          reset();
+        onSuccess: (responseData) => {
+          // 웹훅 생성
+          createWebhook(
+            {
+              owner,
+              repo: repositoryName,
+              webhookUrl: responseData.webhookUrl,
+            },
+            {
+              onSuccess: () => {
+                resetGitHubWebhookStore();
+              },
+            }
+          );
+          resetDeployStore();
           router.push(`/projects/${projectId}`);
         },
       }

@@ -1,27 +1,8 @@
 "use client";
 
-type DeployType = "FRONTEND" | "BACKEND" | null;
-
-interface Commit {
-  sha: string;
-  commit: {
-    message: string;
-    author: {
-      name: string;
-      email: string;
-      date: string;
-    };
-  };
-  author: {
-    login: string;
-    avatar_url: string;
-  } | null;
-}
-
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-
-import { Repository, FileContent } from "@/types/repo";
+import { Repository, FileContent, Commit, DeployType } from "@/types/repo";
 import { SearchBar } from "@/app/deploy/create/[type]/components/SearchBar";
 import { RepoList } from "@/app/deploy/create/[type]/components/RepoList";
 import { DirectoryNavigator } from "@/app/deploy/create/[type]/components/DirectoryNavigator";
@@ -31,6 +12,7 @@ import useGetRepos from "@/apis/repo/useGetRepos";
 import Button from "@/components/Button";
 import useDeployStore from "@/store/useDeployStore";
 import useAuthStore from "@/store/useAuthStore";
+import useGitHubWebhookStore from "@/store/useGitHubWebhookStore";
 
 export default function GitHubRepos() {
   const [filteredRepos, setFilteredRepos] = useState<Repository[]>([]); // 검색 필터링된 레포지토리 목록
@@ -57,16 +39,15 @@ export default function GitHubRepos() {
     ? (deployTypeMatch[1].toUpperCase() as DeployType)
     : null;
 
+  const githubApiKey = useAuthStore((state) => state.userInfo?.accessToken);
   const { setGithubRepositoryRequest, setProjectId, setServiceType } =
     useDeployStore();
-
-  const githubApiKey = useAuthStore((state) => state.userInfo?.accessToken);
+  const { setOwner, setRepositoryName } = useGitHubWebhookStore();
 
   const { data: repos } = useGetRepos();
 
   // 검색어 변경시 레포지토리 필터링
   useEffect(() => {
-    // setSelectedRepo(null);
     if (repos) {
       setFilteredRepos(
         repos.filter((repo) =>
@@ -303,6 +284,9 @@ export default function GitHubRepos() {
 
       setProjectId(parseInt(projectId));
       setServiceType(deployType);
+
+      setOwner(selectedRepo.owner.login);
+      setRepositoryName(selectedRepo.name);
 
       router.push(`/deploy/form?projectId=${projectId}&type=${deployType}`);
     }

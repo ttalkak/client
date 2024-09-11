@@ -23,3 +23,23 @@ export interface FileContent {
   download_url?: string;
   sha: string;
 }
+
+// 커밋 정보를 위한 인터페이스
+export interface Commit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    };
+  };
+  author: {
+    login: string;
+    avatar_url: string;
+  } | null;
+}
+
+// 배포 유형을 위한 타입
+export type DeployType = "FRONTEND" | "BACKEND" | null;

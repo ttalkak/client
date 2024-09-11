@@ -4,7 +4,9 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import { LuMinusCircle } from "react-icons/lu";
 import useDeployStore from "@/store/useDeployStore";
+import useGitHubWebhookStore from "@/store/useGitHubWebhookStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
+import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
 import { useRouter } from "next/navigation";
 
 interface FormData {
@@ -14,11 +16,21 @@ interface FormData {
 }
 
 export default function FrontendForm() {
-  const { mutate: createDeploy } = useCreateDeploy();
   const router = useRouter();
+  const { mutate: createDeploy } = useCreateDeploy();
+  const { mutate: createWebhook } = useCreateWebhook();
 
-  const { projectId, serviceType, githubRepositoryRequest, reset } =
-    useDeployStore();
+  const {
+    projectId,
+    serviceType,
+    githubRepositoryRequest,
+    reset: resetDelpoyStore,
+  } = useDeployStore();
+  const {
+    owner,
+    repositoryName,
+    reset: resetGitHubWebhookStore,
+  } = useGitHubWebhookStore();
 
   const {
     control,
@@ -53,8 +65,21 @@ export default function FrontendForm() {
         env: envString,
       },
       {
-        onSuccess: () => {
-          reset();
+        onSuccess: (responseData) => {
+          // 웹훅 생성
+          createWebhook(
+            {
+              owner,
+              repo: repositoryName,
+              webhookUrl: responseData.webhookUrl,
+            },
+            {
+              onSuccess: () => {
+                resetGitHubWebhookStore();
+              },
+            }
+          );
+          resetDelpoyStore();
           router.push(`/projects/${projectId}`);
         },
       }

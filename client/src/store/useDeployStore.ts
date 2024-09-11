@@ -24,7 +24,7 @@ interface DeployStoreState extends DeployData {
 const initialState: DeployData = {
   projectId: 0,
   framework: null,
-  serviceType: "FRONTEND",
+  serviceType: "",
   githubRepositoryRequest: {
     repositoryName: "",
     repositoryUrl: "",
@@ -32,7 +32,7 @@ const initialState: DeployData = {
     repositoryLastCommitUserProfile: "",
     repositoryLastCommitUserName: "",
     rootDirectory: "./",
-    branch: "main",
+    branch: "",
   },
   databaseCreateRequests: null,
   hostingPort: null,
@@ -69,13 +69,7 @@ const useDeployStore = create(
         })),
       setHostingPort: (hostingPort) => set({ hostingPort }),
       setEnvironment: (env) => set({ env }),
-      reset: () =>
-        set((state) => ({
-          ...initialState,
-          projectId: state.projectId,
-          serviceType: state.serviceType,
-          githubRepositoryRequest: state.githubRepositoryRequest,
-        })),
+      reset: () => set(initialState),
     }),
     {
       name: "deploy-storage",

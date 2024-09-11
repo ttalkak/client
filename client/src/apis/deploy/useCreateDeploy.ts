@@ -7,17 +7,24 @@ import {
 import { toast } from "react-toastify";
 import { DeployData } from "@/types/deploy";
 
-const createDeploy = async (data: DeployData): Promise<void> => {
+interface CreateDeployResponse {
+  webhookUrl: string;
+}
+
+const createDeploy = async (
+  data: DeployData
+): Promise<CreateDeployResponse> => {
   const response = await client.post({
     url: "deployment",
     data,
   });
   if (!response.success)
     throw new Error(response.message || "배포 생성에 실패했습니다.");
+  return response.data;
 };
 
 const useCreateDeploy = (): UseMutationResult<
-  void,
+  CreateDeployResponse,
   Error,
   DeployData,
   unknown

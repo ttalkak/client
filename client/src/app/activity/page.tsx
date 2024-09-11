@@ -23,7 +23,7 @@ export default function ActivityPage() {
   const owner = "ljjunh";
   const repo = "study";
   const webhookUrl =
-    "https://webhook.site/1d3be0df-735b-49c1-8511-e3e051f5fc66";
+    "https://webhook.site/57cbbd96-6668-4a9c-a46f-b6b9d6ea00c0";
 
   useEffect(() => {
     fetchWebhooks();
