@@ -14,7 +14,8 @@ import { getProjectsParams, Project } from "@/types/project";
 export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [sortOrder, setSortOrder] = useState("createdAt,desc");
+  const [sortOrder, setSortOrder] = useState("createdAt");
+  const [direction, setDirection] = useState("desc");
   const [currentPage, setCurrentPage] = useState(0);
 
   const userInfo = useAuthStore((state) => state.userInfo);
@@ -24,6 +25,7 @@ export default function ProjectsPage() {
     page: currentPage,
     size: 9,
     sort: sortOrder,
+    direction: direction.toUpperCase(),
     userId: userInfo?.userId ?? 0, // 타입때문에 임시조치. 비로그인 접근을 막아야됨
     searchKeyword,
   };
@@ -57,11 +59,11 @@ export default function ProjectsPage() {
         <div className="relative">
           <select
             className="appearance-none bg-white border rounded-lg px-4 py-2 pr-8 text-gray-700"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            value={direction}
+            onChange={(e) => setDirection(e.target.value)}
           >
-            <option value="createdAt,desc">최신순</option>
-            <option value="createdAt,asc">오래된순</option>
+            <option value="desc">최신순</option>
+            <option value="asc">오래된순</option>
           </select>
           <FaSort className="absolute right-3 top-3 text-gray-400" />
         </div>

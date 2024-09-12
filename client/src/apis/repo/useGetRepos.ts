@@ -15,7 +15,7 @@ const getRepos = async (githubApiKey: string): Promise<Repository[]> => {
 };
 
 const useGetRepos = () => {
-  const githubApiKey = useAuthStore((state) => state.userInfo?.accessToken);
+  const githubApiKey = useAuthStore.getState().userInfo?.accessToken;
 
   return useQuery({
     queryKey: ["repos", githubApiKey] as const,

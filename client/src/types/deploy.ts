@@ -8,7 +8,7 @@ export interface Hosting {
 export interface Deployment {
   deploymentId: number;
   projectId: number;
-  status: "STOPPED" | "RUNNING" | "DELETED" | "PENDING";
+  status: DeployStatus;
   serviceType: "FRONTEND" | "BACKEND";
   repositoryName: string;
   repositoryUrl: string;
@@ -19,6 +19,11 @@ export interface Deployment {
 }
 
 export type DeployType = "FRONTEND" | "BACKEND" | "";
+
+export type DeployStatus = "STOPPED" | "RUNNING" | "PENDING";
+
+export type DeployCommand = "START" | "RESTART" | "STOP";
+
 export type DatabaseType =
   | "MYSQL"
   | "MARIADB"

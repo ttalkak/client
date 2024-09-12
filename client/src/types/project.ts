@@ -18,6 +18,7 @@ export interface getProjectsParams {
   page: number;
   size: number;
   sort: string;
+  direction: string;
   userId: number;
   searchKeyword?: string;
 }
