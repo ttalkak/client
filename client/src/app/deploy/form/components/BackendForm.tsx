@@ -3,11 +3,10 @@
 import { useEffect } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import useDeployStore from "@/store/useDeployStore";
-import useGitHubWebhookStore from "@/store/useGitHubWebhookStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
-import { DatabaseType } from "@/types/deploy";
-import { useRouter } from "next/navigation";
+import { DatabaseType, DeployType } from "@/types/deploy";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface DatabaseForm {
   databaseType: DatabaseType;
@@ -24,21 +23,21 @@ interface FormData {
 }
 
 export default function BackendForm() {
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const projectId = searchParams.get("projectId"); // 프로젝트 ID
+  const typeParam = searchParams.get("type");
+  const serviceType: DeployType =
+    typeParam === "FRONTEND" || typeParam === "BACKEND" ? typeParam : null;
+
   const { mutate: createDeploy } = useCreateDeploy();
   const { mutate: createWebhook } = useCreateWebhook();
 
   const {
-    projectId,
-    serviceType,
     githubRepositoryRequest,
+    versionRequest,
     reset: resetDeployStore,
   } = useDeployStore();
-  const {
-    owner,
-    repositoryName,
-    reset: resetGitHubWebhookStore,
-  } = useGitHubWebhookStore();
 
   const {
     control,
@@ -87,29 +86,23 @@ export default function BackendForm() {
 
     createDeploy(
       {
-        projectId,
-        framework: "SPRINGBOOT",
-        serviceType: serviceType!,
-        githubRepositoryRequest,
-        databaseCreateRequests,
+        projectId: Number(projectId),
+        serviceType: serviceType,
         hostingPort: Number(data.port),
+        githubRepositoryRequest,
+        versionRequest,
+        databaseCreateRequests,
         env: null,
+        framework: "SPRINGBOOT",
       },
       {
         onSuccess: (responseData) => {
           // 웹훅 생성
-          createWebhook(
-            {
-              owner,
-              repo: repositoryName,
-              webhookUrl: responseData.webhookUrl,
-            },
-            {
-              onSuccess: () => {
-                resetGitHubWebhookStore();
-              },
-            }
-          );
+          createWebhook({
+            owner: githubRepositoryRequest.repositoryOwner,
+            repo: githubRepositoryRequest.repositoryName,
+            webhookUrl: responseData.webhookUrl,
+          });
           resetDeployStore();
           router.push(`/projects/${projectId}`);
         },

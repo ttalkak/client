@@ -18,7 +18,7 @@ export interface Deployment {
   hostingResponses: Hosting[];
 }
 
-export type DeployType = "FRONTEND" | "BACKEND" | "";
+export type DeployType = "FRONTEND" | "BACKEND" | null;
 
 export type DeployStatus = "STOPPED" | "RUNNING" | "PENDING";
 
@@ -33,14 +33,19 @@ export type DatabaseType =
 export type Framework = "REACT" | "NEXTJS" | "SPRINGBOOT" | null;
 
 export interface GithubRepositoryRequest {
+  repositoryOwner: string;
   repositoryName: string;
   repositoryUrl: string;
-  repositoryLastCommitMessage: string;
-  repositoryLastCommitUserProfile: string;
-  repositoryLastCommitUserName: string;
   rootDirectory: string;
   branch: string;
 }
+
+export interface VersionRequest {
+  repositoryLastCommitMessage: string;
+  repositoryLastCommitUserProfile: string;
+  repositoryLastCommitUserName: string;
+}
+
 export interface DatabaseCreateRequest {
   databaseName: DatabaseType;
   databasePort: number;
@@ -49,11 +54,21 @@ export interface DatabaseCreateRequest {
 }
 
 export interface DeployData {
-  projectId: number;
-  framework: Framework;
-  serviceType: DeployType;
-  githubRepositoryRequest: GithubRepositoryRequest;
-  databaseCreateRequests: DatabaseCreateRequest[] | null;
   hostingPort: number | null;
+  githubRepositoryRequest: GithubRepositoryRequest;
+  versionRequest: VersionRequest | null;
+  databaseCreateRequests: DatabaseCreateRequest[] | null;
   env: string | null;
+  framework: Framework;
+}
+
+export interface createDeployRequest {
+  projectId: number;
+  serviceType: DeployType;
+  hostingPort: number | null;
+  githubRepositoryRequest: GithubRepositoryRequest;
+  versionRequest: VersionRequest | null;
+  databaseCreateRequests: DatabaseCreateRequest[] | null;
+  env: string | null;
+  framework: Framework;
 }
