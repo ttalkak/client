@@ -72,3 +72,27 @@ export interface createDeployRequest {
   env: string | null;
   framework: Framework;
 }
+
+export interface DatabaseResponse {
+  databaseId: number;
+  databaseType: string;
+  username: string;
+  password: string;
+  port: number;
+}
+
+export interface GetDeployResponse {
+  deploymentId: number;
+  projectId: number;
+  status: string;
+  serviceType: string;
+  repositoryName: string;
+  repositoryUrl: string;
+  branch: string;
+  repositoryOwner: string;
+  framework: string;
+  version: null | any[];
+  envs: any[];
+  hostingResponse: Hosting;
+  databaseResponse: DatabaseResponse[];
+}
