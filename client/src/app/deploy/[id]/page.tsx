@@ -3,7 +3,7 @@
 import useGetDeploy from "@/apis/deploy/useGetDeploy";
 import { useParams } from "next/navigation";
 
-export default function deployDetailPage() {
+export default function DeployDetailPage() {
   const params = useParams();
   const deployId = params.id;
 
