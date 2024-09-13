@@ -4,10 +4,10 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 import { LuMinusCircle } from "react-icons/lu";
 import useDeployStore from "@/store/useDeployStore";
-import useGitHubWebhookStore from "@/store/useGitHubWebhookStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { DeployType } from "@/types/deploy";
 
 interface FormData {
   framework: "REACT" | "NEXTJS";
@@ -16,21 +16,21 @@ interface FormData {
 }
 
 export default function FrontendForm() {
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const projectId = searchParams.get("projectId"); // 프로젝트 ID
+  const typeParam = searchParams.get("type");
+  const serviceType: DeployType =
+    typeParam === "FRONTEND" || typeParam === "BACKEND" ? typeParam : null;
+
   const { mutate: createDeploy } = useCreateDeploy();
   const { mutate: createWebhook } = useCreateWebhook();
 
   const {
-    projectId,
-    serviceType,
     githubRepositoryRequest,
+    versionRequest,
     reset: resetDelpoyStore,
   } = useDeployStore();
-  const {
-    owner,
-    repositoryName,
-    reset: resetGitHubWebhookStore,
-  } = useGitHubWebhookStore();
 
   const {
     control,
@@ -56,29 +56,23 @@ export default function FrontendForm() {
 
     createDeploy(
       {
-        projectId,
-        framework: data.framework,
-        serviceType: serviceType!,
-        githubRepositoryRequest,
-        databaseCreateRequests: null,
+        projectId: Number(projectId),
+        serviceType: serviceType,
         hostingPort: Number(data.port),
+        githubRepositoryRequest,
+        versionRequest,
+        databaseCreateRequests: null,
         env: envString,
+        framework: data.framework,
       },
       {
         onSuccess: (responseData) => {
           // 웹훅 생성
-          createWebhook(
-            {
-              owner,
-              repo: repositoryName,
-              webhookUrl: responseData.webhookUrl,
-            },
-            {
-              onSuccess: () => {
-                resetGitHubWebhookStore();
-              },
-            }
-          );
+          createWebhook({
+            owner: githubRepositoryRequest.repositoryOwner,
+            repo: githubRepositoryRequest.repositoryName,
+            webhookUrl: responseData.webhookUrl,
+          });
           resetDelpoyStore();
           router.push(`/projects/${projectId}`);
         },

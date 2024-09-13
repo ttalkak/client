@@ -5,14 +5,14 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { DeployData } from "@/types/deploy";
+import { createDeployRequest } from "@/types/deploy";
 
 interface CreateDeployResponse {
   webhookUrl: string;
 }
 
 const createDeploy = async (
-  data: DeployData
+  data: createDeployRequest
 ): Promise<CreateDeployResponse> => {
   const response = await client.post({
     url: "deployment",
@@ -26,7 +26,7 @@ const createDeploy = async (
 const useCreateDeploy = (): UseMutationResult<
   CreateDeployResponse,
   Error,
-  DeployData,
+  createDeployRequest,
   unknown
 > => {
   const queryClient = useQueryClient();

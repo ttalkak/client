@@ -12,7 +12,6 @@ import useGetRepos from "@/apis/repo/useGetRepos";
 import Button from "@/components/Button";
 import useDeployStore from "@/store/useDeployStore";
 import useAuthStore from "@/store/useAuthStore";
-import useGitHubWebhookStore from "@/store/useGitHubWebhookStore";
 
 export default function GitHubRepos() {
   const [filteredRepos, setFilteredRepos] = useState<Repository[]>([]); // 검색 필터링된 레포지토리 목록
@@ -40,9 +39,7 @@ export default function GitHubRepos() {
     : null;
 
   const githubApiKey = useAuthStore((state) => state.userInfo?.accessToken);
-  const { setGithubRepositoryRequest, setProjectId, setServiceType } =
-    useDeployStore();
-  const { setOwner, setRepositoryName } = useGitHubWebhookStore();
+  const { setGithubRepositoryRequest, setVersionRequest } = useDeployStore();
 
   const { data: repos } = useGetRepos();
 
@@ -273,20 +270,18 @@ export default function GitHubRepos() {
       }
 
       setGithubRepositoryRequest({
+        repositoryOwner: selectedRepo.owner.login,
         repositoryName: selectedRepo.name,
         repositoryUrl: selectedRepo.html_url,
-        repositoryLastCommitMessage: commitMessage,
-        repositoryLastCommitUserProfile: commitUserProfile,
-        repositoryLastCommitUserName: commitUserName,
         rootDirectory: currentPath ? `./${currentPath}/` : "./",
         branch: selectedBranch,
       });
 
-      setProjectId(parseInt(projectId));
-      setServiceType(deployType);
-
-      setOwner(selectedRepo.owner.login);
-      setRepositoryName(selectedRepo.name);
+      setVersionRequest({
+        repositoryLastCommitMessage: commitMessage,
+        repositoryLastCommitUserProfile: commitUserProfile,
+        repositoryLastCommitUserName: commitUserName,
+      });
 
       router.push(`/deploy/form?projectId=${projectId}&type=${deployType}`);
     }

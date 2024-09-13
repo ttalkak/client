@@ -3,36 +3,36 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import {
   DeployData,
   Framework,
-  DeployType,
   GithubRepositoryRequest,
   DatabaseCreateRequest,
+  VersionRequest,
 } from "@/types/deploy";
 
 interface DeployStoreState extends DeployData {
-  setProjectId: (projectId: number) => void;
   setFramework: (framework: Framework) => void;
-  setServiceType: (serviceType: DeployType) => void;
   setGithubRepositoryRequest: (data: Partial<GithubRepositoryRequest>) => void;
   setDatabaseCreateRequests: (data: DatabaseCreateRequest[] | null) => void;
   addDatabaseCreateRequest: (data: DatabaseCreateRequest) => void;
   removeDatabaseCreateRequest: (index: number) => void;
+  setVersionRequest: (data: Partial<VersionRequest>) => void;
   setHostingPort: (hostingPort: number | null) => void;
   setEnvironment: (env: string | null) => void;
   reset: () => void;
 }
 
 const initialState: DeployData = {
-  projectId: 0,
   framework: null,
-  serviceType: "",
   githubRepositoryRequest: {
+    repositoryOwner: "",
     repositoryName: "",
     repositoryUrl: "",
+    rootDirectory: "./",
+    branch: "",
+  },
+  versionRequest: {
     repositoryLastCommitMessage: "",
     repositoryLastCommitUserProfile: "",
     repositoryLastCommitUserName: "",
-    rootDirectory: "./",
-    branch: "",
   },
   databaseCreateRequests: null,
   hostingPort: null,
@@ -43,9 +43,7 @@ const useDeployStore = create(
   persist<DeployStoreState>(
     (set) => ({
       ...initialState,
-      setProjectId: (projectId) => set({ projectId }),
       setFramework: (framework) => set({ framework }),
-      setServiceType: (serviceType) => set({ serviceType }),
       setGithubRepositoryRequest: (data) =>
         set((state) => ({
           githubRepositoryRequest: {
@@ -66,6 +64,13 @@ const useDeployStore = create(
           databaseCreateRequests: state.databaseCreateRequests
             ? state.databaseCreateRequests.filter((_, i) => i !== index)
             : null,
+        })),
+      setVersionRequest: (data) =>
+        set((state) => ({
+          ...state,
+          versionRequest: state.versionRequest
+            ? { ...state.versionRequest, ...data }
+            : (data as VersionRequest),
         })),
       setHostingPort: (hostingPort) => set({ hostingPort }),
       setEnvironment: (env) => set({ env }),
