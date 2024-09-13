@@ -3,4 +3,6 @@ export interface UserInfo {
   username: string;
   email: string;
   accessToken: string | null;
+  emailVerified: boolean;
+  profileImage: string;
 }
