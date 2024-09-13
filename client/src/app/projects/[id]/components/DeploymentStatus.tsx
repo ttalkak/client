@@ -76,7 +76,7 @@ export default function DeploymentStatus({
             <div className="text-md">{deploy.status}</div>
           </div>
           <div className="flex justify-between items-center">
-            <div>
+            <div className="flex">
               <Image
                 src={deploy.repositoryLastCommitUserProfile}
                 alt={`${deploy.repositoryLastCommitUserName}'s profile`}
@@ -84,7 +84,7 @@ export default function DeploymentStatus({
                 height={26}
                 className="inline-block rounded-full mr-2"
               />
-              <span className="text-sm text-gray-500 max-w-[70%] truncate">
+              <span className="text-sm text-gray-500 max-w-[50%] truncate">
                 {deploy.repositoryLastCommitUserName} -{" "}
                 {deploy.repositoryLastCommitMessage}
               </span>
