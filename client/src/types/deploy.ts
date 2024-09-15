@@ -91,6 +91,7 @@ export interface GetDeployResponse {
   branch: string;
   repositoryOwner: string;
   framework: string;
+  payloadURL: string;
   version: null | any[];
   envs: any[];
   hostingResponse: Hosting;

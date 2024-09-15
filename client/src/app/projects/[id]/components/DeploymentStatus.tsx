@@ -76,47 +76,49 @@ export default function DeploymentStatus({
             <div className="text-md">{deploy.status}</div>
           </div>
           <div className="flex justify-between items-center">
-            <div className="flex">
+            <div className="flex items-center max-w-[60%]">
               <Image
                 src={deploy.repositoryLastCommitUserProfile}
                 alt={`${deploy.repositoryLastCommitUserName}'s profile`}
                 width={26}
                 height={26}
-                className="inline-block rounded-full mr-2"
+                className="inline-block rounded-full mr-2 flex-shrink-0"
               />
-              <span className="text-sm text-gray-500 max-w-[50%] truncate">
+              <span className="text-sm text-gray-500 truncate">
                 {deploy.repositoryLastCommitUserName} -{" "}
                 {deploy.repositoryLastCommitMessage}
               </span>
             </div>
 
-            <div className="flex flex-wrap gap-3 w-full sm:w-auto">
+            <div className="flex gap-2">
               {deploy.status === "STOPPED" && (
-                <div
-                  onClick={handleButtonClick("START")}
-                  className="border flex items-center gap-2 px-4 py-2 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
-                >
-                  <FaPlay color="#3eb127" className="w-4 h-4" />
-                  <span>start</span>
-                </div>
+                <>
+                  <button
+                    onClick={handleButtonClick("START")}
+                    className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
+                  >
+                    <FaPlay color="#3eb127" className="w-3 h-3" />
+                    <span className="text-xs">start</span>
+                  </button>
+                </>
               )}
               {deploy.status === "RUNNING" && (
-                <div
-                  onClick={handleButtonClick("RESTART")}
-                  className="border flex items-center gap-2 px-4 py-2 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
-                >
-                  <VscDebugRestart color="#7A7A7A" className="w-4 h-4" />
-                  <span>restart</span>
-                </div>
-              )}
-              {deploy.status === "RUNNING" && (
-                <div
-                  onClick={handleButtonClick("STOP")}
-                  className="border flex items-center gap-2 px-4 py-2 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
-                >
-                  <FaStop color="#d03939" className="w-4 h-4" />
-                  <span>stop</span>
-                </div>
+                <>
+                  <button
+                    onClick={handleButtonClick("RESTART")}
+                    className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
+                  >
+                    <VscDebugRestart color="#7A7A7A" className="w-3 h-3" />
+                    <span className="text-xs">restart</span>
+                  </button>
+                  <button
+                    onClick={handleButtonClick("STOP")}
+                    className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
+                  >
+                    <FaStop color="#d03939" className="w-3 h-3" />
+                    <span className="text-xs">stop</span>
+                  </button>
+                </>
               )}
             </div>
           </div>
@@ -130,7 +132,6 @@ export default function DeploymentStatus({
       </>
     );
   }
-
   return (
     <div className="flex flex-col gap-6 border rounded-lg p-6">
       <h3 className="font-semibold text-lg">{type}</h3>
