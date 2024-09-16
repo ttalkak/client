@@ -9,7 +9,7 @@ import useGetProject from "@/apis/project/useGetProject";
 import { Deployment } from "@/types/deploy";
 import EditProjectForm from "@/app/projects/[id]/components/EditProjectForm";
 import useDeleteProject from "@/apis/project/useDeleteProject";
-import ConfirmModal from "@/app/projects/[id]/components/ConfirmModal";
+import ConfirmModal from "@/components/ConfirmModal";
 
 interface ProjectContentProps {
   id: string;

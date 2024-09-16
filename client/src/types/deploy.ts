@@ -92,7 +92,7 @@ export interface GetDeployResponse {
   repositoryOwner: string;
   framework: string;
   payloadURL: string;
-  version: null | any[];
+  versions: null | any[];
   envs: any[];
   hostingResponse: Hosting;
   databaseResponse: DatabaseResponse[];
