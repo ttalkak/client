@@ -36,6 +36,7 @@ const useGetWebhooks = (owner: string, repo: string) => {
     queryKey: ["webhooks", owner, repo],
     queryFn: () => getWebhooks({ owner, repo }),
     enabled: !!owner && !!repo,
+    staleTime: 0,
   });
 };
 

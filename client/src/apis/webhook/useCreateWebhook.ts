@@ -35,7 +35,7 @@ const useCreateWebhook = () => {
   return useMutation({
     mutationFn: createWebhook,
     onSuccess: (_, variables) => {
-      toast.success("웹훅 생성에 성공했습니다.");
+      toast.success("웹훅이 성공적으로 생성되었습니다.");
       queryClient.invalidateQueries({
         queryKey: ["webhooks", variables.owner, variables.repo],
       });
