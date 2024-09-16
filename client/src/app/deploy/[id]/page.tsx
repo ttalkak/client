@@ -13,6 +13,7 @@ import useDeleteDeploy from "@/apis/deploy/useDeleteDeploy";
 import ConfirmModal from "@/components/ConfirmModal";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { FaCodeBranch, FaCodeCommit } from "react-icons/fa6";
+import { IoChevronBack } from "react-icons/io5";
 
 export default function DeployDetailPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function DeployDetailPage() {
   const deployId = params.id;
   const [deleteModal, setDeleteModal] = useState(false);
   const [isToggled, setIsToggled] = useState(false);
+  const [isWebhookLoading, setIsWebhookLoading] = useState(false); // 웹훅 생성,삭제 중 실행 막기
   const { data } = useGetDeploy(Number(deployId));
   const { mutate: createWebhook } = useCreateWebhook();
   const { mutate: deleteWebhook } = useDeleteWebhook();
@@ -43,7 +45,8 @@ export default function DeployDetailPage() {
 
   // 웹훅 생성, 삭제 토글 처리
   const handleWebhookToggle = () => {
-    // 웹훅이 있다면, 삭제
+    if (isWebhookLoading) return; // 이미 요청 실행중이면 함수 실행 중지
+    // 웹훅 삭제
     if (isToggled) {
       const webhookToDelete = webhooksData?.find(
         (webhook) => webhook.config.url === data?.payloadURL
@@ -58,12 +61,16 @@ export default function DeployDetailPage() {
           {
             onSuccess: () => {
               setIsToggled(false);
+              setIsWebhookLoading(false);
+            },
+            onError: () => {
+              setIsWebhookLoading(false);
             },
           }
         );
       }
-    }
-    if (!isToggled) {
+    } else {
+      // 웹훅 생성
       createWebhook(
         {
           owner: data?.repositoryOwner || "",
@@ -73,6 +80,10 @@ export default function DeployDetailPage() {
         {
           onSuccess: () => {
             setIsToggled(true);
+            setIsWebhookLoading(false);
+          },
+          onError: () => {
+            setIsWebhookLoading(false);
           },
         }
       );
@@ -83,6 +94,7 @@ export default function DeployDetailPage() {
   const handleDeleteConfirm = () => {
     deleteDeploy(Number(data?.deploymentId), {
       onSuccess: () => {
+        handleWebhookToggle();
         router.push(`/projects/${data?.projectId}`);
       },
     });
@@ -119,7 +131,13 @@ export default function DeployDetailPage() {
   return (
     <div>
       <div className="flex justify-between mb-3">
-        <h1 className="text-3xl font-bold">배포</h1>
+        <div className="flex items-center gap-2">
+          <IoChevronBack
+            onClick={() => router.back()}
+            className="w-9 h-9 hover:scale-110 cursor-pointer"
+          />
+          <h1 className="text-3xl font-bold">배포</h1>
+        </div>
         <Button
           label="삭제"
           onClick={() => setDeleteModal(true)}
