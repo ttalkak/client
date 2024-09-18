@@ -13,6 +13,7 @@ const navItems = [
   { name: "사용량", path: routes.usage },
   { name: "활동내역", path: routes.activity },
   { name: "가이드", path: routes.guide },
+  { name: "대시보드", path: routes.dashboard },
 ];
 
 export default function NavBar() {
@@ -36,12 +37,15 @@ export default function NavBar() {
 
   const AuthButton = () =>
     isLogin ? (
-      <button
-        onClick={handleLogout}
-        className="bg-black px-3 py-2 rounded-md font-bold text-white"
-      >
-        로그아웃
-      </button>
+      <>
+        <Link href={routes.mypage}>마이페이지</Link>
+        <button
+          onClick={handleLogout}
+          className="bg-black px-3 py-2 rounded-md font-bold text-white"
+        >
+          로그아웃
+        </button>
+      </>
     ) : (
       <Link
         href={routes.login}
