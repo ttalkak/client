@@ -62,7 +62,7 @@ export interface DeployData {
   framework: Framework;
 }
 
-export interface createDeployRequest {
+export interface CreateDeployRequest {
   projectId: number;
   serviceType: DeployType;
   hostingPort: number | null;

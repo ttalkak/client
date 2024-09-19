@@ -9,7 +9,7 @@ import useGetProjects from "@/apis/project/useGetProjects";
 import useCreateProject from "@/apis/project/useCreateProject";
 import useAuthStore from "@/store/useAuthStore";
 import getRelativeTime from "@/utils/getRelativeTime";
-import { getProjectsParams, Project, ProjectFormData } from "@/types/project";
+import { GetProjectsParams, Project, ProjectFormData } from "@/types/project";
 
 export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function ProjectsPage() {
   const userInfo = useAuthStore((state) => state.userInfo);
   const { mutate: createProject } = useCreateProject();
 
-  const params: getProjectsParams = {
+  const params: GetProjectsParams = {
     page: currentPage,
     size: 9,
     sort: sortOrder,

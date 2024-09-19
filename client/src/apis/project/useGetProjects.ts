@@ -1,9 +1,9 @@
 import client from "@/apis/core/client";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { getProjectsParams, ProjectsResponse } from "@/types/project";
+import { GetProjectsParams, ProjectsResponse } from "@/types/project";
 
 const getProjects = async (
-  params: getProjectsParams
+  params: GetProjectsParams
 ): Promise<ProjectsResponse> => {
   const response = await client.get<ProjectsResponse>({
     url: "/project/search",
@@ -15,7 +15,7 @@ const getProjects = async (
 };
 
 const useGetProjects = (
-  params: getProjectsParams
+  params: GetProjectsParams
 ): UseQueryResult<ProjectsResponse, Error> => {
   return useQuery({
     queryKey: ["projects", params] as const,
