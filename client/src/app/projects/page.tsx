@@ -30,9 +30,13 @@ export default function ProjectsPage() {
     searchKeyword,
   };
 
-  const handleCreateProject = (projectName: string, domainName: string) => {
+  const handleCreateProject = (
+    projectName: string,
+    domainName: string,
+    expirationDate: string
+  ) => {
     createProject(
-      { projectName, domainName },
+      { projectName, domainName, expirationDate },
       {
         onSuccess: () => {
           setIsModalOpen(false);

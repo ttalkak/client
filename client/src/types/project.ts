@@ -26,6 +26,7 @@ export interface getProjectsParams {
 export interface ProjectData {
   projectName: string;
   domainName: string;
+  expirationDate: string;
 }
 
 export interface patchProjectParams {
