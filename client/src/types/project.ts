@@ -15,7 +15,7 @@ export interface ProjectsResponse {
   totalElements: number;
 }
 
-export interface getProjectsParams {
+export interface GetProjectsParams {
   page: number;
   size: number;
   sort: string;
@@ -30,7 +30,7 @@ export interface ProjectData {
   expirationDate: string;
 }
 
-export interface patchProjectParams {
+export interface PatchProjectParams {
   projectId: number;
   data: ProjectData;
 }
