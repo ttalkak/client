@@ -3,6 +3,7 @@ export interface Project {
   userId: number;
   projectName: string;
   domainName: string;
+  expirationDate: string;
   createdAt: string;
   updatedAt: string;
   deployments: null | any;
@@ -32,4 +33,11 @@ export interface ProjectData {
 export interface patchProjectParams {
   projectId: number;
   data: ProjectData;
+}
+
+export interface ProjectFormData {
+  projectName: string;
+  domainName: string;
+  paymentType?: "기간제" | "무기한";
+  expirationDate: string;
 }
