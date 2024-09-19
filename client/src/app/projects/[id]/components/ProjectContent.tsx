@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { Deployment } from "@/types/deploy";
+import { ProjectFormData } from "@/types/project";
 import DeploymentStatus from "@/app/projects/[id]/components/DeploymentStatus";
 import useGetProject from "@/apis/project/useGetProject";
-import { Deployment } from "@/types/deploy";
-import EditProjectForm from "@/app/projects/[id]/components/EditProjectForm";
 import useDeleteProject from "@/apis/project/useDeleteProject";
+import useModifyProject from "@/apis/project/useModifyProject";
 import ConfirmModal from "@/components/ConfirmModal";
+import Modal from "@/app/projects/components/Modal";
 
 interface ProjectContentProps {
   id: string;
@@ -20,9 +22,14 @@ export default function ProjectContent({ id }: ProjectContentProps) {
   const [deleteModal, setDeleteModal] = useState(false);
   const router = useRouter();
   const { data: project } = useGetProject(Number(id));
+  const { mutate: modifyProject } = useModifyProject();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const onClose = () => {
+  const handleEditSubmit = (data: ProjectFormData) => {
+    modifyProject({
+      projectId: project.id,
+      data,
+    });
     setEditModal(false);
   };
 
@@ -81,7 +88,13 @@ export default function ProjectContent({ id }: ProjectContentProps) {
           </div>
         </div>
       </div>
-      <EditProjectForm isOpen={editModal} project={project} onClose={onClose} />
+      <Modal
+        isOpen={editModal}
+        onClose={() => setEditModal(false)}
+        onSubmit={handleEditSubmit}
+        project={project}
+        mode="edit"
+      />
       <ConfirmModal
         isOpen={deleteModal}
         onClose={() => setDeleteModal(false)}

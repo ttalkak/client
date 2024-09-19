@@ -1,32 +1,27 @@
 import Button from "@/components/Button";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { BiInfinite } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { Project } from "@/types/project";
+import { ProjectFormData } from "@/types/project";
 
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    projectName: string,
-    domainName: string,
-    expirationDate: string
-  ) => void;
-}
-
-interface FormData {
-  projectName: string;
-  domainName: string;
-  paymentType: "기간제" | "무기한";
-  expirationDate: string;
+  onSubmit: (data: ProjectFormData) => void;
+  project?: Project;
+  mode: "create" | "edit";
 }
 
 export default function Modal({
   isOpen,
   onClose,
   onSubmit,
+  project,
+  mode,
 }: ProjectModalProps) {
   const {
     register,
@@ -36,8 +31,10 @@ export default function Modal({
     watch,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<ProjectFormData>({
     defaultValues: {
+      projectName: "",
+      domainName: "",
       paymentType: "무기한",
       expirationDate: new Date().toISOString().split("T")[0],
     },
@@ -47,21 +44,37 @@ export default function Modal({
 
   useEffect(() => {
     if (isOpen) {
-      reset({
-        projectName: "",
-        domainName: "",
-        paymentType: "무기한",
-        expirationDate: new Date().toISOString().split("T")[0],
-      });
+      if (mode === "edit" && project) {
+        const isUnlimited = project.expirationDate === "9999-12-31";
+        reset({
+          projectName: project.projectName,
+          domainName: project.domainName,
+          paymentType: isUnlimited ? "무기한" : "기간제",
+          expirationDate: isUnlimited
+            ? new Date().toISOString().split("T")[0]
+            : project.expirationDate,
+        });
+      } else {
+        reset({
+          projectName: "",
+          domainName: "",
+          paymentType: "무기한",
+          expirationDate: new Date().toISOString().split("T")[0],
+        });
+      }
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, project, mode]);
 
   if (!isOpen) return null;
 
-  const onSubmitForm = (data: FormData) => {
+  const onSubmitForm = (data: ProjectFormData) => {
     const formattedDate =
       paymentType === "무기한" ? "9999-12-31" : data.expirationDate;
-    onSubmit(data.projectName, data.domainName, formattedDate);
+    onSubmit({
+      projectName: data.projectName,
+      domainName: data.domainName,
+      expirationDate: formattedDate,
+    });
     onClose();
   };
 
@@ -75,7 +88,9 @@ export default function Modal({
             onClose();
           }}
         />
-        <h2 className="text-4xl font-bold mb-8 text-center">프로젝트 생성</h2>
+        <h2 className="text-4xl font-bold mb-8 text-center">
+          프로젝트 {mode === "create" ? "생성" : "수정"}
+        </h2>
         <form onSubmit={handleSubmit(onSubmitForm)}>
           <div className="mb-4">
             <label
@@ -154,13 +169,13 @@ export default function Modal({
                     <div
                       className={`flex-2 p-8 border rounded-lg cursor-pointer ${
                         field.value === "기간제"
-                          ? "border-blue-500 text-black"
+                          ? "ring-2 ring-blue-500 text-black"
                           : "border-gray-300 text-gray-400"
                       } `}
                       onClick={() => field.onChange("기간제")}
                     >
                       <h3 className="font-bold mb-4">기간제</h3>
-                      {field.value === "무기한" && (
+                      {field.value !== "기간제" && (
                         <FaRegCalendarAlt className="w-7 h-7" />
                       )}
 
@@ -213,7 +228,7 @@ export default function Modal({
                     <div
                       className={`flex-2 p-8 border rounded-lg cursor-pointer ${
                         field.value === "무기한"
-                          ? "border-blue-500 text-black"
+                          ? "ring-2 ring-blue-500 text-black"
                           : "border-gray-300 text-gray-400"
                       }`}
                       onClick={() => {
@@ -247,7 +262,12 @@ export default function Modal({
           </div>
 
           <div className="text-center mt-8">
-            <Button label="생성" type="submit" primary size="large" />
+            <Button
+              label={mode === "create" ? "생성" : "수정"}
+              type="submit"
+              primary
+              size="large"
+            />
           </div>
         </form>
       </div>

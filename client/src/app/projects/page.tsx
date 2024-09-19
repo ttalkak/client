@@ -9,7 +9,7 @@ import useGetProjects from "@/apis/project/useGetProjects";
 import useCreateProject from "@/apis/project/useCreateProject";
 import useAuthStore from "@/store/useAuthStore";
 import getRelativeTime from "@/utils/getRelativeTime";
-import { getProjectsParams, Project } from "@/types/project";
+import { getProjectsParams, Project, ProjectFormData } from "@/types/project";
 
 export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,19 +30,12 @@ export default function ProjectsPage() {
     searchKeyword,
   };
 
-  const handleCreateProject = (
-    projectName: string,
-    domainName: string,
-    expirationDate: string
-  ) => {
-    createProject(
-      { projectName, domainName, expirationDate },
-      {
-        onSuccess: () => {
-          setIsModalOpen(false);
-        },
-      }
-    );
+  const handleCreateProject = (data: ProjectFormData) => {
+    createProject(data, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+      },
+    });
   };
 
   const { data, isLoading, error, isFetching } = useGetProjects(params);
@@ -147,6 +140,7 @@ export default function ProjectsPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateProject}
+        mode="create"
       />
     </div>
   );
