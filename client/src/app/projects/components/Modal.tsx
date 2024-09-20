@@ -6,12 +6,16 @@ import { BiInfinite } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { Project } from "@/types/project";
-import { ProjectFormData } from "@/types/project";
+import {
+  ProjectFormData,
+  CreateProjectParams,
+  PaymentType,
+} from "@/types/project";
 
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: ProjectFormData) => void;
+  onSubmit: (data: CreateProjectParams) => void;
   project?: Project;
   mode: "create" | "edit";
 }
@@ -35,7 +39,7 @@ export default function Modal({
     defaultValues: {
       projectName: "",
       domainName: "",
-      paymentType: "무기한",
+      paymentType: PaymentType.Unlimited,
       expirationDate: new Date().toISOString().split("T")[0],
     },
   });
@@ -49,7 +53,9 @@ export default function Modal({
         reset({
           projectName: project.projectName,
           domainName: project.domainName,
-          paymentType: isUnlimited ? "무기한" : "기간제",
+          paymentType: isUnlimited
+            ? PaymentType.Unlimited
+            : PaymentType.FixedTerm,
           expirationDate: isUnlimited
             ? new Date().toISOString().split("T")[0]
             : project.expirationDate,
@@ -58,7 +64,7 @@ export default function Modal({
         reset({
           projectName: "",
           domainName: "",
-          paymentType: "무기한",
+          paymentType: PaymentType.Unlimited,
           expirationDate: new Date().toISOString().split("T")[0],
         });
       }
@@ -69,7 +75,9 @@ export default function Modal({
 
   const onSubmitForm = (data: ProjectFormData) => {
     const formattedDate =
-      paymentType === "무기한" ? "9999-12-31" : data.expirationDate;
+      data.paymentType === PaymentType.Unlimited
+        ? "9999-12-31"
+        : data.expirationDate;
     onSubmit({
       projectName: data.projectName,
       domainName: data.domainName,
@@ -168,14 +176,14 @@ export default function Modal({
                   <>
                     <div
                       className={`flex-2 p-8 border rounded-lg cursor-pointer ${
-                        field.value === "기간제"
+                        field.value === PaymentType.FixedTerm
                           ? "ring-2 ring-blue-500 text-black"
                           : "border-gray-300 text-gray-400"
                       } `}
-                      onClick={() => field.onChange("기간제")}
+                      onClick={() => field.onChange(PaymentType.FixedTerm)}
                     >
                       <h3 className="font-bold mb-4">기간제</h3>
-                      {field.value !== "기간제" && (
+                      {field.value !== PaymentType.FixedTerm && (
                         <FaRegCalendarAlt className="w-7 h-7" />
                       )}
 
@@ -185,11 +193,11 @@ export default function Modal({
                           control={control}
                           rules={{
                             required:
-                              paymentType === "기간제"
+                              paymentType === PaymentType.FixedTerm
                                 ? "만료일은 필수입니다"
                                 : false,
                             validate: (value) =>
-                              paymentType === "무기한" ||
+                              paymentType === PaymentType.Unlimited ||
                               new Date(value) > new Date() ||
                               "선택한 날짜는 오늘 이후여야 합니다.",
                           }}
@@ -198,9 +206,11 @@ export default function Modal({
                               type="date"
                               {...field}
                               className={`w-full border border-gray-300 rounded ${
-                                paymentType === "무기한" ? "hidden" : ""
+                                paymentType === PaymentType.Unlimited
+                                  ? "hidden"
+                                  : ""
                               }`}
-                              disabled={paymentType !== "기간제"}
+                              disabled={paymentType !== PaymentType.FixedTerm}
                             />
                           )}
                         />
@@ -227,12 +237,12 @@ export default function Modal({
                     </div>
                     <div
                       className={`flex-2 p-8 border rounded-lg cursor-pointer ${
-                        field.value === "무기한"
+                        field.value === PaymentType.Unlimited
                           ? "ring-2 ring-blue-500 text-black"
                           : "border-gray-300 text-gray-400"
                       }`}
                       onClick={() => {
-                        field.onChange("무기한");
+                        field.onChange(PaymentType.Unlimited);
                         setValue("expirationDate", "");
                       }}
                     >

@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { DeployCommand, Deployment } from "@/types/deploy";
+import {
+  DeployCommand,
+  Deployment,
+  ServiceType,
+  DeployStatus,
+} from "@/types/deploy";
 import Image from "next/image";
 import { FaPlay } from "react-icons/fa6";
 import { VscDebugRestart } from "react-icons/vsc";
@@ -7,7 +12,7 @@ import { FaStop } from "react-icons/fa";
 import useModifyDeployStatus from "@/apis/deploy/useModifyDeployStatus";
 
 interface DeploymentStatusProps {
-  type: "Frontend" | "Backend";
+  type: ServiceType;
   deploy: Deployment | null;
   projectId: number;
 }
@@ -23,7 +28,6 @@ export default function DeploymentStatus({
     (command: DeployCommand) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log(command);
       modifyDeployStatus({
         deploymentId: String(deploy?.deploymentId),
         command,
@@ -41,11 +45,11 @@ export default function DeploymentStatus({
         <div className="flex items-center gap-2 mb-3">
           <div
             className={`inline-block w-3 h-3 rounded-full ${
-              deploy.status === "STOPPED"
+              deploy.status === DeployStatus.STOPPED
                 ? "bg-red-500"
-                : deploy.status === "RUNNING"
+                : deploy.status === DeployStatus.RUNNING
                   ? "bg-green-500"
-                  : deploy.status === "PENDING"
+                  : deploy.status === DeployStatus.PENDING
                     ? "bg-yellow-400 animate-pulse-slow"
                     : "bg-gray-500"
             }`}
@@ -68,10 +72,10 @@ export default function DeploymentStatus({
           </div>
 
           <div className="flex gap-2">
-            {deploy.status === "STOPPED" && (
+            {deploy.status === DeployStatus.STOPPED && (
               <>
                 <button
-                  onClick={handleButtonClick("START")}
+                  onClick={handleButtonClick(DeployCommand.START)}
                   className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
                 >
                   <FaPlay color="#3eb127" className="w-3 h-3" />
@@ -79,17 +83,17 @@ export default function DeploymentStatus({
                 </button>
               </>
             )}
-            {deploy.status === "RUNNING" && (
+            {deploy.status === DeployStatus.RUNNING && (
               <>
                 <button
-                  onClick={handleButtonClick("RESTART")}
+                  onClick={handleButtonClick(DeployCommand.RESTART)}
                   className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
                 >
                   <VscDebugRestart color="#7A7A7A" className="w-3 h-3" />
                   <span className="text-xs">restart</span>
                 </button>
                 <button
-                  onClick={handleButtonClick("STOP")}
+                  onClick={handleButtonClick(DeployCommand.STOP)}
                   className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
                 >
                   <FaStop color="#d03939" className="w-3 h-3" />

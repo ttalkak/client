@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { Deployment } from "@/types/deploy";
-import { ProjectFormData } from "@/types/project";
+import { Deployment, ServiceType } from "@/types/deploy";
+import { CreateProjectParams } from "@/types/project";
 import DeploymentStatus from "@/app/projects/[id]/components/DeploymentStatus";
 import useGetProject from "@/apis/project/useGetProject";
 import useDeleteProject from "@/apis/project/useDeleteProject";
@@ -25,7 +25,7 @@ export default function ProjectContent({ id }: ProjectContentProps) {
   const { mutate: modifyProject } = useModifyProject();
   const { mutate: deleteProject } = useDeleteProject();
 
-  const handleEditSubmit = (data: ProjectFormData) => {
+  const handleEditSubmit = (data: CreateProjectParams) => {
     modifyProject({
       projectId: project.id,
       data,
@@ -48,7 +48,7 @@ export default function ProjectContent({ id }: ProjectContentProps) {
 
   const getLatestDeploy = (
     deployments: Deployment[],
-    type: "FRONTEND" | "BACKEND"
+    type: ServiceType
   ): Deployment | null => {
     return (
       deployments
@@ -75,13 +75,19 @@ export default function ProjectContent({ id }: ProjectContentProps) {
           <div className="flex-grow">
             <div className="grid grid-cols-2 gap-4">
               <DeploymentStatus
-                type="Frontend"
-                deploy={getLatestDeploy(project.deployments, "FRONTEND")}
+                type={ServiceType.FRONTEND}
+                deploy={getLatestDeploy(
+                  project.deployments,
+                  ServiceType.FRONTEND
+                )}
                 projectId={project.id}
               />
               <DeploymentStatus
-                type="Backend"
-                deploy={getLatestDeploy(project.deployments, "BACKEND")}
+                type={ServiceType.BACKEND}
+                deploy={getLatestDeploy(
+                  project.deployments,
+                  ServiceType.BACKEND
+                )}
                 projectId={project.id}
               />
             </div>
