@@ -17,6 +17,7 @@ const navItems = [
 ];
 
 export default function NavBar() {
+  const { userInfo } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const isLogin = useAuthStore((state) => state.isLogin);
   const logout = useAuthStore((state) => state.logout);
@@ -37,15 +38,25 @@ export default function NavBar() {
 
   const AuthButton = () =>
     isLogin ? (
-      <>
-        <Link href={routes.mypage}>마이페이지</Link>
+      <div className="flex items-center">
+        <Link href={routes.mypage}>
+          {userInfo && (
+            <Image
+              src={userInfo.profileImage}
+              width={32}
+              height={32}
+              alt="profile_img"
+              className="rounded-full mr-8 bg-gray-200"
+            />
+          )}
+        </Link>
         <button
           onClick={handleLogout}
           className="bg-black px-3 py-2 rounded-md font-bold text-white"
         >
           로그아웃
         </button>
-      </>
+      </div>
     ) : (
       <Link
         href={routes.login}
