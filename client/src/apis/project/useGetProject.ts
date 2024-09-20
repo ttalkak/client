@@ -1,9 +1,9 @@
-import client from "@/apis/core/client";
 import {
   useSuspenseQuery,
   UseSuspenseQueryResult,
 } from "@tanstack/react-query";
 import { Project } from "@/types/project";
+import client from "@/apis/core/client";
 
 const getProject = async (projectId: number): Promise<Project> => {
   const response = await client.get<Project>({
