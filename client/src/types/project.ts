@@ -9,7 +9,19 @@ export interface Project {
   deployments: null | any;
 }
 
-export interface ProjectsResponse {
+export enum PaymentType {
+  FixedTerm = "fixed-term",
+  Unlimited = "unlimited",
+}
+
+export interface ProjectFormData {
+  projectName: string;
+  domainName: string;
+  paymentType: PaymentType;
+  expirationDate: string;
+}
+
+export interface GetProjectsResponse {
   content: Project[];
   totalPages: number;
   totalElements: number;
@@ -24,20 +36,15 @@ export interface GetProjectsParams {
   searchKeyword?: string;
 }
 
-export interface ProjectData {
+export interface ProjectParams {
   projectName: string;
   domainName: string;
   expirationDate: string;
 }
+
+export interface CreateProjectParams extends ProjectParams {}
 
 export interface PatchProjectParams {
   projectId: number;
-  data: ProjectData;
-}
-
-export interface ProjectFormData {
-  projectName: string;
-  domainName: string;
-  paymentType?: "기간제" | "무기한";
-  expirationDate: string;
+  data: Partial<ProjectParams>;
 }

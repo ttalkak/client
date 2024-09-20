@@ -7,10 +7,10 @@ import useDeployStore from "@/store/useDeployStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DeployType } from "@/types/deploy";
+import { ServiceType, Framework } from "@/types/deploy";
 
 interface FormData {
-  framework: "REACT" | "NEXTJS";
+  framework: Framework;
   port: number;
   envVars: { key: string; value: string }[];
 }
@@ -20,8 +20,12 @@ export default function FrontendForm() {
   const router = useRouter();
   const projectId = searchParams.get("projectId"); // 프로젝트 ID
   const typeParam = searchParams.get("type");
-  const serviceType: DeployType =
-    typeParam === "FRONTEND" || typeParam === "BACKEND" ? typeParam : null;
+  const serviceType: ServiceType | null =
+    typeParam === "FRONTEND"
+      ? ServiceType.FRONTEND
+      : typeParam === "BACKEND"
+        ? ServiceType.BACKEND
+        : null;
 
   const { mutate: createDeploy } = useCreateDeploy();
   const { mutate: createWebhook } = useCreateWebhook();
@@ -38,7 +42,7 @@ export default function FrontendForm() {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      framework: "REACT",
+      framework: Framework.REACT,
       port: 3000,
       envVars: [],
     },
@@ -57,7 +61,7 @@ export default function FrontendForm() {
     createDeploy(
       {
         projectId: Number(projectId),
-        serviceType: serviceType,
+        serviceType: serviceType as ServiceType,
         hostingPort: Number(data.port),
         githubRepositoryRequest,
         versionRequest,

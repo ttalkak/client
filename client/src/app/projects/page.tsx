@@ -9,7 +9,11 @@ import useGetProjects from "@/apis/project/useGetProjects";
 import useCreateProject from "@/apis/project/useCreateProject";
 import useAuthStore from "@/store/useAuthStore";
 import getRelativeTime from "@/utils/getRelativeTime";
-import { GetProjectsParams, Project, ProjectFormData } from "@/types/project";
+import {
+  GetProjectsParams,
+  Project,
+  CreateProjectParams,
+} from "@/types/project";
 
 export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +34,7 @@ export default function ProjectsPage() {
     searchKeyword,
   };
 
-  const handleCreateProject = (data: ProjectFormData) => {
+  const handleCreateProject = (data: CreateProjectParams) => {
     createProject(data, {
       onSuccess: () => {
         setIsModalOpen(false);
