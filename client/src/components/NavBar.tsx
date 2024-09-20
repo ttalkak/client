@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { routes } from "@/constants/routeURL";
-import NavLink from "@/components/NavLink";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { FiMenu, FiX } from "react-icons/fi";
+import NavLink from "@/components/NavLink";
 import useAuthStore from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
+import { routes } from "@/constants/routeURL";
+import { FiMenu, FiX } from "react-icons/fi";
+
 const navItems = [
   { name: "내 프로젝트", path: routes.projects },
   { name: "사용량", path: routes.usage },
@@ -17,11 +18,11 @@ const navItems = [
 ];
 
 export default function NavBar() {
+  const router = useRouter();
   const { userInfo } = useAuthStore();
-  const [isOpen, setIsOpen] = useState(false);
   const isLogin = useAuthStore((state) => state.isLogin);
   const logout = useAuthStore((state) => state.logout);
-  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
