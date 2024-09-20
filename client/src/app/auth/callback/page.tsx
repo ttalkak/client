@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import useAuthStore from "@/store/useAuthStore";
 import getUserInfo from "@/apis/user/useGetUserInfo";
-import { toast } from "react-toastify";
+
 export default function CallbackPage() {
   const router = useRouter();
   const { setAccessToken, setUserInfo, setIsLogin } = useAuthStore();
