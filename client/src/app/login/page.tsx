@@ -8,9 +8,9 @@ export default function LoginPage() {
   const handleGitHubLogin = (): void => {
     setIsLoading(true);
     const redirectUri = encodeURIComponent(
-      "http://localhost:3000/auth/callback"
+      `${process.env.NEXT_PUBLIC_REDIRECT_URI}/auth/callback`
     );
-    window.location.href = `https://ttalkak.com/v1/auth/authorization/github?oauth_redirect_uri=${redirectUri}`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/authorization/github?oauth_redirect_uri=${redirectUri}`;
   };
 
   return (
