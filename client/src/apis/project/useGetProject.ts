@@ -1,4 +1,7 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import {
+  useSuspenseQuery,
+  UseSuspenseQueryResult,
+} from "@tanstack/react-query";
 import { Project } from "@/types/project";
 import client from "@/apis/core/client";
 
@@ -10,13 +13,11 @@ const getProject = async (projectId: number): Promise<Project> => {
 };
 
 const useGetProject = (
-  projectId: number,
-  enabled: boolean = true
-): UseQueryResult<Project, Error> => {
-  return useQuery({
-    queryKey: ["project", projectId],
+  projectId: number
+): UseSuspenseQueryResult<Project, Error> => {
+  return useSuspenseQuery({
+    queryKey: ["project", projectId] as const,
     queryFn: () => getProject(projectId),
-    enabled,
   });
 };
 
