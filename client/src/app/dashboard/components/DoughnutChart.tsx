@@ -2,7 +2,7 @@
 
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { formatTimestamp } from "@/utils/getDate";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -41,12 +41,19 @@ const DoughnutChart = ({
   title,
   counts,
   logs,
+  fetchMoreLogs,
+  hasMoreLogs,
+  isRefresh, // 새로고침인지 여부를 받아서 처리
 }: {
   title: string;
   counts: Record<string, number>;
   logs: any[];
+  fetchMoreLogs: () => void;
+  hasMoreLogs: boolean;
+  isRefresh: boolean; // 새로고침 여부
 }) => {
   const [sortedLogs, setSortedLogs] = useState<any[]>([]);
+  const logsContainerRef = useRef<HTMLDivElement>(null);
 
   // 최신순으로 로그 정렬
   useEffect(() => {
@@ -56,7 +63,23 @@ const DoughnutChart = ({
       return dateB - dateA;
     });
     setSortedLogs(sorted);
-  }, [logs]);
+
+    // 새로고침일 때만 스크롤을 상단으로 이동
+    if (isRefresh && logsContainerRef.current) {
+      logsContainerRef.current.scrollTop = 0;
+    }
+  }, [logs, isRefresh]); // isRefresh에 의존하여 새로고침 시만 처리
+
+  // 무한 스크롤 (로직 변경 필요 | 지금은 스크롤 마지막에 도달해야 다음 데이터를 가져오고 있음)
+  const handleScroll = () => {
+    if (logsContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } =
+        logsContainerRef.current;
+      if (scrollTop + clientHeight >= scrollHeight - 1 && hasMoreLogs) {
+        fetchMoreLogs();
+      }
+    }
+  };
 
   const chartData = getPercentageData(counts);
 
@@ -98,7 +121,11 @@ const DoughnutChart = ({
         <Doughnut data={data} options={options} />
       </div>
 
-      <div className="w-2/3 h-80 overflow-y-auto ">
+      <div
+        className="w-2/3 h-80 overflow-y-auto"
+        ref={logsContainerRef}
+        onScroll={handleScroll}
+      >
         {sortedLogs.length > 0 ? (
           sortedLogs.map((log, index) => (
             <div key={index} className="flex border-b py-3.5">
