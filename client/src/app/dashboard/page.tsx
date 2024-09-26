@@ -16,12 +16,13 @@ import useAuthStore from "@/store/useAuthStore";
 import { GetProjectsParams, Project, Deployment } from "@/types/project";
 import {
   HistogramParams,
+  Histogram,
   DeploymentLogParams,
   DeploymentLog,
 } from "@/types/dashboard";
 import { IoRefresh } from "react-icons/io5";
 import Monitoring from "./components/Monitoring";
-import { Histogram } from "perf_hooks";
+import HistogramChart from "./components/HistogramChart";
 
 export default function CallbackPage() {
   const { userInfo } = useAuthStore();
@@ -38,6 +39,9 @@ export default function CallbackPage() {
   const [histogramParams, setHistogramParams] =
     useState<HistogramParams | null>(null);
   const [histogramData, setHistogramData] = useState<Histogram[] | null>(null);
+  const [histogramInterval, setHistogramInterval] = useState<number | null>(
+    null
+  );
   const [logParams, setLogParams] = useState<DeploymentLogParams | null>(null);
   const [logData, setLogData] = useState<DeploymentLog | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -97,7 +101,8 @@ export default function CallbackPage() {
   useEffect(() => {
     if (histogram && histogramParams) {
       console.log(histogram);
-      // setHistogramData(histogram)
+      setHistogramData(histogram.histograms);
+      setHistogramInterval(histogram.intervalMinute);
     }
   }, [histogram]);
 
@@ -194,6 +199,9 @@ export default function CallbackPage() {
       setFromDate(getStartDate("week"));
       setToDate(getNowDate());
     } else if (selected === "total") {
+      if (project) {
+        setFromDate(formatTimestamp(project.createdAt));
+      }
       setToDate(getNowDate());
     }
 
@@ -329,7 +337,12 @@ export default function CallbackPage() {
 
       <div className="border flex">
         <Monitoring selectedDeployId={selectedDeployId} />
-        <div className="w-full h-48 border overflow-x-auto"></div>
+        <HistogramChart
+          histogramData={histogramData}
+          histogramInterval={histogramInterval}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
       </div>
 
       <div className="border">
