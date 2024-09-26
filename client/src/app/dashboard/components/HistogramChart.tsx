@@ -18,11 +18,13 @@ const HistogramChart = ({
   histogramInterval, // 시간 간격(분 단위)
   fromDate,
   toDate,
+  onBarClick,
 }: {
   histogramData: Histogram[] | null;
   histogramInterval: number | null;
   fromDate: string;
   toDate: string;
+  onBarClick: (start: string, end: string) => void;
 }) => {
   const [chartData, setChartData] = useState<any>(null);
 
@@ -88,6 +90,21 @@ const HistogramChart = ({
     }
   }, [histogramData, histogramInterval]);
 
+  const handleBarClick = (_: any, elements: any[]) => {
+    if (histogramInterval && histogramInterval > 10 && elements.length > 0) {
+      const index = elements[0].index; // 선택한 막대의 인덱스
+      const start = chartData.labels[index]; // 선택한 막대의 시작 시간
+      const end = formatTimestamp(
+        new Date(
+          new Date(start).getTime() + histogramInterval * 60 * 1000
+        ).toISOString()
+      );
+
+      // 부모로 시작 시간과 종료 시간 전달
+      onBarClick(start, end);
+    }
+  };
+
   return (
     <div className="w-full h-48 border overflow-x-auto">
       {chartData ? (
@@ -99,6 +116,7 @@ const HistogramChart = ({
                 display: false,
               },
             },
+            onClick: handleBarClick,
             scales: {
               x: {
                 // x축 설정

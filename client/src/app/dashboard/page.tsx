@@ -36,6 +36,7 @@ export default function CallbackPage() {
   const [selectedType, setSelectedType] = useState<string>("method");
   const [fromDate, setFromDate] = useState<string>(getStartDate());
   const [toDate, setToDate] = useState<string>(getNowDate());
+  const [dateChange, setDateChange] = useState<boolean>(false);
   const [histogramParams, setHistogramParams] =
     useState<HistogramParams | null>(null);
   const [histogramData, setHistogramData] = useState<Histogram[] | null>(null);
@@ -167,11 +168,12 @@ export default function CallbackPage() {
     project,
     selectedStatus,
     selectedMethod,
+    dateChange,
   ]);
 
   useEffect(() => {
     updateHitogramParams();
-  }, [selectedDeployId, selectedDate]);
+  }, [selectedDeployId, selectedDate, dateChange]);
 
   // Project 선택
   const handleProjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -254,6 +256,13 @@ export default function CallbackPage() {
     );
   };
 
+  const handleBarClick = (start: string, end: string) => {
+    setFromDate(start);
+    setToDate(end);
+    setSelectedDate("");
+    setDateChange((prev) => !prev); // 데이터 불러오는 useEffect를 실행
+  };
+
   const chartData =
     selectedType === "method"
       ? Object.entries(logData?.methodCounts || {}).reduce(
@@ -313,9 +322,12 @@ export default function CallbackPage() {
             <input
               type="datetime-local"
               value={fromDate}
-              onChange={(e) => setFromDate(formatTimestamp(e.target.value))}
+              onChange={(e) => {
+                setFromDate(formatTimestamp(e.target.value));
+              }}
               onBlur={() => {
-                updateLogParams(0), updateHitogramParams();
+                updateLogParams(0);
+                updateHitogramParams();
               }}
               disabled={!!selectedDate}
             />
@@ -325,7 +337,8 @@ export default function CallbackPage() {
               value={toDate}
               onChange={(e) => setToDate(formatTimestamp(e.target.value))}
               onBlur={() => {
-                updateLogParams(0), updateHitogramParams();
+                updateLogParams(0);
+                updateHitogramParams();
               }}
               disabled={!!selectedDate}
             />
@@ -342,6 +355,7 @@ export default function CallbackPage() {
           histogramInterval={histogramInterval}
           fromDate={fromDate}
           toDate={toDate}
+          onBarClick={handleBarClick}
         />
       </div>
 
