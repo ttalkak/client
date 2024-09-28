@@ -110,7 +110,7 @@ export interface DeployData {
   versionRequest: VersionRequest | null;
   databaseCreateRequests?: DatabaseCreateRequest[] | null;
   dockerfileCreateRequest?: DockerfileCreateRequest;
-  envs: EnvVar[];
+  envs?: EnvVar[] | null;
   framework: Framework;
 }
 
