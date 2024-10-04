@@ -11,8 +11,9 @@ import { FiMenu, FiX } from "react-icons/fi";
 
 const navItems = [
   { name: "프로젝트", path: routes.projects },
+  { name: "데이터베이스", path: routes.database },
   { name: "대시보드", path: routes.dashboard },
-  { name: "결제내역", path: routes.activity },
+  { name: "결제내역", path: routes.payments },
   { name: "가이드", path: routes.guide },
 ];
 
