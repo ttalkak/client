@@ -116,8 +116,8 @@ export default function ProjectsPage() {
                 onClick={() => setCurrentPage(page - 1)}
                 className={`px-3 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium ${
                   page === currentPage + 1
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-500 hover:bg-gray-50"
+                    ? "text-black"
+                    : "bg-white text-gray-400 hover:bg-gray-50"
                 }`}
               >
                 {page}
