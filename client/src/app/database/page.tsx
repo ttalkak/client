@@ -1,10 +1,13 @@
 "use client";
 
 import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import CreateModal from "@/app/database/components/CreateModal";
 import DetailModal from "@/app/database/components/DetailModal";
 import DetailLoading from "@/app/database/components/DetailLoading";
+import DetailError from "@/app/database/components/DetailError";
 import useGetDatabases from "@/apis/database/useGetDatabases";
 import useCreateDatabase from "@/apis/database/useCreateDatabase";
 import useDeleteDatabase from "@/apis/database/useDeleteDatabase";
@@ -18,6 +21,7 @@ import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
 
 export default function DatabasePage() {
+  const queryClient = useQueryClient();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [direction, setDirection] = useState("desc");
   const [currentPage, setCurrentPage] = useState(0);
@@ -162,14 +166,29 @@ export default function DatabasePage() {
         onSubmit={handleCreateDatabase}
       />
       {detailModalOpen && (
-        <Suspense fallback={<DetailLoading />}>
-          <DetailModal
-            isOpen={detailModalOpen}
-            onClose={() => setDetailModalOpen(false)}
-            onDelete={handleDeleteDatabase}
-            databaseId={selectedDatabaseId}
-          />
-        </Suspense>
+        <ErrorBoundary
+          FallbackComponent={({ error, resetErrorBoundary }) => (
+            <DetailError
+              error={error}
+              resetErrorBoundary={resetErrorBoundary}
+              onClose={() => setDetailModalOpen(false)}
+            />
+          )}
+          onReset={() => {
+            queryClient.invalidateQueries({
+              queryKey: ["database", selectedDatabaseId],
+            });
+          }}
+        >
+          <Suspense fallback={<DetailLoading />}>
+            <DetailModal
+              isOpen={detailModalOpen}
+              onClose={() => setDetailModalOpen(false)}
+              onDelete={handleDeleteDatabase}
+              databaseId={selectedDatabaseId}
+            />
+          </Suspense>
+        </ErrorBoundary>
       )}
     </div>
   );
