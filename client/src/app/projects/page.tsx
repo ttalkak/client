@@ -11,7 +11,7 @@ import useAuthStore from "@/store/useAuthStore";
 import Modal from "@/app/projects/components/Modal";
 import useGetProjects from "@/apis/project/useGetProjects";
 import useCreateProject from "@/apis/project/useCreateProject";
-import getRelativeTime from "@/utils/getRelativeTime";
+import { getRelativeTime } from "@/utils/getRelativeTime";
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
 
