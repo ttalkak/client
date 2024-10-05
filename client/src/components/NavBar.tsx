@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import NavLink from "@/components/NavLink";
 import useAuthStore from "@/store/useAuthStore";
+import { toast } from "react-toastify";
 import { routes } from "@/constants/routeURL";
 import { FiMenu, FiX } from "react-icons/fi";
 
@@ -32,9 +33,15 @@ export default function NavBar() {
     }
   }, [isOpen]);
 
-  const handleLogout = () => {
-    logout();
-    router.push(routes.home);
+  const handleLogout = async () => {
+    const success = await logout();
+    if (success) {
+      router.push(routes.home);
+      toast.success("로그아웃에 성공했습니다.");
+    }
+    if (!success) {
+      toast.error("로그아웃에 실패했습니다.");
+    }
   };
 
   const AuthButton = () =>
