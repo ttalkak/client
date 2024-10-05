@@ -1,8 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState } from "react";
 import CreateModal from "@/app/database/components/CreateModal";
 import DetailModal from "@/app/database/components/DetailModal";
+import DetailLoading from "@/app/database/components/DetailLoading";
 import useGetDatabases from "@/apis/database/useGetDatabases";
 import useCreateDatabase from "@/apis/database/useCreateDatabase";
 import useDeleteDatabase from "@/apis/database/useDeleteDatabase";
@@ -159,12 +161,16 @@ export default function DatabasePage() {
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateDatabase}
       />
-      <DetailModal
-        isOpen={detailModalOpen}
-        onClose={() => setDetailModalOpen(false)}
-        onDelete={handleDeleteDatabase}
-        databaseId={selectedDatabaseId}
-      />
+      {detailModalOpen && (
+        <Suspense fallback={<DetailLoading />}>
+          <DetailModal
+            isOpen={detailModalOpen}
+            onClose={() => setDetailModalOpen(false)}
+            onDelete={handleDeleteDatabase}
+            databaseId={selectedDatabaseId}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
