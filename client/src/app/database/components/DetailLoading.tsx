@@ -29,10 +29,10 @@ export default function DetailLoading() {
         </div>
         <div className="flex justify-center p-4 gap-4">
           <div className="text-center mt-8">
-            <Skeleton width={155} height={48} /> {/* For confirm button */}
+            <Skeleton width={155} height={48} />
           </div>
           <div className="text-center mt-8">
-            <Skeleton width={155} height={48} /> {/* For delete button */}
+            <Skeleton width={155} height={48} />
           </div>
         </div>
       </div>
