@@ -1,6 +1,5 @@
 import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
-import "tippy.js/dist/tippy.css";
 import { DeployStatus } from "@/types/deploy";
 import useGetDatabase from "@/apis/database/useGetDatabase";
 import useStatusColor from "@/hooks/useStatusColor";
@@ -82,9 +81,9 @@ export default function DetailModal({
           <>
             <h2 className="text-4xl mb-6 text-center">{data.name}</h2>
             {data.status && (
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center mb-4">
                 <div className={`w-3 h-3 rounded-full ${statusColor}`} />
-                <div className="text-md">{data.status}</div>
+                <div className="text-md ml-2">{data.status}</div>
                 <Tooltip
                   content={getStatusTooptip(data.status, "데이터베이스")}
                 />
@@ -98,10 +97,7 @@ export default function DetailModal({
                       <td className="py-3 text-gray-500 w-1/3">
                         <div className="flex items-center">
                           {item.label}
-                          <Tooltip
-                            content={item.tooltip}
-                            iconClassName="ml-1"
-                          />
+                          <Tooltip content={item.tooltip} />
                         </div>
                       </td>
                       <td className="py-3">{data[item.key]}</td>

@@ -68,7 +68,7 @@ export default function ProjectsPage() {
         </div>
       </div>
       <div className="flex justify-between mb-3">
-        <h1 className="text-2xl font-bold">Projects</h1>
+        <h1 className="text-2xl font-bold">프로젝트</h1>
         <button
           onClick={() => setIsModalOpen(true)}
           className="border border rounded-lg px-4 py-2"
@@ -116,8 +116,8 @@ export default function ProjectsPage() {
                 onClick={() => setCurrentPage(page - 1)}
                 className={`px-3 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium ${
                   page === currentPage + 1
-                    ? "text-gray-500 bg-gray-200"
-                    : "text-gray-500 hover:bg-gray-50"
+                    ? "bg-gray-900 text-white border-gray-900"
+                    : "bg-white text-gray-500 hover:bg-gray-50"
                 }`}
               >
                 {page}

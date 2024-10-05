@@ -7,12 +7,26 @@ import {
   Framework,
   DockerfileCreateRequest,
 } from "@/types/deploy";
+import Tooltip from "@/components/Tooltip";
 import useDeployStore from "@/store/useDeployStore";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
 import { LuMinusCircle } from "react-icons/lu";
 import { MdAdd } from "react-icons/md";
 import { useEffect } from "react";
+
+const TOOLTIPS = {
+  FRONTEND_FRAMEWORK: "프론트엔드는 React와 Next.js만 지원합니다.",
+  BACKEND_FRAMEWORK: "백엔드는 SpringBoot만 지원합니다.",
+  LANGUAGE_VERSION: {
+    FRONTEND: "프로젝트에서 사용한 Node.js 버전을 입력해주세요.",
+    BACKEND: "프로젝트에서 사용한 Java 버전을 입력해주세요.",
+  },
+  PORT: "애플리케이션에서 사용할 포트 번호를 입력해주세요.",
+  BRANCH: "배포할 레포지토리의 브랜치 입니다.",
+  ROOT_DIR: "프로젝트의 루트 디렉토리 경로입니다.",
+  ENV_VARS: "애플리케이션에 필요한 환경 변수를 입력해주세요.",
+};
 
 interface FormData {
   serviceType: ServiceType;
@@ -122,9 +136,10 @@ export default function DeploymentForm() {
                 <div>
                   <label
                     htmlFor="framework"
-                    className="block text-md font-semibold text-gray-700 mb-1"
+                    className="flex items-center text-md font-semibold text-gray-700 mb-1"
                   >
                     프레임워크
+                    <Tooltip content={TOOLTIPS.FRONTEND_FRAMEWORK} />
                   </label>
                   <select
                     {...field}
@@ -140,8 +155,9 @@ export default function DeploymentForm() {
           )}
           {serviceType === ServiceType.BACKEND && (
             <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">
+              <label className="flex items-center text-md font-semibold text-gray-700 mb-1">
                 백엔드 프레임워크
+                <Tooltip content={TOOLTIPS.BACKEND_FRAMEWORK} />
               </label>
               <div className="w-full p-3 border border-gray-300 rounded-md bg-gray-100">
                 SpringBoot
@@ -177,10 +193,17 @@ export default function DeploymentForm() {
               <div>
                 <label
                   htmlFor="languageVersion"
-                  className="block text-md font-semibold text-gray-700 mb-1"
+                  className="flex items-center text-md font-semibold text-gray-700 mb-1"
                 >
                   {serviceType === ServiceType.FRONTEND ? "Node.js" : "Java"}{" "}
                   버전
+                  <Tooltip
+                    content={
+                      serviceType === ServiceType.FRONTEND
+                        ? TOOLTIPS.LANGUAGE_VERSION.FRONTEND
+                        : TOOLTIPS.LANGUAGE_VERSION.BACKEND
+                    }
+                  />
                 </label>
                 <input
                   {...field}
@@ -219,9 +242,10 @@ export default function DeploymentForm() {
               <div>
                 <label
                   htmlFor="port"
-                  className="block text-md font-semibold text-gray-700 mb-1"
+                  className="flex items-center text-md font-semibold text-gray-700 mb-1"
                 >
                   포트번호
+                  <Tooltip content={TOOLTIPS.PORT} />
                 </label>
                 <input
                   {...field}
@@ -243,9 +267,10 @@ export default function DeploymentForm() {
           <div>
             <label
               htmlFor="branch"
-              className="block text-md font-semibold text-gray-700 mb-1"
+              className="flex items-center text-md font-semibold text-gray-700 mb-1"
             >
               브랜치
+              <Tooltip content={TOOLTIPS.BRANCH} />
             </label>
             <input
               id="branch"
@@ -259,9 +284,10 @@ export default function DeploymentForm() {
           <div>
             <label
               htmlFor="rootDir"
-              className="block text-md font-semibold text-gray-700 mb-1"
+              className="flex items-center text-md font-semibold text-gray-700 mb-1"
             >
               루트 디렉토리
+              <Tooltip content={TOOLTIPS.ROOT_DIR} />
             </label>
             <input
               id="rootDir"
@@ -274,8 +300,9 @@ export default function DeploymentForm() {
         </div>
 
         <div className="mt-8">
-          <h3 className="block text-md font-semibold text-gray-700 mb-1">
+          <h3 className="flex items-center text-md font-semibold text-gray-700 mb-1">
             환경변수
+            <Tooltip content={TOOLTIPS.ENV_VARS} />
           </h3>
           <div className="space-y-3">
             {fields.map((field, index) => (
