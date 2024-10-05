@@ -67,6 +67,11 @@ export default function DeploymentForm() {
   }, [serviceType, setValue]);
 
   const onSubmit = (data: FormData) => {
+    const isNotEmpty = (val: string) => Boolean(val.trim());
+    const filteredEnvVars = data.envVars.filter(
+      ({ key, value }) => isNotEmpty(key) && isNotEmpty(value)
+    );
+
     const updatedDockerfileCreateRequest: DockerfileCreateRequest = {
       exist: dockerfileCreateRequest?.exist ?? true,
       ...dockerfileCreateRequest,
@@ -81,7 +86,7 @@ export default function DeploymentForm() {
         githubRepositoryRequest,
         versionRequest,
         dockerfileCreateRequest: updatedDockerfileCreateRequest,
-        envs: data.envVars,
+        envs: filteredEnvVars,
         framework: (data.serviceType === ServiceType.FRONTEND
           ? data.framework
           : Framework.SPRINGBOOT) as Framework,

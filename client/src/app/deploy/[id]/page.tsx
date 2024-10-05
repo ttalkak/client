@@ -96,7 +96,9 @@ export default function DeployDetailPage() {
   const handleDeleteConfirm = () => {
     deleteDeploy(Number(data?.deploymentId), {
       onSuccess: () => {
-        handleWebhookToggle();
+        if (isToggled) {
+          handleWebhookToggle();
+        }
         router.push(`/projects/${data?.projectId}`);
       },
     });
