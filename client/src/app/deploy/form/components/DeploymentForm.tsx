@@ -9,6 +9,7 @@ import {
 } from "@/types/deploy";
 import Tooltip from "@/components/Tooltip";
 import useDeployStore from "@/store/useDeployStore";
+import useThrottle from "@/hooks/useThrottle";
 import useCreateDeploy from "@/apis/deploy/useCreateDeploy";
 import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
 import { LuMinusCircle } from "react-icons/lu";
@@ -80,7 +81,8 @@ export default function DeploymentForm() {
     setValue("port", serviceType === ServiceType.FRONTEND ? 80 : 8080);
   }, [serviceType, setValue]);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = useThrottle((data: FormData) => {
+    console.log("--dkdfjkdfjkdfjdfjk");
     const isNotEmpty = (val: string) => Boolean(val.trim());
     const filteredEnvVars = data.envVars.filter(
       ({ key, value }) => isNotEmpty(key) && isNotEmpty(value)
@@ -118,7 +120,7 @@ export default function DeploymentForm() {
         },
       }
     );
-  };
+  }, 4000);
 
   return (
     <>
