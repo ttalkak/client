@@ -3,9 +3,9 @@
 import { Suspense } from "react";
 import { useState } from "react";
 import { GetProjectsParams, CreateProjectParams } from "@/types/project";
-import ProjectList from "@/app/projects/components/ProjectList";
-import ProjectListLoading from "@/app/projects/components/ProjectListLoading";
-import Modal from "@/app/projects/components/Modal";
+import ProjectList from "@/app/project/components/ProjectList";
+import ProjectListLoading from "@/app/project/components/ProjectListLoading";
+import Modal from "@/app/project/components/Modal";
 import useCreateProject from "@/apis/project/useCreateProject";
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
