@@ -20,7 +20,7 @@ import { FaSort } from "react-icons/fa";
 export default function DatabasePage() {
   const queryClient = useQueryClient();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const debouncedSearchKeyword = useDebounce(searchKeyword, 1000);
+  const debouncedSearchKeyword = useDebounce(searchKeyword, 500);
   const [direction, setDirection] = useState("desc");
   const [selectedDatabaseId, setSelectedDatabaseId] = useState<number | null>(
     null
