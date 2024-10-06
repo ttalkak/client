@@ -1,39 +1,28 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState } from "react";
-import Link from "next/link";
-import {
-  GetProjectsParams,
-  Project,
-  CreateProjectParams,
-} from "@/types/project";
-import useAuthStore from "@/store/useAuthStore";
+import { GetProjectsParams, CreateProjectParams } from "@/types/project";
+import ProjectList from "@/app/projects/components/ProjectList";
+import ProjectListLoading from "@/app/projects/components/ProjectListLoading";
 import Modal from "@/app/projects/components/Modal";
-import useGetProjects from "@/apis/project/useGetProjects";
 import useCreateProject from "@/apis/project/useCreateProject";
-import { getRelativeTime } from "@/utils/getRelativeTime";
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
 
 export default function ProjectsPage() {
-  const userInfo = useAuthStore((state) => state.userInfo);
   const { mutate: createProject } = useCreateProject();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [direction, setDirection] = useState("desc");
-  const [currentPage, setCurrentPage] = useState(0);
 
-  const params: GetProjectsParams = {
-    page: currentPage,
+  const params: Omit<GetProjectsParams, "page"> = {
     size: 9,
     sort: "createdAt",
     direction: direction.toUpperCase(),
-    userId: userInfo?.userId,
     searchKeyword,
   };
-
-  const { data } = useGetProjects(params);
 
   const handleCreateProject = (data: CreateProjectParams) => {
     createProject(data, {
@@ -76,67 +65,9 @@ export default function ProjectsPage() {
           생성
         </button>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data?.content.map((project: Project) => (
-          <Link
-            href={`/projects/${project.id}`}
-            key={project.id}
-            className="border rounded-lg p-6"
-          >
-            <div className="flex items-center mb-2 cursor-pointer">
-              <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
-              <div>
-                <h2 className="font-semibold">{project.projectName}</h2>
-                <p className="text-sm text-gray-500">{project.domainName}</p>
-              </div>
-            </div>
-            <div className="flex justify-end items-center mt-6">
-              <span className="text-sm text-gray-500">
-                {getRelativeTime(project.createdAt)}
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <div className="flex justify-center mt-8">
-        <nav className="inline-flex rounded-md gap-2">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
-            disabled={currentPage === 0}
-            className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
-          >
-            이전
-          </button>
-          {Array.from({ length: data?.totalPages || 0 }, (_, i) => i + 1).map(
-            (page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page - 1)}
-                className={`px-3 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium ${
-                  page === currentPage + 1
-                    ? "text-black"
-                    : "bg-white text-gray-400 hover:bg-gray-50"
-                }`}
-              >
-                {page}
-              </button>
-            )
-          )}
-          <button
-            onClick={() =>
-              setCurrentPage((prev) =>
-                Math.min((data?.totalPages ?? 1) - 1, prev + 1)
-              )
-            }
-            disabled={currentPage === (data?.totalPages ?? 1) - 1}
-            className="px-3 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
-          >
-            다음
-          </button>
-        </nav>
-      </div>
+      <Suspense fallback={<ProjectListLoading />}>
+        <ProjectList initialParams={params} />
+      </Suspense>
 
       <Modal
         isOpen={isModalOpen}
