@@ -1,12 +1,12 @@
 "use client";
 
-import { Suspense } from "react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { GetProjectsParams, CreateProjectParams } from "@/types/project";
 import ProjectList from "@/app/project/components/ProjectList";
 import ProjectListLoading from "@/app/project/components/ProjectListLoading";
 import Modal from "@/app/project/components/Modal";
 import useCreateProject from "@/apis/project/useCreateProject";
+import useDebounce from "@/hooks/useDebounce";
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
 
@@ -16,12 +16,13 @@ export default function ProjectsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [direction, setDirection] = useState("desc");
+  const debouncedSearchKeyword = useDebounce(searchKeyword, 500);
 
   const params: Omit<GetProjectsParams, "page"> = {
     size: 9,
     sort: "createdAt",
     direction: direction.toUpperCase(),
-    searchKeyword,
+    searchKeyword: debouncedSearchKeyword,
   };
 
   const handleCreateProject = (data: CreateProjectParams) => {
