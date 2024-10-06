@@ -1,6 +1,6 @@
 import { FaSearch } from "react-icons/fa";
 
-export default function NoSearchResult({ message = "데이터가 없습니다." }) {
+export default function NoSearchResult({ message = "검색 결과가 없습니다." }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-388px)]">
       <FaSearch className="w-16 h-16 text-gray-400 mb-4" />
