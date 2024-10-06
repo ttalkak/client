@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { CreateDatabaseRequest, GetDatabasesParams } from "@/types/database";
 import DatabaseList from "@/app/database/components/DatabaseList";
 import DatabaseListLoading from "@/app/database/components/DatabaseListLoading";
 import CreateModal from "@/app/database/components/CreateModal";
@@ -12,13 +13,14 @@ import DetailLoading from "@/app/database/components/DetailLoading";
 import DetailError from "@/app/database/components/DetailError";
 import useCreateDatabase from "@/apis/database/useCreateDatabase";
 import useDeleteDatabase from "@/apis/database/useDeleteDatabase";
-import { CreateDatabaseRequest, GetDatabasesParams } from "@/types/database";
+import useDebounce from "@/hooks/useDebounce";
 import { IoIosSearch } from "react-icons/io";
 import { FaSort } from "react-icons/fa";
 
 export default function DatabasePage() {
   const queryClient = useQueryClient();
   const [searchKeyword, setSearchKeyword] = useState("");
+  const debouncedSearchKeyword = useDebounce(searchKeyword, 1000);
   const [direction, setDirection] = useState("desc");
   const [selectedDatabaseId, setSelectedDatabaseId] = useState<number | null>(
     null
@@ -34,7 +36,7 @@ export default function DatabasePage() {
     size: 9,
     sort: "createdAt",
     direction: direction.toUpperCase(),
-    searchKeyword,
+    searchKeyword: debouncedSearchKeyword,
   };
 
   const handleCreateDatabase = (data: CreateDatabaseRequest) => {
