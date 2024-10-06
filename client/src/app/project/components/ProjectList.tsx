@@ -28,7 +28,7 @@ export default function ProjectList({ initialParams }: ProjectListProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data?.content.map((project: Project) => (
           <Link
-            href={`/projects/${project.id}`}
+            href={`/project/${project.id}`}
             key={project.id}
             className="border rounded-lg p-6"
           >

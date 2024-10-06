@@ -114,7 +114,7 @@ export default function DeploymentForm() {
             webhookUrl: responseData.webhookUrl,
           });
           resetDelpoyStore();
-          router.push(`/projects/${projectId}`);
+          router.push(`/project/${projectId}`);
         },
       }
     );

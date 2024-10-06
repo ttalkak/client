@@ -99,7 +99,7 @@ export default function DeployDetailPage() {
         if (isToggled) {
           handleWebhookToggle();
         }
-        router.push(`/projects/${data?.projectId}`);
+        router.push(`/project/${data?.projectId}`);
       },
     });
   };
