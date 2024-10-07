@@ -58,24 +58,25 @@ export default function ProjectContent({ id }: ProjectContentProps) {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!project) return;
+    if (project.deployments.length >= 1) {
+      const deletePromises = webhookQueries.flatMap((query, index) => {
+        if (!query.data) return [];
+        const repo = repos[index];
+        return query.data
+          .filter((webhook) =>
+            webhook.config.url.includes(project.webhookToken)
+          )
+          .map((webhook) =>
+            deleteWebhook({
+              owner: repo.owner,
+              repo: repo.repo,
+              hook_id: webhook.id,
+            })
+          );
+      });
 
-    // 웹훅 삭제
-    const deletePromises = webhookQueries.flatMap((query, index) => {
-      if (!query.data) return [];
-      const repo = repos[index];
-      return query.data
-        .filter((webhook) => webhook.config.url.includes(project.webhookToken))
-        .map((webhook) =>
-          deleteWebhook({
-            owner: repo.owner,
-            repo: repo.repo,
-            hook_id: webhook.id,
-          })
-        );
-    });
-
-    await Promise.all(deletePromises);
+      await Promise.all(deletePromises);
+    }
 
     // 프로젝트 삭제
     deleteProject(id, {
