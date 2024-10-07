@@ -14,9 +14,10 @@ interface DetailModalProps {
 }
 
 interface DbInfoField {
-  key: "type" | "username" | "password" | "port";
+  key: "type" | "username" | "password" | "port" | "dbName" | "host";
   label: string;
   tooltip: string;
+  value?: string;
 }
 
 const dbInfoFields: DbInfoField[] = [
@@ -26,9 +27,14 @@ const dbInfoFields: DbInfoField[] = [
     tooltip: "데이터베이스의 종류 (예: MySQL, PostgreSQL)",
   },
   {
+    key: "dbName",
+    label: "DB 이름",
+    tooltip: "데이터베이스 접속에 필요한 데이터베이스명",
+  },
+  {
     key: "username",
     label: "DB 아이디",
-    tooltip: "데이터베이스 접속에 필요한 사용자 이름",
+    tooltip: "데이터베이스 접속에 필요한 사용자 아이디",
   },
   {
     key: "password",
@@ -39,6 +45,12 @@ const dbInfoFields: DbInfoField[] = [
     key: "port",
     label: "DB 포트번호",
     tooltip: "데이터베이스 서버에 접속하기 위한 네트워크 포트",
+  },
+  {
+    key: "host",
+    label: "DB 호스트",
+    tooltip: "데이터베이스 서버의 호스트 주소",
+    value: "database.ttalkak.com",
   },
 ];
 
@@ -100,7 +112,7 @@ export default function DetailModal({
                           <Tooltip content={item.tooltip} />
                         </div>
                       </td>
-                      <td className="py-3">{data[item.key]}</td>
+                      <td className="py-3">{item.value || data[item.key]}</td>
                     </tr>
                   ))}
                 </tbody>
