@@ -78,15 +78,19 @@ const IntroSection: React.FC = () => {
     <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
       <div className="text-white text-center max-w-4xl px-4">
         <h1 className="text-5xl md:text-7xl font-bold mb-6">
-          미래를 선도하는 기술 혁신
+          간편한 배포 서비스
         </h1>
         <p className="text-xl md:text-2xl mb-8">
-          우리는 최첨단 기술을 통해 비즈니스의 디지털 혁신을 이끌어갑니다.
-          클라우드, AI, 빅데이터, 그리고 스마트 고객 서비스 솔루션으로 여러분의
-          성공을 지원합니다.
+          가난한.. 개발자들 모여라.. 우리에겐 Ttalkak이 있는데 AWS? Lamda? 그게
+          왜 필요하죠? 우리에겐 Ttalkak이 있는데 도커 파일을 내가 어떻게 써..?
+          소스코드 기반 도커 파일 생성과 배포 깃허브 기반으로 Project를 배포
+          프론트 엔드만 배포하기 아쉽지 않나요 백엔드와 DB 까지? 주니어
+          개발자들을 위한 서비스 도메인 구매하기 비싸지 않나요? 도메인 자동생성
+          프로젝트 배포 원스톱 서비스 Ttalkak 버려진 프로젝트 클릭 몇번으로
+          살려보세요 언제까지 프로젝트하고 버릴래?
         </p>
         <button className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-100 transition duration-300">
-          자세히 알아보기
+          여기는 내일 수정 ㄱ
         </button>
       </div>
     </div>
