@@ -29,7 +29,7 @@ export default function RootLayout({
           <header>
             <NavBar />
           </header>
-          <main className="flex-grow container mx-auto px-10 py-10">
+          <main className="flex-grow container justify-center items-center px-10 py-10">
             {children}
           </main>
           <Footer />
