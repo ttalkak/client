@@ -38,9 +38,13 @@ export default function CallbackPage() {
     fetchUserInfoAndSetState();
   }, [fetchUserInfoAndSetState]);
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-388px)]">
-      <Image src="/logo.png" alt="Logo" width={128} height={128} />
-      <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-2">로그인 중</h2>
+    <div className="flex items-center justify-center min-h-[calc(100vh-268px)]">
+      <div className="flex flex-col items-center">
+        <Image src="/logo.png" alt="Logo" width={128} height={128} />
+        <h2 className="text-2xl font-bold text-gray-800 mt-8 mb-2">
+          로그인 중
+        </h2>
+      </div>
     </div>
   );
 }
