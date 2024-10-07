@@ -4,7 +4,8 @@ import { DeployStatus } from "@/types/deploy";
 import useGetDatabase from "@/apis/database/useGetDatabase";
 import useStatusColor from "@/hooks/useStatusColor";
 import { getStatusTooptip } from "@/utils/getStatusTooltip";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoEye, IoEyeOff } from "react-icons/io5";
+import { useState } from "react";
 
 interface DetailModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ interface DbInfoField {
   label: string;
   tooltip: string;
   value?: string;
+  isPassword?: boolean;
 }
 
 const dbInfoFields: DbInfoField[] = [
@@ -40,6 +42,7 @@ const dbInfoFields: DbInfoField[] = [
     key: "password",
     label: "DB 비밀번호",
     tooltip: "데이터베이스 접속에 필요한 비밀번호",
+    isPassword: true,
   },
   {
     key: "port",
@@ -61,7 +64,7 @@ export default function DetailModal({
   databaseId,
 }: DetailModalProps) {
   const { data } = useGetDatabase(Number(databaseId));
-
+  const [showPassword, setShowPassword] = useState(false);
   const statusColor = useStatusColor(data?.status as DeployStatus);
 
   const onDeleteDatabase = () => {
@@ -72,6 +75,10 @@ export default function DetailModal({
     if (e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   if (!isOpen) return null;
@@ -112,7 +119,27 @@ export default function DetailModal({
                           <Tooltip content={item.tooltip} />
                         </div>
                       </td>
-                      <td className="py-3">{item.value || data[item.key]}</td>
+                      <td className="py-3">
+                        {item.isPassword ? (
+                          <div className="flex items-center justify-between">
+                            <span>
+                              {showPassword ? data[item.key] : "••••••••"}
+                            </span>
+                            <button
+                              onClick={togglePasswordVisibility}
+                              className="focus:outline-none"
+                            >
+                              {showPassword ? (
+                                <IoEyeOff className="w-5 h-5" />
+                              ) : (
+                                <IoEye className="w-5 h-5" />
+                              )}
+                            </button>
+                          </div>
+                        ) : (
+                          item.value || data[item.key]
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
