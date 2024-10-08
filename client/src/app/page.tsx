@@ -110,7 +110,7 @@ const VideoSection: React.FC<{
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-4xl md:text-6xl font-bold mb-12"
+            className="text-4xl md:text-4xl lg:text-5xl font-bold mb-12"
           >
             {text.title}
           </motion.h2>
@@ -118,7 +118,7 @@ const VideoSection: React.FC<{
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 1 }}
-            className="text-xl md:text-2xl mb-8"
+            className="md:text-xl lg:text-2xl mb-8"
           >
             {text.subtitle}
           </motion.p>
@@ -126,7 +126,7 @@ const VideoSection: React.FC<{
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 1.5 }}
-            className="text-lg max-w-2xl"
+            className="text-base lg:text-lg max-w-2xl"
           >
             {text.description}
           </motion.p>
@@ -159,7 +159,7 @@ const IntroSection: React.FC<{
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: isActive ? 0 : -50, opacity: isActive ? 1 : 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-5xl md:text-7xl font-bold mb-14"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-14"
           >
             간편한 배포 서비스
           </motion.h1>
@@ -167,7 +167,7 @@ const IntroSection: React.FC<{
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: isActive ? 0 : 50, opacity: isActive ? 1 : 0 }}
             transition={{ duration: 1, delay: 1 }}
-            className="text-xl md:text-2xl mb-12"
+            className="text-base md:text-lg lg:text-xl mb-12"
           >
             가난한.. 개발자들 모여라.. 우리에겐 Ttalkak이 있는데 AWS? Lamda?
             그게 왜 필요하죠? 우리에겐 Ttalkak이 있는데 도커 파일을 내가 어떻게
