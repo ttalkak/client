@@ -228,7 +228,7 @@ const DoughnutChart = ({
               </div>
             ))
           ) : (
-            <div className="w-full h-full text-[#b0b0b0] bg-gradient-to-br from-[#f5f5f5] via-[#F4F4F5] to-[#f1f1ff] text-[#3b3b3b] flex items-center justify-center">
+            <div className="w-full h-full text-[#b0b0b0] bg-gradient-to-br from-[#f5f5f5] rounded via-[#F4F4F5] to-[#f1f1ff] text-[#3b3b3b] flex items-center justify-center">
               조회된 데이터가 없습니다
             </div>
           )}
