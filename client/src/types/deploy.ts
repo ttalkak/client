@@ -106,7 +106,7 @@ export interface DeployData {
   githubRepositoryRequest: GithubRepositoryRequest;
   versionRequest: VersionRequest | null;
   dockerfileCreateRequest?: DockerfileCreateRequest;
-  envs?: EnvVar[];
+  envs: EnvVar[] | null;
   framework: Framework;
 }
 
