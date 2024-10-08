@@ -4,6 +4,7 @@ import { Deployment } from "@/types/project";
 import { DeployCommand, ServiceType, DeployStatus } from "@/types/deploy";
 import Tooltip from "@/components/Tooltip";
 import useModifyDeployStatus from "@/apis/deploy/useModifyDeployStatus";
+import useThrottle from "@/hooks/useThrottle";
 import useStatusColor from "@/hooks/useStatusColor";
 import { getStatusTooptip } from "@/utils/getStatusTooltip";
 import { FaPlay } from "react-icons/fa6";
@@ -24,14 +25,23 @@ export default function DeploymentStatus({
   const { mutate: modifyDeployStatus } = useModifyDeployStatus();
   const statusColor = useStatusColor(deploy?.status as DeployStatus);
 
+  const throttledModifyDeployStatus = useThrottle(
+    (deploymentId: string, command: DeployCommand) => {
+      modifyDeployStatus({
+        deploymentId,
+        command,
+      });
+    },
+    5000
+  );
+
   const handleButtonClick =
     (command: DeployCommand) => (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      modifyDeployStatus({
-        deploymentId: String(deploy?.deploymentId),
-        command,
-      });
+      if (deploy?.deploymentId) {
+        throttledModifyDeployStatus(String(deploy.deploymentId), command);
+      }
     };
 
   if (deploy) {

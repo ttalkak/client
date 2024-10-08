@@ -4,6 +4,7 @@ import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
 import useGetDatabase from "@/apis/database/useGetDatabase";
 import useModifyDatabaseStatus from "@/apis/database/useModifyDatabaseStatus";
+import useThrottle from "@/hooks/useThrottle";
 import useStatusColor from "@/hooks/useStatusColor";
 import { getStatusTooptip } from "@/utils/getStatusTooltip";
 import { IoClose, IoEye, IoEyeOff } from "react-icons/io5";
@@ -81,13 +82,12 @@ export default function DetailModal({
     }
   };
 
-  const handleButtonClick =
-    (command: DeployCommand) => (e: React.MouseEvent) => {
-      modifyDatabaseStatus({
-        databaseId: data.id,
-        command,
-      });
-    };
+  const handleButtonClick = useThrottle((command: DeployCommand) => {
+    modifyDatabaseStatus({
+      databaseId: data.id,
+      command,
+    });
+  }, 5000);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -120,7 +120,7 @@ export default function DetailModal({
                 />
                 {data.status === DeployStatus.STOPPED && (
                   <button
-                    onClick={handleButtonClick(DeployCommand.START)}
+                    onClick={() => handleButtonClick(DeployCommand.START)}
                     className="border ml-3 flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
                   >
                     <FaPlay color="#3eb127" className="w-3 h-3" />
@@ -129,7 +129,7 @@ export default function DetailModal({
                 )}
                 {data.status === DeployStatus.RUNNING && (
                   <button
-                    onClick={handleButtonClick(DeployCommand.STOP)}
+                    onClick={() => handleButtonClick(DeployCommand.STOP)}
                     className="border ml-3 flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
                   >
                     <FaStop color="#d03939" className="w-3 h-3" />
