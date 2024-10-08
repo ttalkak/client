@@ -68,15 +68,13 @@ export default function DeploymentStatus({
 
           <div className="flex gap-2">
             {deploy.status === DeployStatus.STOPPED && (
-              <>
-                <button
-                  onClick={handleButtonClick(DeployCommand.START)}
-                  className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
-                >
-                  <FaPlay color="#3eb127" className="w-3 h-3" />
-                  <span className="text-xs">start</span>
-                </button>
-              </>
+              <button
+                onClick={handleButtonClick(DeployCommand.START)}
+                className="border flex items-center gap-1 px-2 py-1 shadow-md rounded-full cursor-pointer hover:scale-110 duration-300 ease-in-out transform"
+              >
+                <FaPlay color="#3eb127" className="w-3 h-3" />
+                <span className="text-xs">start</span>
+              </button>
             )}
             {deploy.status === DeployStatus.RUNNING && (
               <>
