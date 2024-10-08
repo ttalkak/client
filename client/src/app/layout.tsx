@@ -32,7 +32,7 @@ export default function RootLayout({
           <main className="flex-grow container mx-auto px-10 py-10">
             {children}
           </main>
-          <footer className="z-10">
+          <footer className="">
             <Footer />
           </footer>
         </ClientWrapper>
