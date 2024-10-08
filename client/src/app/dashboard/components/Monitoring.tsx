@@ -56,7 +56,7 @@ const Monitoring = ({
       <div className="text-lg mb-3 font-semibold flex">AI 분석 결과</div>
       <div
         ref={containerRef}
-        className="relative z-50 p-2 h-[134px] rounded overflow-y-auto custom-scrollbar text-sm bg-gradient-to-br from-[#f5f5f5] via-[#F4F4F5] to-[#f1f1ff] text-[#3b3b3b]"
+        className="relative p-2 h-[134px] rounded overflow-y-auto custom-scrollbar text-sm bg-gradient-to-br from-[#f5f5f5] via-[#F4F4F5] to-[#f1f1ff] text-[#3b3b3b]"
         onScroll={handleScroll}
       >
         {monitoring ? (

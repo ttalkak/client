@@ -26,7 +26,6 @@ import HistogramChart from "./components/HistogramChart";
 
 export default function CallbackPage() {
   const { userInfo } = useAuthStore();
-  const [projects, setProjects] = useState<Project[]>([]);
   const [project, setProject] = useState<Project | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null
@@ -70,7 +69,7 @@ export default function CallbackPage() {
     searchKeyword: "",
   };
 
-  const { data: projectData } = useGetProjects(params);
+  const { data: projects } = useGetProjects(params);
   const { data: selectedProjectData, isLoading } = useGetProjectToLog(
     selectedProjectId || 0,
     !!selectedProjectId
@@ -85,11 +84,6 @@ export default function CallbackPage() {
     !!logParams && !!selectedDeployId
   );
 
-  // Project 선택
-  useEffect(() => {
-    if (projectData) setProjects(projectData.content);
-  }, [projectData]);
-
   // Deploy 선택
   useEffect(() => {
     if (selectedProjectData) {
@@ -101,7 +95,6 @@ export default function CallbackPage() {
 
   useEffect(() => {
     if (histogram && histogramParams) {
-      console.log(histogram);
       setHistogramData(histogram.histograms);
       setHistogramInterval(histogram.intervalMinute);
     }
@@ -162,7 +155,6 @@ export default function CallbackPage() {
   useEffect(() => {
     updateLogParams();
   }, [
-    selectedProjectId,
     selectedDeployId,
     selectedDate,
     project,
@@ -300,7 +292,7 @@ export default function CallbackPage() {
             <option value="" disabled>
               프로젝트 선택
             </option>
-            {projects.map((project: Project) => (
+            {projects.content.map((project: Project) => (
               <option key={project.id} value={project.id}>
                 {project.projectName}
               </option>
