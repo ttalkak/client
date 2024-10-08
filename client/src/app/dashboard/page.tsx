@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import DoughnutChart from "./components/DoughnutChart";
 import useGetProjectToLog from "@/apis/project/useGetProjectToLog";
-import useGetProjects from "@/apis/project/useGetProjects";
+import useGetProjectsToLog from "@/apis/project/useGetProjectsToLog";
 import useGetHistogram from "@/apis/deploy/useGetHistogram";
 import useGetLog from "@/apis/project/useGetLog";
 import {
@@ -70,12 +70,12 @@ export default function CallbackPage() {
     to: toISOWithTimezone(toDate),
     method: selectedMethod,
     status: selectedStatus,
-    deploymentId: selectedDeployId ?? 0,
+    deploymentId: selectedDeployId || 0,
     sort: "DESC",
     page: currentPage,
   };
 
-  const { data: projects } = useGetProjects(projectsParams);
+  const { data: projects } = useGetProjectsToLog(projectsParams);
   const { data: project, isLoading } = useGetProjectToLog(
     selectedProjectId || 0,
     !!selectedProjectId
@@ -91,10 +91,7 @@ export default function CallbackPage() {
 
   // LogData 저장 및 추가 로드 시 데이터 병합
   useEffect(() => {
-    if (deployLog && logParams) {
-      console.log("로그 데이터", deployLog);
-      console.log("로그 파람스", logParams);
-
+    if (selectedDeployId && deployLog && logParams) {
       setLogData((prevLogData) => {
         const updatedContent =
           logParams.page === 0
@@ -238,7 +235,7 @@ export default function CallbackPage() {
             <option value="" disabled>
               프로젝트 선택
             </option>
-            {projects.content.map((project: Project) => (
+            {projects?.content.map((project: Project) => (
               <option key={project.id} value={project.id}>
                 {project.projectName}
               </option>
