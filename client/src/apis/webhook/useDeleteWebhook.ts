@@ -1,13 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import webhookClient from "@/apis/core/webhookClient";
 
-interface DeleteWebhookParams {
+interface DeleteWebhookRequest {
   owner: string;
   repo: string;
   hook_id: number;
 }
 
-const deleteWebhook = async ({ owner, repo, hook_id }: DeleteWebhookParams) => {
+const deleteWebhook = async ({
+  owner,
+  repo,
+  hook_id,
+}: DeleteWebhookRequest) => {
   try {
     await webhookClient.repos.deleteWebhook({ owner, repo, hook_id });
   } catch (error) {
