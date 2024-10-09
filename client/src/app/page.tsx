@@ -41,13 +41,21 @@ const texts = [
 
 const usePreloadVideos = (videoSources: string[]) => {
   useEffect(() => {
-    videoSources.forEach((src) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.href = src;
-      link.as = "video";
-      document.head.appendChild(link);
+    const videoElements = videoSources.map((src) => {
+      const video = document.createElement("video");
+      video.src = src;
+      video.preload = "auto";
+      return video;
     });
+
+    videoElements.forEach((video) => video.load());
+
+    return () => {
+      videoElements.forEach((video) => {
+        video.src = "";
+        video.load();
+      });
+    };
   }, [videoSources]);
 };
 
@@ -109,6 +117,7 @@ const VideoSection: React.FC<{
         loop
         muted
         playsInline
+        preload="auto"
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
       <motion.div
