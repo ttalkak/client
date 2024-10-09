@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { ServiceType } from "@/types/deploy";
 import { Deployment } from "@/types/project";
 import { CreateProjectParams } from "@/types/project";
@@ -77,8 +78,12 @@ export default function ProjectContent({ id }: ProjectContentProps) {
           })
         );
     });
-
-    await Promise.all(deletePromises);
+    try {
+      await Promise.all(deletePromises);
+      toast.success("웹훅이 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      toast.error("웹훅 삭제에 실패했습니다.");
+    }
   };
 
   // 프로젝트 삭제, 페이지 이동 함수

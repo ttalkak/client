@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "react-toastify";
 import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
@@ -64,11 +65,13 @@ export default function DeployDetailPage() {
           },
           {
             onSuccess: () => {
+              toast.success("웹훅이 성공적으로 삭제되었습니다.");
               setIsToggled(false);
               setIsWebhookLoading(false);
             },
             onError: () => {
               setIsWebhookLoading(false);
+              toast.error("웹훅 삭제에 실패했습니다.");
             },
           }
         );
