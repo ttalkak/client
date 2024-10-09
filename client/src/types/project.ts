@@ -23,6 +23,7 @@ export interface Project {
   expirationDate: string;
   createdAt: string;
   updatedAt: string;
+  favicon?: string;
   deployments: Deployment[];
 }
 

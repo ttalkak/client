@@ -13,7 +13,6 @@ const getProjects = async (
     params,
   });
 
-  const { content, totalPages, totalElements } = response.data;
   return response.data;
 };
 
