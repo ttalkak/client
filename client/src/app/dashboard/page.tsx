@@ -13,7 +13,7 @@ import {
   toISOWithTimezone,
 } from "@/utils/getDate";
 import useAuthStore from "@/store/useAuthStore";
-import { GetProjectsParams, Project, Deployment } from "@/types/project";
+import { GetProjectsRequest, Project, Deployment } from "@/types/project";
 import {
   HistogramParams,
   DeploymentLogParams,
@@ -50,7 +50,7 @@ export default function CallbackPage() {
     "5",
   ]);
 
-  const projectsParams: GetProjectsParams = {
+  const projectsParams: GetProjectsRequest = {
     page: 0,
     size: 999,
     sort: "createdAt",
