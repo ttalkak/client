@@ -14,7 +14,6 @@ const navItems = [
   { name: "프로젝트", path: routes.project },
   { name: "데이터베이스", path: routes.database },
   { name: "대시보드", path: routes.dashboard },
-  { name: "결제내역", path: routes.payment },
   { name: "가이드", path: routes.guide.root },
 ];
 
@@ -99,6 +98,9 @@ export default function NavBar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              aria-label="메뉴 열기/닫기"
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
             >
               {isOpen ? (
                 <FiX className="h-6 w-6" />
@@ -110,7 +112,9 @@ export default function NavBar() {
         </div>
       </div>
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-20 transform ${isOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out lg:hidden`}
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-20 transform ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out lg:hidden`}
       >
         <div className="flex flex-col h-full">
           <div className="flex justify-end p-4">

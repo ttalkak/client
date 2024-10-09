@@ -74,6 +74,7 @@ export default function DeploymentForm() {
     githubRepositoryRequest,
     versionRequest,
     dockerfileCreateRequest,
+    favicon,
     reset: resetDelpoyStore,
   } = useDeployStore();
 
@@ -105,6 +106,7 @@ export default function DeploymentForm() {
         framework: (data.serviceType === ServiceType.FRONTEND
           ? data.framework
           : Framework.SPRINGBOOT) as Framework,
+        favicon: favicon,
       },
       {
         onSuccess: (responseData) => {

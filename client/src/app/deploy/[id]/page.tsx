@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "react-toastify";
 import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
@@ -64,11 +65,13 @@ export default function DeployDetailPage() {
           },
           {
             onSuccess: () => {
+              toast.success("웹훅이 성공적으로 삭제되었습니다.");
               setIsToggled(false);
               setIsWebhookLoading(false);
             },
             onError: () => {
               setIsWebhookLoading(false);
+              toast.error("웹훅 삭제에 실패했습니다.");
             },
           }
         );
@@ -242,32 +245,29 @@ export default function DeployDetailPage() {
           {previousVersions.map((version) => (
             <div
               key={version.version}
-              className="flex flex-col mb-4 pb-4 border-b last:border-b-0"
+              className="flex items-center mb-4 pb-4 border-b last:border-b-0"
             >
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-medium">Version: {version.version}</span>
-                <span className="text-sm text-gray-500 flex">
-                  by {version.repositoryLastCommitUserName}
-                  {version.repositoryLastCommitUserProfile && (
-                    <Image
-                      src={version.repositoryLastCommitUserProfile}
-                      alt={`${version.repositoryLastCommitUserName}'s profile`}
-                      width={20}
-                      height={20}
-                      className="inline-block rounded-full ml-2"
-                    />
-                  )}
-                </span>
+              <span className="font-medium w-24 flex-shrink-0">
+                Version: {version.version}
+              </span>
+              <div className="flex items-center justify-center flex-grow mx-4">
+                <FaCodeCommit className="w-4 h-4 flex-shrink-0 mr-2" />
+                <p className="font-medium truncate">
+                  커밋 메시지 : {version.repositoryLastCommitMessage}
+                </p>
               </div>
-              <div className="flex flex-col gap-2 mt-1">
-                <p className="text-gray-600">커밋 메시지</p>
-                <div className="flex items-center gap-2">
-                  <FaCodeCommit className="w-4 h-4 flex-shrink-0" />
-                  <p className="font-medium truncate">
-                    {version.repositoryLastCommitMessage}
-                  </p>
-                </div>
-              </div>
+              <span className="text-sm text-gray-500 flex items-center w-36 justify-end flex-shrink-0">
+                by {version.repositoryLastCommitUserName}
+                {version.repositoryLastCommitUserProfile && (
+                  <Image
+                    src={version.repositoryLastCommitUserProfile}
+                    alt={`${version.repositoryLastCommitUserName}'s profile`}
+                    width={20}
+                    height={20}
+                    className="inline-block rounded-full ml-2"
+                  />
+                )}
+              </span>
             </div>
           ))}
         </div>

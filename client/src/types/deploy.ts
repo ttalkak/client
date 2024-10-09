@@ -106,8 +106,9 @@ export interface DeployData {
   githubRepositoryRequest: GithubRepositoryRequest;
   versionRequest: VersionRequest | null;
   dockerfileCreateRequest?: DockerfileCreateRequest;
-  envs?: EnvVar[];
+  envs: EnvVar[] | null;
   framework: Framework;
+  favicon: string | null;
 }
 
 export interface CreateDeployRequest extends DeployData {

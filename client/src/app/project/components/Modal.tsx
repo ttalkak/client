@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   ProjectFormData,
-  CreateProjectParams,
+  CreateProjectRequest,
   PaymentType,
 } from "@/types/project";
 import { Project } from "@/types/project";
@@ -15,7 +15,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: CreateProjectParams) => void;
+  onSubmit: (data: CreateProjectRequest) => void;
   project?: Project;
   mode: "create" | "edit";
 }
