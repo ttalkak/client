@@ -22,13 +22,9 @@ const useDeleteWebhook = () => {
   return useMutation({
     mutationFn: deleteWebhook,
     onSuccess: (_, variables) => {
-      toast.success("웹훅이 성공적으로 삭제되었습니다.");
       queryClient.invalidateQueries({
         queryKey: ["webhooks", variables.owner, variables.repo],
       });
-    },
-    onError: (error) => {
-      toast.error(error.message);
     },
   });
 };
