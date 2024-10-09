@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ImArrowDown2, ImArrowUp2 } from "react-icons/im";
 
 const videoSources = [
-  "/videos/earth.mp4",
-  "/videos/log.mp4",
-  "/videos/pay.mp4",
-  "/videos/block.mp4",
+  "/videos/earth",
+  "/videos/log",
+  "/videos/pay",
+  "/videos/block",
 ];
 
 const texts = [
@@ -93,12 +93,14 @@ const VideoSection: React.FC<{
     <div className="relative w-full h-full flex items-center justify-center">
       <video
         ref={videoRef}
-        src={videoSrc}
         loop
         muted
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover"
-      />
+      >
+        <source src={`${videoSrc}.webm`} type="video/webm" />
+        <source src={`${videoSrc}.mp4`} type="video/mp4" />
+      </video>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: isActive ? 1 : 0 }}
@@ -201,6 +203,7 @@ const IntroSection: React.FC<{
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="bg-white cursor-pointer bg-opacity-20 p-4 rounded-full text-white hover:bg-opacity-30 transition-all duration-300"
+          aria-label="다음 섹션으로 이동"
         >
           <ImArrowDown2 size={24} />
         </motion.button>
