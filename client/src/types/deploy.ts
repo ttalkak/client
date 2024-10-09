@@ -108,7 +108,7 @@ export interface DeployData {
   dockerfileCreateRequest?: DockerfileCreateRequest;
   envs: EnvVar[] | null;
   framework: Framework;
-  favicon?: string;
+  favicon: string | null;
 }
 
 export interface CreateDeployRequest extends DeployData {

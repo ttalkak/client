@@ -343,12 +343,9 @@ export default function GitHubRepos() {
           return;
         }
       } catch (error) {
-        console.error(`Error fetching favicon at ${fullPath}:`, error);
+        continue;
       }
     }
-
-    // 파비콘을 찾지 못한 경우
-    setFavicon(undefined);
   };
 
   // 루트 디렉토리인지 검증하는 함수
