@@ -106,7 +106,7 @@ const HistogramChart = ({
   };
 
   return (
-    <div className="w-full h-52 border rounded overflow-x-auto overflow-y-hidden custom-scrollbar px-4 pt-4 shadow-lg">
+    <div className="w-full h-52 border rounded overflow-x-auto overflow-y-hidden custom-scrollbar px-4 pt-4 hover:shadow-lg transition-shadow duration-200">
       <div className="text-lg mb-3 font-semibold">시간별 요청 횟수</div>
       <div className="h-[160px]">
         {chartData ? (
