@@ -1,6 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
+import {
+  RiArrowDropDownLine,
+  RiArrowDropUpLine,
+  RiFileTextLine,
+} from "react-icons/ri";
 import { TtalkakPolicyContent } from "./components/TtalkakPolicyContent";
 
 interface TermsSectionProps {
@@ -20,7 +24,10 @@ const GuideSection: React.FC<GuideSectionProps> = ({
   children,
 }) => (
   <section className="mb-8">
-    <h2 className="text-2xl font-semibold mb-4 flex items-center">{title}</h2>
+    <h2 className="text-2xl font-semibold mb-4 flex items-center">
+      {icon}
+      <span className="ml-2">{title}</span>
+    </h2>
     {children}
   </section>
 );
@@ -29,46 +36,46 @@ const TermsSection: React.FC<TermsSectionProps> = ({ title, content }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="mb-6 min-w-full">
-      <button
-        className="flex items-center mb-2 w-full text-left"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {isOpen ? (
-          <RiArrowDropUpLine size={20} className="ml-auto" />
-        ) : (
-          <RiArrowDropDownLine size={20} className="ml-auto" />
+    <div>
+      <div className="mb-6 w-full bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+        <button
+          className="flex items-center p-4 w-full text-left border rounded-lg hover:shadow-lg transition-shadow"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <RiFileTextLine size={20} className="mr-3 text-blue-500" />
+          <h3 className="text-lg font-semibold flex-grow">{title}</h3>
+          {isOpen ? (
+            <RiArrowDropUpLine size={24} className="text-gray-500" />
+          ) : (
+            <RiArrowDropDownLine size={24} className="text-gray-500" />
+          )}
+        </button>
+        {isOpen && (
+          <div className="p-4 text-gray-600">
+            {content.map((item, index) => (
+              <p key={index} className="mb-3 last:mb-0">
+                {item}
+              </p>
+            ))}
+          </div>
         )}
-      </button>
-      {isOpen && (
-        <div className="mt-2 text-gray-600 ml-9">
-          {content.map((item, index) => (
-            <p key={index} className="mb-2">
-              {item}
-            </p>
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 };
 
 const TTALKAKTermsOfServiceAgreement: React.FC = () => {
-  const [isAgreed, setIsAgreed] = useState<boolean>(false);
-
-  const handleAgreeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAgreed(event.target.checked);
-  };
-
   return (
-    <div className="container px-8 min-h-screen max-h-screen">
-      <div className="flex-grow px-4 sm:px-6 lg:px-8 pt-16 grid">
-        <h1 className="text-4xl font-bold mb-4 text-center">
+    <div className="container min-h-screen max-h-screen overflow-y-auto w-full px-6">
+      <div className="flex-grow sm:px-6 lg:px-8 pt-16 grid px-6">
+        <h1 className="text-4xl font-bold mb-8 text-center">
           TTALKAK 서비스 이용약관 및 라이선스
         </h1>
       </div>
-      <GuideSection title="이용약관" icon={<RiArrowDropDownLine size={24} />}>
+      <GuideSection
+        title="이용약관"
+        icon={<RiFileTextLine size={24} className="text-blue-500" />}
+      >
         <div className="space-y-6">
           {TtalkakPolicyContent.map(
             (section: TermsSectionProps, index: number) => (

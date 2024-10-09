@@ -84,6 +84,10 @@ const BackendGuidePage: React.FC = () => {
                 프로젝트 루트에 build.gradle 또는 pom.xml 파일이 있어야 합니다.
               </li>
               <li>Dockerfile이 없는 경우, Ttalkak이 자동으로 생성합니다.</li>
+              <p className="text-red-500 font-bold">
+                Database가 필요한 프로젝트의 경우 Database를 먼저 배포 후
+                Backend를 배포해야 합니다.
+              </p>
             </ul>
           </div>
         </GuideSection>

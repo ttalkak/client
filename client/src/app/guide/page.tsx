@@ -103,10 +103,13 @@ export default function GuidePage() {
       <div className="flex-grow mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <h1 className="text-4xl font-bold mb-4 text-center">딸깍 가이드</h1>
         <section className="text-center border-b pb-12 mb-12">
-          <div className="mb-8 max-w-2xl mx-auto">
-            딸깍은 Frontend, Backend, Database를 배포하고 더 빠르고 개인화된
-            웹을 구축, 확장 및 보호할 수 있는 개발자 경험과 인프라를 제공합니다.
-          </div>
+          <p className=" max-w-2xl mx-auto">
+            딸깍은 Frontend, Backend, Database를 배포하고
+          </p>
+          <p className="mb-8 max-w-2xl mx-auto">
+            더 빠르고 개인화된 웹을 구축, 확장 및 보호할 수 있는 개발자 경험과
+            인프라를 제공합니다.
+          </p>
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link href="/project">
               <Button label="프로젝트 등록하기" primary size="large" />

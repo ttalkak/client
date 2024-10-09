@@ -110,9 +110,9 @@ CMD ["npm", "start"]`,
   );
 
   return (
-    <div className="mx-auto p-6 ">
+    <div className="mx-auto p-6 space-y-8">
       <Section title="배포 과정">
-        <ul className="list-none space-y-1 pl-6">
+        <ul className="list-none space-y-3 pl-6">
           <li className="flex items-center space-x-2">
             GitHub 저장소를 Ttalkak과 연동합니다.
           </li>
@@ -125,10 +125,11 @@ CMD ["npm", "start"]`,
           <li>배포가 완료되면 접속 URL이 제공됩니다.</li>
         </ul>
       </Section>
+
       <Section title="React.js">
-        <p className="mb-4">React.js 프로젝트를 배포</p>
+        <p className="mb-6">React.js 프로젝트를 배포</p>
         <SubSection title="npm 기반 빌드툴 선택">
-          <div className="flex space-x-2 mb-4">
+          <div className="flex space-x-2 mb-6">
             {npmOptions.map((option) => (
               <Tab
                 key={option.label}
@@ -139,15 +140,15 @@ CMD ["npm", "start"]`,
               />
             ))}
           </div>
-          <p className="mb-2">
+          <p className="mb-4">
             선택한 빌드 툴에 따라 자동 생성되는 Dockerfile 양식입니다.
           </p>
           <CodeBlock code={selectedNpm.code} />
         </SubSection>
 
         <SubSection title="yarn 기반 빌드 툴 선택">
-          <p className="mb-4">yarn을 사용하는 경우, 프레임워크를 선택하세요:</p>
-          <div className="flex space-x-2 mb-4">
+          <p className="mb-6">yarn을 사용하는 경우, 프레임워크를 선택하세요:</p>
+          <div className="flex space-x-2 mb-6">
             {yarnOptions.map((option) => (
               <Tab
                 key={option.label}
@@ -158,15 +159,16 @@ CMD ["npm", "start"]`,
               />
             ))}
           </div>
-          <p className="mb-2">
+          <p className="mb-4">
             선택한 빌드 툴에 따라 자동 생성되는 Dockerfile 양식입니다.
           </p>
           <CodeBlock code={selectedYarn.code} />
         </SubSection>
       </Section>
+
       <Section title="Next.js 배포">
-        <p className="mb-4">Next.js 프로젝트를 배포</p>
-        <div className="flex space-x-2 mb-4">
+        <p className="mb-6">Next.js 프로젝트를 배포</p>
+        <div className="flex space-x-2 mb-6">
           {nextOptions.map((option) => (
             <Tab
               key={option.label}
@@ -177,7 +179,7 @@ CMD ["npm", "start"]`,
             />
           ))}
         </div>
-        <p className="mb-2">
+        <p className="mb-4">
           선택한 빌드 툴에 따라 자동 생성되는 Dockerfile 양식입니다.
         </p>
         <CodeBlock code={selectedNext.code} />
@@ -185,5 +187,4 @@ CMD ["npm", "start"]`,
     </div>
   );
 };
-
 export default FrontendDeploymentGuide;
