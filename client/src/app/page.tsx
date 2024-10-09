@@ -39,6 +39,18 @@ const texts = [
   },
 ];
 
+const usePreloadVideos = (videoSources: string[]) => {
+  useEffect(() => {
+    videoSources.forEach((src) => {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.href = src;
+      link.as = "video";
+      document.head.appendChild(link);
+    });
+  }, [videoSources]);
+};
+
 const NavigationMenu: React.FC<{
   currentSlide: number;
   setCurrentSlide: (slide: number) => void;
@@ -216,6 +228,9 @@ export default function Home() {
   const isScrolling = useRef(false);
 
   const totalSlides = videoSources.length + 1;
+
+  // 비디오 프리로딩 훅 사용
+  usePreloadVideos(videoSources);
 
   useEffect(() => {
     const handleWheel = throttle((e: WheelEvent) => {
