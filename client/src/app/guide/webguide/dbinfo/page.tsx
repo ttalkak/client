@@ -51,8 +51,8 @@ const DatabaseGuidePage: React.FC = () => {
             className="mt-2"
           />
           <li>
-            <strong>배포:</strong> '생성' 버튼을 클릭하여 데이터베이스 생성을
-            시작합니다. 실시간으로 배포 과정을 확인할 수 있습니다.
+            <strong>배포:</strong> &apos;생성&apos; 버튼을 클릭하여 데이터베이스
+            생성을 시작합니다. 실시간으로 배포 과정을 확인할 수 있습니다.
           </li>
           <li>
             <strong>접속 정보 확인 및 적용:</strong> 배포가 완료되면 접속 URL,
