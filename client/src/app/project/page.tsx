@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { GetProjectsParams, CreateProjectParams } from "@/types/project";
+import { GetProjectsParams, CreateProjectRequest } from "@/types/project";
 import ProjectList from "@/app/project/components/ProjectList";
 import ProjectListLoading from "@/app/project/components/ProjectListLoading";
 import Modal from "@/app/project/components/Modal";
@@ -25,7 +25,7 @@ export default function ProjectsPage() {
     searchKeyword: debouncedSearchKeyword,
   };
 
-  const handleCreateProject = (data: CreateProjectParams) => {
+  const handleCreateProject = (data: CreateProjectRequest) => {
     createProject(data, {
       onSuccess: () => {
         setIsModalOpen(false);

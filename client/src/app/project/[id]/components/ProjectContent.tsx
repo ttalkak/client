@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { ServiceType } from "@/types/deploy";
 import { Deployment } from "@/types/project";
-import { CreateProjectParams } from "@/types/project";
+import { CreateProjectRequest } from "@/types/project";
 import ConfirmModal from "@/components/ConfirmModal";
 import Modal from "@/app/project/components/Modal";
 import DeploymentStatus from "@/app/project/[id]/components/DeploymentStatus";
@@ -47,7 +47,7 @@ export default function ProjectContent({ id }: ProjectContentProps) {
   const webhookQueries = useGetMultipleWebhooks(repos, isDeleteClicked);
 
   // 프로젝트 수정
-  const handleEditSubmit = (data: CreateProjectParams) => {
+  const handleEditSubmit = (data: CreateProjectRequest) => {
     modifyProject({
       projectId: project.id,
       data,

@@ -60,9 +60,9 @@ export interface ProjectParams {
   expirationDate: string;
 }
 
-export interface CreateProjectParams extends ProjectParams {}
+export interface CreateProjectRequest extends ProjectParams {}
 
-export interface PatchProjectParams {
+export interface ModifyProjectRequest {
   projectId: number;
   data: Partial<ProjectParams>;
 }
