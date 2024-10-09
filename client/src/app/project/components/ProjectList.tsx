@@ -1,19 +1,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { GetProjectsParams, Project } from "@/types/project";
+import { GetProjectsRequest, Project } from "@/types/project";
 import NoData from "@/components/NoData";
 import NoSearchResult from "@/components/NoSearchResult";
 import useGetProjects from "@/apis/project/useGetProjects";
 import { getRelativeTime } from "@/utils/getRelativeTime";
 
 interface ProjectListProps {
-  initialParams: Omit<GetProjectsParams, "page">;
+  initialParams: Omit<GetProjectsRequest, "page">;
 }
 
 export default function ProjectList({ initialParams }: ProjectListProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const params: GetProjectsParams = { ...initialParams, page: currentPage };
+  const params: GetProjectsRequest = { ...initialParams, page: currentPage };
   const { data } = useGetProjects(params);
 
   if (!data || data.content.length === 0) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { GetProjectsParams, CreateProjectRequest } from "@/types/project";
+import { GetProjectsRequest, CreateProjectRequest } from "@/types/project";
 import ProjectList from "@/app/project/components/ProjectList";
 import ProjectListLoading from "@/app/project/components/ProjectListLoading";
 import Modal from "@/app/project/components/Modal";
@@ -18,7 +18,7 @@ export default function ProjectsPage() {
   const [direction, setDirection] = useState("desc");
   const debouncedSearchKeyword = useDebounce(searchKeyword, 500);
 
-  const params: Omit<GetProjectsParams, "page"> = {
+  const params: Omit<GetProjectsRequest, "page"> = {
     size: 9,
     sort: "createdAt",
     direction: direction.toUpperCase(),
