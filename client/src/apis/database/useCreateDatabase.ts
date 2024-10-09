@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQueryClient,
-  UseMutationResult,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { CreateDatabaseRequest } from "@/types/database";
 import client from "@/apis/core/client";

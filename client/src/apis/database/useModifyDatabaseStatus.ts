@@ -3,13 +3,13 @@ import { toast } from "react-toastify";
 import { DeployCommand } from "@/types/deploy";
 import client from "@/apis/core/client";
 
-interface DatabaseStatusRequest {
+interface ModifyDatabaseStatusRequest {
   databaseId: number;
   command: DeployCommand;
 }
 
 const modifyDatabaseStatus = async (
-  data: DatabaseStatusRequest
+  data: ModifyDatabaseStatusRequest
 ): Promise<void> => {
   const response = await client.post({
     url: "/deployment/database/command",
