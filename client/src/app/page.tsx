@@ -39,26 +39,6 @@ const texts = [
   },
 ];
 
-const usePreloadVideos = (videoSources: string[]) => {
-  useEffect(() => {
-    const videoElements = videoSources.map((src) => {
-      const video = document.createElement("video");
-      video.src = src;
-      video.preload = "auto";
-      return video;
-    });
-
-    videoElements.forEach((video) => video.load());
-
-    return () => {
-      videoElements.forEach((video) => {
-        video.src = "";
-        video.load();
-      });
-    };
-  }, [videoSources]);
-};
-
 const NavigationMenu: React.FC<{
   currentSlide: number;
   setCurrentSlide: (slide: number) => void;
@@ -117,7 +97,6 @@ const VideoSection: React.FC<{
         loop
         muted
         playsInline
-        preload="auto"
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
       <motion.div
@@ -237,9 +216,6 @@ export default function Home() {
   const isScrolling = useRef(false);
 
   const totalSlides = videoSources.length + 1;
-
-  // 비디오 프리로딩 훅 사용
-  usePreloadVideos(videoSources);
 
   useEffect(() => {
     const handleWheel = throttle((e: WheelEvent) => {
