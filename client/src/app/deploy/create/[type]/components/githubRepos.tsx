@@ -312,37 +312,38 @@ export default function GitHubRepos() {
     }
   };
 
-  // Favicon을 찾고 스토어에 인코딩해서 저장하는 함수
   const findAndStoreFaviconUrl = async (
     repo: Repository,
     branch: string,
     rootDirectory: string
   ) => {
-    const faviconPaths = ["favicon.ico", "favicon.png", "logo.png", "logo.svg"];
-    const possibleDirs = ["", "public/", "static/", "assets/"];
+    const faviconPaths = [
+      "public/favicon.ico",
+      "public/favicon.png",
+      "public/logo.png",
+      "public/logo.svg",
+    ];
 
-    for (const dir of possibleDirs) {
-      for (const path of faviconPaths) {
-        const fullPath = `${rootDirectory}${dir}${path}`.replace(/^\.?\//, "");
-        try {
-          const response = await fetch(
-            `https://api.github.com/repos/${repo.full_name}/contents/${fullPath}?ref=${branch}`,
-            {
-              headers: {
-                Authorization: `Bearer ${githubApiKey}`,
-              },
-            }
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            const faviconUrl = data.download_url;
-            setFavicon(faviconUrl);
-            return;
+    for (const path of faviconPaths) {
+      const fullPath = `${rootDirectory}${path}`.replace(/^\.?\//, "");
+      try {
+        const response = await fetch(
+          `https://api.github.com/repos/${repo.full_name}/contents/${fullPath}?ref=${branch}`,
+          {
+            headers: {
+              Authorization: `Bearer ${githubApiKey}`,
+            },
           }
-        } catch (error) {
-          console.error(`Error fetching favicon at ${fullPath}:`, error);
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const faviconUrl = data.download_url;
+          setFavicon(faviconUrl);
+          return;
         }
+      } catch (error) {
+        console.error(`Error fetching favicon at ${fullPath}:`, error);
       }
     }
 
