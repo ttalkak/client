@@ -16,7 +16,7 @@ const modifyDatabaseStatus = async (
     data,
   });
   if (!response.success) {
-    throw new Error(response.message!!);
+    throw new Error("요청에 실패했습니다. 서버가 불안정합니다.");
   }
 };
 
