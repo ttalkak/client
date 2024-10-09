@@ -99,7 +99,7 @@ const GuideCard: React.FC<GuideCardProps> = ({ title, description, link }) => {
 
 export default function GuidePage() {
   return (
-    <div className="container px-8 max-h-screen">
+    <div className="container p-8 max-h-screen pb-8 ">
       <div className="flex-grow mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <h1 className="text-4xl font-bold mb-4 text-center">딸깍 가이드</h1>
         <section className="text-center border-b pb-12 mb-12">

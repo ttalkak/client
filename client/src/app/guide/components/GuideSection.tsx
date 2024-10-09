@@ -13,7 +13,7 @@ export default function GuideSection({
 }: GuideSectionProps) {
   return (
     <div className="mb-8 border-b pb-8 last:border-b-0">
-      <h2 className="text-2xl font-semibold mb-4 flex items-center">
+      <h2 className="text-3xl font-semibold mb-4 flex items-center">
         {icon && <span className="text-blue-500 mr-3">{icon}</span>}
         {title}
       </h2>

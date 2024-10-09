@@ -1,6 +1,7 @@
 import React from "react";
 import { FaReact, FaGithub, FaNodeJs, FaDocker, FaGlobe } from "react-icons/fa";
 import GuideSection from "../../components/GuideSection";
+import FrontendDeploymentGuide from "./components/FrontendGuide";
 
 interface GuideStepProps {
   id: string;
@@ -66,33 +67,58 @@ const FrontGuidePage: React.FC = () => {
   ];
 
   return (
-    <div className="container w-full px-8 min-h-screen max-h-screen ">
-      <div className="flex-grow px-4 sm:px-6 lg:px-8 py-16 grid">
-        <h1 className="text-4xl font-bold text-center">
-          프론트엔드 배포 가이드
-        </h1>
+    <div>
+      <div className="w-full px-8 max-h-screen">
+        <div className="flex-grow px-4 sm:px-6 lg:px-8 grid">
+          <h1 className="text-4xl font-bold text-center mb-5 mt-10">
+            프론트엔드 배포 가이드
+          </h1>
+        </div>
+        <GuideSection title="시작하기 전에">
+          <div className="space-y-6">
+            <p>
+              Ttalkak을 사용하여 프론트엔드 프로젝트를 배포하기 전에 다음 사항을
+              확인하세요:
+            </p>
+            <ul className="list-disc pl-6 mt-2">
+              <li>GitHub 저장소에 프로젝트가 푸시되어 있어야 합니다.</li>
+              <li>프로젝트 루트에 package.json 파일이 있어야 합니다.</li>
+              <li>Dockerfile이 없는 경우, Ttalkak이 자동으로 생성합니다.</li>
+            </ul>
+          </div>
+        </GuideSection>
+        <GuideSection title="배포하기">
+          <FrontendDeploymentGuide />
+        </GuideSection>
+        <GuideSection title="최적화 팁">
+          <ul className="list-disc pl-6">
+            <li>
+              빌드 시간을 줄이기 위해 .dockerignore 파일을 사용하여 불필요한
+              파일을 제외하세요.
+            </li>
+            <li>프로덕션 빌드 시 코드 최소화 및 트리 쉐이킹을 활성화하세요.</li>
+            <li>정적 에셋에 대해 CDN을 활용하여 로딩 속도를 개선하세요.</li>
+            <li>환경별 설정을 위해 환경 변수를 적극 활용하세요.</li>
+          </ul>
+        </GuideSection>
+
+        <GuideSection title="주의사항">
+          <ul className="list-disc pl-6">
+            <li>프로젝트 이름은 영문으로 설정해야 합니다.</li>
+            <li>
+              Ttalkak은 단일 컨테이너만 지원합니다 (Docker Compose 미지원).
+            </li>
+            <li>
+              배포된 애플리케이션의 사용량에 따라 자동으로 요금이 청구됩니다.
+            </li>
+            <li>
+              보안 관련 정보(API 키 등)는 환경 변수로 관리하고, 코드에 직접
+              포함시키지 마세요.
+            </li>
+          </ul>
+        </GuideSection>
+        <div className="h-10"></div>
       </div>
-      <GuideSection title="시작하기">
-        <div className="space-y-6">
-          {steps.map((step) => (
-            <StepItem key={step.id} {...step} />
-          ))}
-        </div>
-      </GuideSection>
-      <GuideSection title="배포하기">
-        <div className="space-y-6">
-          {steps.map((step) => (
-            <StepItem key={step.id} {...step} />
-          ))}
-        </div>
-      </GuideSection>
-      <GuideSection title="결제하기">
-        <div className="space-y-6">
-          {steps.map((step) => (
-            <StepItem key={step.id} {...step} />
-          ))}
-        </div>
-      </GuideSection>
     </div>
   );
 };
