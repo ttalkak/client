@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { PaymentCreateProps, PaymentRegistrationStatus } from "@/types/payment";
+import { PaymentCreateProps } from "@/types/payment";
 import client from "@/apis/core/client";
 
 const createPayment = async (data: PaymentCreateProps) => {
