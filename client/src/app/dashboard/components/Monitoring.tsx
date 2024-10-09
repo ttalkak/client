@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import MonitoringModal from "./MonitoringModal";
 import useGetMonitoring from "@/apis/deploy/useGetMonitoring";
-import useTypingAnimation from "../_hooks/useTypingAnimation";
+import useTypingAnimation from "@/hooks/useTypingAnimation";
 
 const Monitoring = ({
   selectedDeployId,
