@@ -15,7 +15,7 @@ const navItems = [
   { name: "데이터베이스", path: routes.database },
   { name: "대시보드", path: routes.dashboard },
   { name: "결제내역", path: routes.payment },
-  { name: "가이드", path: routes.guide },
+  { name: "가이드", path: routes.guide.root },
 ];
 
 export default function NavBar() {

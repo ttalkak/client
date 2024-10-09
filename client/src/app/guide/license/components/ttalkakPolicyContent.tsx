@@ -1,4 +1,4 @@
-export const ttalkakPolicyContent = [
+export const TtalkakPolicyContent = [
   {
     title: "1. 소스코드 공개 동의",
     content: [

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import {
   FaDownload,
   FaWallet,
@@ -6,62 +7,97 @@ import {
   FaCoins,
   FaQuestionCircle,
 } from "react-icons/fa";
+import Button from "../../../../components/Button";
 
-const FeatureCard: React.FC<{
+interface GuideStepProps {
+  id: string;
+  icon: React.ReactElement;
   title: string;
-  items: string[];
-  icon: React.ReactNode;
-}> = ({ title, items, icon }) => (
-  <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-    <div className="flex items-center mb-4">
+  description: string;
+}
+
+interface GuideSectionProps {
+  title: string;
+  icon: React.ReactElement;
+  children: React.ReactNode;
+}
+
+const GuideSection: React.FC<GuideSectionProps> = ({
+  title,
+  icon,
+  children,
+}) => (
+  <section className="mb-8">
+    <h2 className="text-2xl font-semibold mb-4 flex items-center">
+      <span className="mr-2">{icon}</span>
+      {title}
+    </h2>
+    {children}
+  </section>
+);
+
+const StepItem: React.FC<GuideStepProps> = ({ icon, title, description }) => (
+  <div className="mb-6 min-w-full">
+    <div className="flex items-center mb-2">
       <div className="text-blue-500 mr-3">{icon}</div>
-      <h2 className="text-xl font-semibold">{title}</h2>
+      <h3 className="text-lg font-semibold">{title}</h3>
     </div>
-    <ul className="list-disc pl-5 space-y-2">
-      {items.map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
-    </ul>
+    <p className="text-gray-600 ml-9">{description}</p>
   </div>
 );
 
 const List: React.FC<{ items: string[] }> = ({ items }) => (
-  <ul className="list-disc pl-5 space-y-2">
+  <ul className="list-disc pl-5 space-y-2 text-gray-700">
     {items.map((item, index) => (
       <li key={index}>{item}</li>
     ))}
   </ul>
 );
 
-export default function DesktopAppGuide() {
+const AppGuidePage: React.FC = () => {
+  const steps: GuideStepProps[] = [
+    {
+      id: "download",
+      icon: <FaDownload size={24} />,
+      title: "Win64 버전 다운로드",
+      description: "ttalkak.exe 파일을 공식 웹사이트에서 다운로드합니다.",
+    },
+    {
+      id: "install",
+      icon: <FaDownload size={24} />,
+      title: "설치 진행",
+      description: "다운로드한 파일을 실행하여 설치를 진행합니다.",
+    },
+    {
+      id: "metamask",
+      icon: <FaWallet size={24} />,
+      title: "MetaMask 연동",
+      description: "앱 실행 후 MetaMask 지갑을 연동합니다.",
+    },
+    {
+      id: "start",
+      icon: <FaServer size={24} />,
+      title: "서비스 시작",
+      description: "앱을 실행하여 서비스를 시작합니다.",
+    },
+  ];
+
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
-        Ttalkak 데스크톱 앱 설치 가이드
-      </h1>
-
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <p className="text-gray-700 leading-relaxed">
-          Ttalkak 데스크톱 앱을 통해 쉽고 빠르게 서비스를 배포하고 관리할 수
-          있습니다. MetaMask 지갑과 연동하여 실시간으로 서비스를 할당받고,
-          사용량에 따른 요금을 투명하게 정산받을 수 있습니다.
-        </p>
+    <div className="container px-8 min-h-screen max-h-screen">
+      <div className="flex-grow px-4 sm:px-6 lg:px-8 pt-16 grid">
+        <h1 className="text-4xl font-bold mb-4 text-center">
+          Ttalkak 데스크톱 앱 설치 가이드
+        </h1>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <FeatureCard
-          title="설치 과정"
-          icon={<FaDownload size={24} />}
-          items={[
-            "Win64 버전의 ttalkak.exe 파일을 다운로드합니다.",
-            "다운로드한 파일을 실행하여 설치를 진행합니다.",
-            "MetaMask 지갑을 연동합니다.",
-            "앱을 실행하여 서비스를 시작합니다.",
-          ]}
-        />
-        <FeatureCard
-          title="주요 기능"
-          icon={<FaServer size={24} />}
+      <GuideSection title="설치 과정" icon={<FaDownload size={24} />}>
+        <div className="space-y-6">
+          {steps.map((step) => (
+            <StepItem key={step.id} {...step} />
+          ))}
+        </div>
+      </GuideSection>
+      <GuideSection title="주요 기능" icon={<FaServer size={24} />}>
+        <List
           items={[
             "실시간 서비스 할당",
             "사용량 기반 요금 계산",
@@ -69,25 +105,15 @@ export default function DesktopAppGuide() {
             "서비스 모니터링 및 관리",
           ]}
         />
-      </div>
-
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <FaWallet className="text-blue-500 mr-3" size={24} />
-          MetaMask 연동
-        </h2>
+      </GuideSection>
+      <GuideSection title="MetaMask 연동" icon={<FaWallet size={24} />}>
         <p className="text-gray-700">
           Ttalkak 앱을 실행한 후, MetaMask 지갑을 연동해야 합니다. 이를 통해
           서비스 이용 요금을 투명하게 정산받을 수 있습니다. MetaMask가 설치되어
           있지 않다면, 먼저 MetaMask를 설치하고 계정을 생성해주세요.
         </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <FaCoins className="text-blue-500 mr-3" size={24} />
-          요금 정책
-        </h2>
+      </GuideSection>
+      <GuideSection title="요금 정책" icon={<FaCoins size={24} />}>
         <List
           items={[
             "서비스 사용량에 따라 실시간으로 요금이 계산됩니다.",
@@ -95,13 +121,8 @@ export default function DesktopAppGuide() {
             "정산 주기 및 최소 정산 금액은 설정에서 조정할 수 있습니다.",
           ]}
         />
-      </div>
-
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-4 flex items-center">
-          <FaQuestionCircle className="mr-2 text-blue-500" />
-          지원 및 문의
-        </h2>
+      </GuideSection>
+      <GuideSection title="지원 및 문의" icon={<FaQuestionCircle size={24} />}>
         <List
           items={[
             "설치 또는 사용 중 문제가 발생하면 support@ttalkak.com으로 문의해주세요.",
@@ -109,10 +130,8 @@ export default function DesktopAppGuide() {
             "최신 업데이트 및 공지사항은 공식 웹사이트에서 확인하세요.",
           ]}
         />
-      </div>
-
-      <div className="bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
-        <h3 className="text-lg font-semibold mb-2">주의사항</h3>
+      </GuideSection>
+      <GuideSection title="주의사항" icon={<FaQuestionCircle size={24} />}>
         <List
           items={[
             "개인 MetaMask 키는 절대로 공유하지 마세요.",
@@ -120,7 +139,9 @@ export default function DesktopAppGuide() {
             "정기적으로 앱과 MetaMask를 최신 버전으로 업데이트하세요.",
           ]}
         />
-      </div>
+      </GuideSection>
     </div>
   );
-}
+};
+
+export default AppGuidePage;

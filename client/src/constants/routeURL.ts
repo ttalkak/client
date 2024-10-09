@@ -7,7 +7,6 @@ export const routes = {
   payment: "/payment",
   guide: {
     root: "/guide",
-    serviceinfo: "/guide/serviceinfo",
     webGuide: {
       frontinfo: "/guide/webguide/frontinfo",
       backinfo: "/guide/webguide/backinfo",
@@ -17,6 +16,7 @@ export const routes = {
       desktopinfo: "/guide/appguide/desktopinfo",
     },
     license: "/guide/license",
+    payment: "/guide/payment",
   },
   login: "/login",
   mypage: "/mypage",
