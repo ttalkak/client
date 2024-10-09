@@ -12,7 +12,7 @@ export default function MyPage() {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const { data: paymentData } = useGetPayment();
+  const { data: paymentData, isLoading } = useGetPayment();
 
   const openEmailModal = () => {
     setIsEmailModalOpen(true);
@@ -52,7 +52,9 @@ export default function MyPage() {
           <div className="flex flex-col justify-around">
             <div className="flex items-center">
               <div className={thStyle}>지갑 주소</div>
-              {paymentData?.hasKey ? (
+              {isLoading ? (
+                <div className="text-[#cbcbcb]">데이터를 불러오는 중입니다</div>
+              ) : paymentData?.hasKey ? (
                 <div>{paymentData.address}</div>
               ) : (
                 <div className="flex items-center">
