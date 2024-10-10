@@ -87,7 +87,7 @@ export default function DetailModal({
       databaseId: data.id,
       command,
     });
-  }, 5000);
+  }, 3000);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
