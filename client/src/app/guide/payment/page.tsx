@@ -1,4 +1,5 @@
 import { FaExclamationTriangle } from "react-icons/fa";
+import Image from "next/image";
 
 export default function PaymentGuidePage() {
   const container = "px-4 py-10 border-t bg-white";
@@ -82,8 +83,54 @@ export default function PaymentGuidePage() {
         </div>
 
         <div className={container}>
-          <h2 className={containerTitle}>3. 지갑 등록 및 권한 설정하기</h2>
+          <h2 className={containerTitle}>3. MetaMask 네트워크 등록</h2>
           <p className="text-gray-700 mb-4">
+            MetaMask에 SSAFY 네트워크를 등록해야 합니다. 네트워크 등록을 통해
+            블록체인과 연결하고,
+            <br /> 결제 및 서비스에 필요한 권한 설정을 할 수 있습니다. 아래
+            정보를 참고하여 네트워크를 등록하세요.
+          </p>
+          <Image
+            src="/network.png"
+            alt="MetaMask 네트워크 등록 이미지"
+            width={280}
+            height={400}
+            className="border rounded mb-6"
+          />
+          <ul className="list-disc list-inside space-y-2">
+            <li>
+              MetaMask를 실행하고, 우측 상단의{" "}
+              <strong>&quot;네트워크 선택&quot;</strong> 버튼을 클릭하여{" "}
+              <strong>&quot;네트워크 추가(Add Network)&quot;</strong> 버튼을
+              선택합니다.
+            </li>
+            <li>네트워크 추가 화면에서 아래 정보를 입력하세요:</li>
+            <ul className="list-inside ml-6 mt-2">
+              <li>
+                <strong>네트워크 이름:</strong> SSAFY
+              </li>
+              <li>
+                <strong>새 RPC URL:</strong> https://rpc.ssafy-blockchain.com
+              </li>
+              <li>
+                <strong>체인 ID:</strong> 31221
+              </li>
+              <li>
+                <strong>통화 기호:</strong> ETH
+              </li>
+              <li>
+                <strong>블록 탐색기 URL(옵션):</strong> 비워두기
+              </li>
+            </ul>
+          </ul>
+        </div>
+
+        <div className={container}>
+          <h2 className={containerTitle}>4. 지갑 등록 및 권한 설정하기</h2>
+          <p className="text-gray-700 mb-4">
+            웹사이트의 마이페이지에서 지갑 주소{" "}
+            <strong>&quot;등록하기&quot;</strong> 버튼을 눌러 등록창을 열 수
+            있습니다. <br />
             지갑 주소와 Private Key를 입력한 후 <strong>다음</strong> 버튼을
             눌러 <strong>권한 설정</strong> 단계로 이동합니다.
           </p>
@@ -104,7 +151,7 @@ export default function PaymentGuidePage() {
         </div>
 
         <div className={container}>
-          <h2 className={containerTitle}>4. 결제 방식 및 요금 안내</h2>
+          <h2 className={containerTitle}>5. 결제 방식 및 요금 안내</h2>
           <p className="text-gray-700 mb-4">
             딸깍 서비스에서는 <strong>15분마다 10코인</strong>이 자동으로
             결제됩니다. 결제 과정은 다음과 같습니다:
@@ -126,7 +173,7 @@ export default function PaymentGuidePage() {
         </div>
 
         <div className={container}>
-          <h2 className={containerTitle}>5. 주의 사항</h2>
+          <h2 className={containerTitle}>6. 주의 사항</h2>
           <p className="text-gray-700 mb-4">
             권한 설정이 완료되지 않을 경우, 배포한 서비스가 15분 후 자동으로
             종료됩니다.
