@@ -54,7 +54,7 @@ export default function NavBar() {
     ) : (
       <Link
         href={routes.login}
-        className="px-2 py-1.5 rounded-md text-sm hover:text-[#919191]"
+        className="px-2 py-1.5 rounded-md text-sm lg:text-black text-white"
       >
         로그인
       </Link>
