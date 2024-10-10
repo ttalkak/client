@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
+import Link from "next/link";
 import { FaGithub, FaNodeJs, FaDocker, FaGlobe } from "react-icons/fa";
 import GuideSection from "../components/GuideSection";
 import { SubSection } from "../components/Section";
@@ -103,17 +105,10 @@ CMD ["npm", "start"]`,
   },
 ];
 
-const StepItem: React.FC<GuideStepProps> = ({ icon, title, description }) => (
-  <div className="mb-6 min-w-full">
-    <div className="flex items-center mb-2">
-      <div className="text-blue-500 mr-3">{icon}</div>
-      <h3 className="text-lg font-semibold">{title}</h3>
-    </div>
-    <p className="text-gray-600 ml-9">{description}</p>
-  </div>
-);
-
 const FrontGuidePage: React.FC = () => {
+  const container = "px-4 py-10 border-t bg-white";
+  const containerTitle = "text-2xl font-bold mb-4";
+
   const [selectedNpm, setSelectedNpm] = useState<FrameworkOption>(
     npmOptions[0]
   );
@@ -173,28 +168,39 @@ const FrontGuidePage: React.FC = () => {
     <div>
       <div className="w-full px-10 max-h-screen">
         <div className="flex-grow px-4 sm:px-6 lg:px-8 grid">
-          <h1 className="text-4xl font-bold text-center mb-5 mt-10">
+          <h1 className="text-4xl font-bold text-center mb-10 mt-10">
             프론트엔드 배포 가이드
           </h1>
         </div>
         <GuideSection title="시작하기 전에">
           <div className="space-y-6">
             <p>
-              Ttalkak을 사용하여 프론트엔드 프로젝트를 배포하기 전에 다음 사항을
-              확인하세요:
+              딸깍을 사용하여 프론트엔드 프로젝트를 배포하기 전에 다음 사항을
+              확인하세요
             </p>
-            <ul className="list-disc pl-6 mt-2">
+            <ul className="list-disc space-y-3 pl-6 mt-2">
               <li>GitHub 저장소에 프로젝트가 푸시되어 있어야 합니다.</li>
               <li>프로젝트 루트에 package.json 파일이 있어야 합니다.</li>
               <li>Dockerfile이 없는 경우, Ttalkak이 자동으로 생성합니다.</li>
             </ul>
+            <div>
+              <p className="text-red-500 font-bold">
+                [!] Database가 필요한 프로젝트의 경우 Database를 먼저 배포해
+                주세요.
+              </p>
+              <p>
+                자세한 사항은{" "}
+                <Link href="/guide/dbinfo" className="text-blue-500 underline">
+                  Database가이드
+                </Link>{" "}
+                를 참고하세요
+              </p>
+            </div>
           </div>
         </GuideSection>
         <GuideSection title="배포 과정">
-          <ul className="list-none space-y-3 pl-6">
-            <li className="flex items-center space-x-2">
-              GitHub 저장소를 Ttalkak과 연동합니다.
-            </li>
+          <ul className="list-disc space-y-3 pl-6">
+            <li>GitHub 저장소를 Ttalkak과 연동합니다.</li>
             <li>프로젝트의 프레임워크 또는 빌드 도구를 선택합니다.</li>
             <li>
               필요한 경우 환경 변수를 설정합니다 (예: API 엔드포인트, 분석 키

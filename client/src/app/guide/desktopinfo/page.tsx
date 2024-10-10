@@ -40,6 +40,9 @@ const ListItem: React.FC<{
 );
 
 const AppGuidePage: React.FC = () => {
+  const container = "px-4 py-10 border-t bg-white";
+  const containerTitle = "text-2xl font-bold mb-4";
+
   const dowunloadUrl =
     "https://drive.google.com/file/d/1zMYAqDZ-xNYLhF6HhF1RXZN_7l3AqZDy/view?usp=drive_link";
 

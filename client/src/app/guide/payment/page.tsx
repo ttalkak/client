@@ -112,7 +112,7 @@ export default function PaymentGuidePage() {
           <ul className="list-disc list-inside space-y-2">
             <li>
               <strong>자동 결제:</strong> 사용자가 서비스를 이용하는 동안,
-              15분마다 10ssf(SsafyCoint)만큼 자동으로 차감됩니다.
+              15분마다 10ssf(SsafyCoin)만큼 자동으로 차감됩니다.
             </li>
             <li>
               <strong>결제 확인:</strong> 결제 내역은 마이페이지의{" "}
