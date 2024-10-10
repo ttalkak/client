@@ -42,6 +42,7 @@ export default function VideoSection({
         alt={text.title}
         layout="fill"
         objectFit="cover"
+        priority
       />
       <video
         ref={videoRef}
