@@ -24,7 +24,7 @@ const useCreateConfirm = () => {
     onSuccess: () => {
       toast.success("결제 승인 등록이 완료되었습니다.");
       queryClient.invalidateQueries({
-        queryKey: ["payment", "confirm"] as const,
+        queryKey: ["payment", "createConfirm"] as const,
       });
     },
     onError: (error) => {
