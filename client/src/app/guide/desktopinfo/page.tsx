@@ -9,9 +9,8 @@ import {
   FaInfoCircle,
   FaExclamationTriangle,
 } from "react-icons/fa";
-import Button from "../../../../components/Button";
-import Link from "next/link";
-import GuideSection from "../../components/GuideSection";
+import Button from "../../../components/Button";
+import GuideSection from "../components/GuideSection";
 
 interface GuideStepProps {
   id: string;

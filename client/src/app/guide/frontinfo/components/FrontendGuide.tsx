@@ -3,12 +3,9 @@ import React, { useState, ReactNode } from "react";
 import { FaReact, FaDocker, FaGithub } from "react-icons/fa";
 import { SiNextdotjs, SiVite, SiCreatereactapp } from "react-icons/si";
 import { IconType } from "react-icons";
-import { CodeBlock } from "../../../../../app/guide/components/CodeBlock";
-import {
-  Section,
-  SubSection,
-} from "../../../../..//app/guide/components/Section";
-import { Tab } from "../../../../../app/guide/components/Tab";
+import { CodeBlock } from "../../components/CodeBlock";
+import { Section, SubSection } from "../../components/Section";
+import { Tab } from "../../components/Tab";
 
 interface FrameworkOption {
   label: string;

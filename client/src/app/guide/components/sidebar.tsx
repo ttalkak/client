@@ -20,14 +20,14 @@ const sidebarItems: SidebarItem[] = [
   {
     label: "웹 가이드",
     subItems: [
-      { href: routes.guide.webGuide.frontinfo, label: "Frontend" },
-      { href: routes.guide.webGuide.backinfo, label: "Backend" },
-      { href: routes.guide.webGuide.dbinfo, label: "Database" },
+      { href: routes.guide.frontinfo, label: "Frontend" },
+      { href: routes.guide.backinfo, label: "Backend" },
+      { href: routes.guide.dbinfo, label: "Database" },
     ],
   },
   {
     label: "앱 가이드",
-    subItems: [{ href: routes.guide.appGuide.desktopinfo, label: "Desktop" }],
+    subItems: [{ href: routes.guide.desktopinfo, label: "Desktop" }],
   },
   { href: routes.guide.payment, label: "결제 가이드" },
   { href: routes.guide.license, label: "라이선스" },

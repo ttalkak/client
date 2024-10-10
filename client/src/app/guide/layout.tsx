@@ -1,4 +1,4 @@
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar";
 import NavSpacer from "./components/NavSpacer";
 export const inlinelayout =
   "relative w-full h-full items-center justify-center";

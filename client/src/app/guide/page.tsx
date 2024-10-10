@@ -123,17 +123,17 @@ export default function GuidePage() {
           <GuideCard
             title="Frontend 가이드"
             description="React.js, Next.js 기반 서비스를 배포하는 방법을 알아보세요."
-            link={routes.guide.webGuide.frontinfo}
+            link={routes.guide.frontinfo}
           />
           <GuideCard
             title="Backend 가이드"
             description="Java Spring 기반 서비스를 배포하는 방법을 알아보세요."
-            link={routes.guide.webGuide.backinfo}
+            link={routes.guide.backinfo}
           />
           <GuideCard
             title="Database 가이드"
             description="MySQL, PostgreSQL, Redis, MongoDB, MariaDB 를 배포하는 방법을 알아보세요."
-            link={routes.guide.webGuide.dbinfo}
+            link={routes.guide.dbinfo}
           />
         </div>
       </section>

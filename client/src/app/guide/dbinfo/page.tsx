@@ -1,5 +1,5 @@
 import React from "react";
-import GuideSection from "../../components/GuideSection";
+import GuideSection from "../components/GuideSection";
 import Image from "next/image";
 import DatabaseConfigGuide from "./components/DatabaseConfigGuide";
 import DatabaseDockerGuide from "./components/DatabaseDockerGuide";

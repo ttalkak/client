@@ -6,14 +6,10 @@ export const routes = {
   dashboard: "/dashboard",
   guide: {
     root: "/guide",
-    webGuide: {
-      frontinfo: "/guide/webguide/frontinfo",
-      backinfo: "/guide/webguide/backinfo",
-      dbinfo: "/guide/webguide/dbinfo",
-    },
-    appGuide: {
-      desktopinfo: "/guide/appguide/desktopinfo",
-    },
+    frontinfo: "/guide/frontinfo",
+    backinfo: "/guide/backinfo",
+    dbinfo: "/guide/dbinfo",
+    desktopinfo: "/guide/desktopinfo",
     license: "/guide/license",
     payment: "/guide/payment",
   },

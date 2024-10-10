@@ -3,12 +3,9 @@
 import React, { useState } from "react";
 import { SiGradle, SiApachemaven } from "react-icons/si";
 import { IconType } from "react-icons";
-import {
-  Section,
-  SubSection,
-} from "../../../../..//app/guide/components/Section";
-import { CodeBlock } from "../../../../../app/guide/components/CodeBlock";
-import { Tab } from "../../../../../app/guide/components/Tab";
+import { Section } from "../../components/Section";
+import { CodeBlock } from "../../components/CodeBlock";
+import { Tab } from "../../components/Tab";
 
 interface BuildToolOption {
   label: string;
