@@ -1,7 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ImArrowDown2 } from "react-icons/im";
+import Lottie from "lottie-react";
+import clickAnimation from "@/assets/click.json";
 
 interface IntroSectionProps {
   isActive: boolean;
@@ -12,6 +15,11 @@ export default function IntroSection({
   isActive,
   onNextSlide,
 }: IntroSectionProps) {
+  const router = useRouter();
+
+  const handleButtonClick = () => {
+    router.push("/guide");
+  };
   return (
     <div className="w-full h-full flex flex-col items-center justify-between py-40 bg-gradient-to-r from-blue-500 to-purple-600">
       <div className="flex-grow flex items-center justify-center">
@@ -36,21 +44,31 @@ export default function IntroSection({
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: isActive ? 0 : 50, opacity: isActive ? 1 : 0 }}
             transition={{ duration: 1, delay: 1 }}
-            className="text-base md:text-lg lg:text-xl mb-12"
+            className="text-lg md:text-xl lg:text-2xl mb-12"
           >
             언제까지 프로젝트 버릴래?
           </motion.p>
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 0.9 }}
             transition={{ duration: 1, delay: 1.5 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => console.log("dddd")}
-            className="bg-white text-blue-600 font-bold mb-20 py-3 px-8 rounded-full text-lg hover:bg-blue-100 transition duration-300 cursor-pointer"
+            className="relative inline-block mb-20"
           >
-            시작하기
-          </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleButtonClick}
+              className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-100 transition duration-300 cursor-pointer"
+            >
+              시작하기
+            </motion.button>
+            <div
+              className="absolute top-1/2 ml-4 mt-3 transform -translate-y-1/2 -translate-x-1/4 w-96 h-96"
+              style={{ pointerEvents: "none" }}
+            >
+              <Lottie animationData={clickAnimation} />
+            </div>
+          </motion.div>
         </div>
       </div>
       <motion.div
