@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ImArrowUp2 } from "react-icons/im";
@@ -36,10 +37,15 @@ export default function VideoSection({
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
+      <Image
+        src={thumbnailSrc}
+        alt={text.title}
+        layout="fill"
+        objectFit="cover"
+      />
       <video
         ref={videoRef}
         src={videoSrc}
-        poster={thumbnailSrc}
         loop
         muted
         playsInline

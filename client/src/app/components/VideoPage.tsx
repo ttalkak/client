@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { throttle } from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import NavigationMenu from "@/app/components/NavigationMenu";
