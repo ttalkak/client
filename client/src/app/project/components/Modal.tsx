@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import {
   ProjectFormData,
@@ -6,11 +7,13 @@ import {
   PaymentType,
 } from "@/types/project";
 import { Project } from "@/types/project";
+import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
 import { IoClose } from "react-icons/io5";
 import { BiInfinite } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa6";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { TbExternalLink } from "react-icons/tb";
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -27,6 +30,8 @@ export default function Modal({
   project,
   mode,
 }: ProjectModalProps) {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -71,6 +76,10 @@ export default function Modal({
     }
   }, [isOpen, reset, project, mode]);
 
+  const handleLinkClick = () => {
+    router.push("/mypage");
+  };
+
   const onSubmitForm = (data: ProjectFormData) => {
     const formattedDate =
       data.paymentType === PaymentType.Unlimited
@@ -88,9 +97,9 @@ export default function Modal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-      <div className="bg-white p-16 rounded-lg shadow-xl relative">
+      <div className="bg-white p-10 rounded-lg shadow-xl relative">
         <IoClose
-          className="w-6 h-6 absolute top-6 right-6 cursor-pointer"
+          className="w-8 h-8 absolute top-8 right-7 cursor-pointer"
           onClick={() => {
             reset();
             onClose();
@@ -99,6 +108,25 @@ export default function Modal({
         <h2 className="text-4xl font-bold mb-8 text-center">
           프로젝트 {mode === "create" ? "생성" : "수정"}
         </h2>
+        {mode === "create" && (
+          <div className="flex items-center mb-4">
+            <Tooltip
+              content={
+                "지갑 정보가 등록되지 않았습니다. 서비스를 계속 이용하시려면 마이페이지에서 블록체인 지갑 정보를 등록해 주세요."
+              }
+              spanClassName="mr-2"
+              iconClassName="w-5 h-5 text-red-500"
+            />
+            <p className="text-red-500 text-sm">
+              현재 체험판 모드로 서비스가 제공되고 있어, 15분 후 서버가 자동으로
+              종료됩니다.
+            </p>
+            <TbExternalLink
+              onClick={handleLinkClick}
+              className="ml-1 text-red-500 cursor-pointer hover:scale-110"
+            />
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmitForm)}>
           <div className="mb-4">
             <label
