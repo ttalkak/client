@@ -42,7 +42,7 @@ const ListItem: React.FC<{
 
 const AppGuidePage: React.FC = () => {
   const dowunloadUrl =
-    "https://drive.google.com/file/d/1r6YJwHSKujblOqVuBYeDVE0cZ71SItYI/view?usp=drive_link";
+    "https://drive.google.com/file/d/1zMYAqDZ-xNYLhF6HhF1RXZN_7l3AqZDy/view?usp=drive_link";
   const steps: GuideStepProps[] = [
     {
       id: "download",
