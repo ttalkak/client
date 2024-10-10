@@ -30,8 +30,8 @@ export default function PaymentGuidePage() {
               >
                 MetaMask 공식 사이트
               </a>
-              에 접속하여 <strong>"다운로드"</strong> 버튼을 클릭한 뒤,
-              브라우저에 MetaMask를 추가합니다.
+              에 접속하여 <strong>&quot;다운로드&quot;</strong> 버튼을 클릭한
+              뒤, 브라우저에 MetaMask를 추가합니다.
             </li>
             <li>
               MetaMask 확장 프로그램을 설치한 후, 계정을 생성하고 로그인합니다.
@@ -50,11 +50,12 @@ export default function PaymentGuidePage() {
           <ul className="list-disc list-inside space-y-2">
             <li>
               MetaMask를 실행하고, 상단의 계정 이름을 클릭하여{" "}
-              <strong>"계정 세부 정보(Account Details)"</strong> 메뉴를
-              선택합니다.
+              <strong>&quot;계정 세부 정보(Account Details)&quot;</strong>{" "}
+              메뉴를 선택합니다.
             </li>
             <li>
-              <strong>지갑 주소</strong>는 "Account" 아래에 표시된 긴 문자열(예:{" "}
+              <strong>지갑 주소</strong>는 &quot;Account&quot; 아래에 표시된 긴
+              문자열(예:{" "}
               <code className="bg-gray-100 px-2 py-1 rounded text-sm">
                 0x1234...
               </code>
@@ -63,8 +64,9 @@ export default function PaymentGuidePage() {
             </li>
             <li>
               <strong>Private Key</strong>를 확인하려면{" "}
-              <strong>"계정 세부 정보"</strong> 화면에서{" "}
-              <strong>"키 내보내기(Export Private Key)"</strong>를 선택합니다.
+              <strong>&quot;계정 세부 정보&quot;</strong> 화면에서{" "}
+              <strong>&quot;키 내보내기(Export Private Key)&quot;</strong>를
+              선택합니다.
             </li>
           </ul>
           <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 my-4">
@@ -91,7 +93,7 @@ export default function PaymentGuidePage() {
               뜹니다.
             </li>
             <li>
-              <strong>"승인(Approve)"</strong> 버튼을 클릭하여 권한을
+              <strong>&quot;승인(Approve)&quot;</strong> 버튼을 클릭하여 권한을
               부여합니다.
             </li>
             <li>
