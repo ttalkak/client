@@ -2,6 +2,9 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { IoMdClose } from "react-icons/io";
 import { PaymentCreateProps } from "@/types/payment";
 import useCreatePayment from "@/apis/payment/useCreatePayment";
+import useWeb3 from "@/hooks/useWeb3";
+import { toast } from "react-toastify";
+import useCreateConfirm from "@/apis/payment/useCreateConfirm";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -13,16 +16,29 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const [privateKey, setPrivateKey] = useState<string>("");
   const [step, setStep] = useState<number>(1);
 
+  const { signToSend, verifyAccount } = useWeb3();
   const { mutate: createPayment } = useCreatePayment();
+  const { mutate: createConfirm } = useCreateConfirm();
 
   // (1/3) 지갑 등록 요청
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const paymentData: PaymentCreateProps = {
       address,
       privateKey,
     };
+
+    try {
+      if (!(await verifyAccount(address, "0x" + privateKey))) {
+        toast.error("입력한 값이 유효하지 않습니다.");
+        return;
+      }
+    } catch (error) {
+      toast.error("입력한 값이 유효하지 않습니다.");
+      return;
+    }
+    
 
     createPayment(paymentData, {
       onSuccess: () => {
@@ -35,15 +51,31 @@ export default function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   };
 
   // (2/3) 권한 승인 1단계 요청
-  const handleApproveFirst = () => {
-    console.log("1단계 승인 버튼 클릭됨");
-    setStep(3);
+  const handleApproveFirst = async () => {
+    const response = await signToSend(process.env.NEXT_PUBLIC_PAYMENT_CONTRACT_ADDRESS!!)
+    createConfirm({
+      fromAddress: response.from,
+      toAddress: process.env.NEXT_PUBLIC_PAYMENT_CONTRACT_ADDRESS!!,
+      hash: response.hash,
+    }, {
+      onSuccess: () => {
+        setStep(3);
+      }
+    })
   };
 
   // (3/3) 권한 승인 2단계 요청
-  const handleApproveSecond = () => {
-    console.log("2단계 승인 버튼 클릭됨");
-    onClose();
+  const handleApproveSecond = async () => {
+    const response = await signToSend(process.env.NEXT_PUBLIC_ADMIN_ADDRESS!!)
+    createConfirm({
+      fromAddress: response.from,
+      toAddress: process.env.NEXT_PUBLIC_ADMIN_ADDRESS!!,
+      hash: response.hash,
+    }, {
+      onSuccess: () => {
+        onClose();
+      }
+    })
   };
 
   if (!isOpen) return null;
