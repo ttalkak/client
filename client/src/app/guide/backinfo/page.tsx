@@ -202,8 +202,8 @@ const BackendGuidePage: React.FC = () => {
         <div className={container}>
           <h2 className={containerTitle}>도메인 및 포트 매핑</h2>
           <p className="text-gray-700 mb-4">
-            배포가 완료되면 '프로젝트이름.ttalkak.com' 형식의 도메인이 생성되며,
-            포트가 매핑됩니다.
+            배포가 완료되면 &ldquo;프로젝트이름.ttalkak.com &rdquo;형식의
+            도메인이 생성되며, 포트가 매핑됩니다.
           </p>
         </div>
 
