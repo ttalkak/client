@@ -6,7 +6,7 @@ import DatabaseDockerGuide from "./components/DatabaseDockerGuide";
 import { FaDocker } from "react-icons/fa";
 const DatabaseGuidePage: React.FC = () => {
   return (
-    <div className="w-full px-8 max-h-screen">
+    <div className="w-full px-10 max-h-screen">
       <div className="flex-grow px-4 sm:px-6 lg:px-8 grid">
         <h1 className="text-4xl font-bold text-center mb-5 mt-10">
           데이터베이스 배포 가이드

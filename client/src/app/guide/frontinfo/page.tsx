@@ -1,7 +1,18 @@
-import React from "react";
-import { FaReact, FaGithub, FaNodeJs, FaDocker, FaGlobe } from "react-icons/fa";
+"use client";
+import React, { useState } from "react";
+import { FaGithub, FaNodeJs, FaDocker, FaGlobe } from "react-icons/fa";
 import GuideSection from "../components/GuideSection";
-import FrontendDeploymentGuide from "./components/FrontendGuide";
+import { SubSection } from "../components/Section";
+import { CodeBlock } from "../components/CodeBlock";
+import { IconType } from "react-icons";
+import { SiNextdotjs, SiVite, SiCreatereactapp } from "react-icons/si";
+import { Tab } from "../components/Tab";
+
+interface FrameworkOption {
+  label: string;
+  Icon: IconType;
+  code: string;
+}
 
 interface GuideStepProps {
   id: string;
@@ -9,6 +20,88 @@ interface GuideStepProps {
   title: string;
   description: string;
 }
+
+const npmOptions: FrameworkOption[] = [
+  {
+    label: "Vite",
+    Icon: SiVite,
+    code: `FROM node:20.11.1 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:stable-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]`,
+  },
+  {
+    label: "Create React App",
+    Icon: SiCreatereactapp,
+    code: `FROM node:18 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:stable-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]`,
+  },
+];
+
+const yarnOptions: FrameworkOption[] = [
+  {
+    label: "Vite",
+    Icon: SiVite,
+    code: `FROM node:18 AS build
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+COPY . .
+RUN yarn build
+FROM nginx:stable-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]`,
+  },
+  {
+    label: "Create React App",
+    Icon: SiCreatereactapp,
+    code: `FROM node:18 AS build
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+COPY . .
+RUN yarn build
+FROM nginx:stable-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]
+`,
+  },
+];
+
+const nextOptions: FrameworkOption[] = [
+  {
+    label: "Next.js",
+    Icon: SiNextdotjs,
+    code: `FROM node:18 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --frozen-lockfile
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine AS runner
+WORKDIR /app
+COPY --from=build /app/package*.json ./ 
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+RUN npm install --production
+CMD ["npm", "start"]`,
+  },
+];
 
 const StepItem: React.FC<GuideStepProps> = ({ icon, title, description }) => (
   <div className="mb-6 min-w-full">
@@ -21,6 +114,16 @@ const StepItem: React.FC<GuideStepProps> = ({ icon, title, description }) => (
 );
 
 const FrontGuidePage: React.FC = () => {
+  const [selectedNpm, setSelectedNpm] = useState<FrameworkOption>(
+    npmOptions[0]
+  );
+  const [selectedYarn, setSelectedYarn] = useState<FrameworkOption>(
+    yarnOptions[0]
+  );
+  const [selectedNext, setSelectedNext] = useState<FrameworkOption>(
+    nextOptions[0]
+  );
+
   const steps: GuideStepProps[] = [
     {
       id: "github-repo",
@@ -68,7 +171,7 @@ const FrontGuidePage: React.FC = () => {
 
   return (
     <div>
-      <div className="w-full px-8 max-h-screen">
+      <div className="w-full px-10 max-h-screen">
         <div className="flex-grow px-4 sm:px-6 lg:px-8 grid">
           <h1 className="text-4xl font-bold text-center mb-5 mt-10">
             프론트엔드 배포 가이드
@@ -87,9 +190,83 @@ const FrontGuidePage: React.FC = () => {
             </ul>
           </div>
         </GuideSection>
-        <GuideSection title="배포하기">
-          <FrontendDeploymentGuide />
+        <GuideSection title="배포 과정">
+          <ul className="list-none space-y-3 pl-6">
+            <li className="flex items-center space-x-2">
+              GitHub 저장소를 Ttalkak과 연동합니다.
+            </li>
+            <li>프로젝트의 프레임워크 또는 빌드 도구를 선택합니다.</li>
+            <li>
+              필요한 경우 환경 변수를 설정합니다 (예: API 엔드포인트, 분석 키
+              등).
+            </li>
+            <li>배포 버튼을 클릭하여 프로세스를 시작합니다.</li>
+            <li>배포 로그를 실시간으로 확인할 수 있습니다.</li>
+            <li>배포가 완료되면 접속 URL이 제공됩니다.</li>
+          </ul>
         </GuideSection>
+
+        <GuideSection title="React.js 배포하기">
+          <p className="mb-6">React.js 프로젝트를 배포</p>
+          <SubSection title="npm 기반 빌드툴 선택">
+            <div className="flex space-x-2 mb-6">
+              {npmOptions.map((option) => (
+                <Tab
+                  key={option.label}
+                  label={option.label}
+                  Icon={option.Icon}
+                  isActive={selectedNpm.label === option.label}
+                  onClick={() => setSelectedNpm(option)}
+                />
+              ))}
+            </div>
+            <p className="mb-4">
+              선택한 빌드 툴에 따라 자동 생성되는 Dockerfile 양식입니다.
+            </p>
+            <CodeBlock code={selectedNpm.code} />
+          </SubSection>
+
+          <GuideSection title="yarn 기반 빌드 툴 선택">
+            <p className="mb-6">
+              yarn을 사용하는 경우, 프레임워크를 선택하세요:
+            </p>
+            <div className="flex space-x-2 mb-6">
+              {yarnOptions.map((option) => (
+                <Tab
+                  key={option.label}
+                  label={option.label}
+                  Icon={option.Icon}
+                  isActive={selectedYarn.label === option.label}
+                  onClick={() => setSelectedYarn(option)}
+                />
+              ))}
+            </div>
+            <p className="mb-4">
+              선택한 빌드 툴에 따라 자동 생성되는 Dockerfile 양식입니다.
+            </p>
+            <CodeBlock code={selectedYarn.code} />
+          </GuideSection>
+        </GuideSection>
+
+        <GuideSection title="Next.js 배포">
+          <p className="mb-6">Next.js 프로젝트를 배포</p>
+          <div className="flex space-x-2 mb-6">
+            {nextOptions.map((option) => (
+              <Tab
+                key={option.label}
+                label={option.label}
+                Icon={option.Icon}
+                isActive={selectedNext.label === option.label}
+                onClick={() => setSelectedNext(option)}
+              />
+            ))}
+          </div>
+          <p className="mb-4">
+            선택한 빌드 툴에 따라 자동 생성되는 Dockerfile 양식입니다.
+          </p>
+          <CodeBlock code={selectedNext.code} />
+        </GuideSection>
+
         <GuideSection title="최적화 팁">
           <ul className="list-disc pl-6">
             <li>

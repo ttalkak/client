@@ -1,5 +1,6 @@
 export const TtalkakPolicyContent = [
   {
+    index: 1,
     title: "1. 소스코드 공개 동의",
     content: [
       "1.1 사용자는 TTALKAK 서비스에 업로드한 소스코드가 다른 사용자들에게 공개되는 것에 동의합니다.",
@@ -7,6 +8,7 @@ export const TtalkakPolicyContent = [
     ],
   },
   {
+    index: 2,
     title: "2. 지적 재산권 및 라이선스",
     content: [
       "2.1 사용자는 자신이 업로드한 소스코드에 대한 모든 필요한 권리를 보유하고 있음을 보증합니다.",
@@ -15,6 +17,7 @@ export const TtalkakPolicyContent = [
     ],
   },
   {
+    index: 3,
     title: "3. 개인정보 보호",
     content: [
       "3.1 사용자는 소스코드에 개인정보, API 키, 비밀번호 등의 민감한 정보가 포함되지 않도록 주의해야 합니다.",
@@ -22,6 +25,7 @@ export const TtalkakPolicyContent = [
     ],
   },
   {
+    index: 4,
     title: "4. 보안 및 책임",
     content: [
       "4.1 TTALKAK은 업로드된 코드의 보안 취약점에 대해 책임을 지지 않습니다.",
@@ -30,6 +34,7 @@ export const TtalkakPolicyContent = [
     ],
   },
   {
+    index: 5,
     title: "5. 법적 책임",
     content: [
       "5.1 업로드된 코드로 인해 발생하는 모든 법적 책임은 해당 코드를 업로드한 사용자에게 있습니다.",

@@ -5,7 +5,7 @@ import {
   RiArrowDropUpLine,
   RiFileTextLine,
 } from "react-icons/ri";
-import { TtalkakPolicyContent } from "./components/TtalkakPolicyContent";
+import { TtalkakPolicyContent } from "./constants/TtalkakPolicyContent";
 
 interface TermsSectionProps {
   title: string;
@@ -39,7 +39,7 @@ const TermsSection: React.FC<TermsSectionProps> = ({ title, content }) => {
     <div>
       <div className="mb-6 w-full bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
         <button
-          className="flex items-center p-4 w-full text-left border rounded-lg hover:shadow-lg transition-shadow"
+          className="flex items-center p-4 w-full text-left border rounded-lg"
           onClick={() => setIsOpen(!isOpen)}
         >
           <RiFileTextLine size={20} className="mr-3 text-blue-500" />
@@ -66,28 +66,25 @@ const TermsSection: React.FC<TermsSectionProps> = ({ title, content }) => {
 
 const TTALKAKTermsOfServiceAgreement: React.FC = () => {
   return (
-    <div className="container min-h-screen max-h-screen overflow-y-auto w-full px-6">
-      <div className="flex-grow sm:px-6 lg:px-8 pt-16 grid px-6">
+    <div className="container min-h-screen max-h-screen overflow-y-auto w-full px-10">
+      <div className="flex-grow sm:px-6 lg:px-8 pt-16 grid px-4">
         <h1 className="text-4xl font-bold mb-8 text-center">
           TTALKAK 서비스 이용약관 및 라이선스
         </h1>
       </div>
-      <GuideSection
-        title="이용약관"
-        icon={<RiFileTextLine size={24} className="text-blue-500" />}
-      >
-        <div className="space-y-6">
-          {TtalkakPolicyContent.map(
-            (section: TermsSectionProps, index: number) => (
-              <TermsSection
-                key={index}
-                title={section.title}
-                content={section.content}
-              />
-            )
-          )}
-        </div>
-      </GuideSection>
+
+      <div className="space-y-6">
+        {TtalkakPolicyContent.map(
+          (section: TermsSectionProps, index: number) => (
+            <TermsSection
+              key={index}
+              title={section.title}
+              content={section.content}
+            />
+          )
+        )}
+      </div>
+      <div className="h-20"></div>
     </div>
   );
 };

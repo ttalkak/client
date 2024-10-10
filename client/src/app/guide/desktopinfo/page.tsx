@@ -42,6 +42,9 @@ const ListItem: React.FC<{
 const AppGuidePage: React.FC = () => {
   const dowunloadUrl =
     "https://drive.google.com/file/d/1zMYAqDZ-xNYLhF6HhF1RXZN_7l3AqZDy/view?usp=drive_link";
+
+  const dockerUrl = "https://docs.docker.com/desktop/install/windows-install/";
+
   const steps: GuideStepProps[] = [
     {
       id: "download",
@@ -70,8 +73,8 @@ const AppGuidePage: React.FC = () => {
   ];
 
   return (
-    <div className="container p-8 max-h-screen pb-8 ">
-      <h1 className="text-4xl font-bold text-center mb-10">
+    <div className="container px-10 max-h-screen pb-8 ">
+      <h1 className="text-4xl px-4 font-bold text-center mb-10">
         딸깍 데스크톱 가이드
       </h1>
 
@@ -91,15 +94,26 @@ const AppGuidePage: React.FC = () => {
       </section>
 
       <GuideSection title="시작하기 전에">
-        <div className="space-y-6">
-          <p>Ttalkak 데스크톱 앱을 설치하기 전에 다음 사항을 확인하세요:</p>
+        <div>
+          <div className="mb-6">
+            <p className="text-red-500 font-bold mb-3">
+              딸깍 데스크톱 앱을 설치하기 전, 아래 사항을 꼭 확인해주세요.
+            </p>
+            <p className="mb-3">
+              딸깍 데스크톱은 Windows 환경에서 Docker 기반으로 실행됩니다.
+            </p>
+            <p className="mb-3">
+              앱 실행 전에 Docker Desktop이 설치되어 있는지 확인해 주세요.
+            </p>
+            <a href={dockerUrl}>
+              <Button size="small" label="Docker Desktop 설치하기" primary />
+            </a>
+          </div>
           <ul className="space-y-4">
             <ListItem icon={<FaCheckCircle />}>
               Windows 64비트 운영 체제를 사용하고 있는지 확인하세요.
             </ListItem>
-            <ListItem icon={<FaCheckCircle />}>
-              MetaMask 지갑이 설치되어 있어야 합니다. 없다면 먼저 설치해주세요.
-            </ListItem>
+            <ListItem icon={<FaCheckCircle />}>MetaMask 지갑이.</ListItem>
             <ListItem icon={<FaCheckCircle />}>
               안정적인 인터넷 연결이 필요합니다.
             </ListItem>
@@ -125,12 +139,8 @@ const AppGuidePage: React.FC = () => {
 
       <GuideSection title="MetaMask 연동">
         <p className="mb-4">
-          Ttalkak 앱을 실행한 후, MetaMask 지갑을 연동해야 합니다. 이를 통해
+          Ttalkak 앱을 실행한 후, MetaMask 지갑 연동해야 합니다. 이를 통해
           서비스 이용 요금을 투명하게 정산받을 수 있습니다.
-        </p>
-        <p>
-          MetaMask가 설치되어 있지 않다면, 먼저 MetaMask를 설치하고 계정을
-          생성해주세요.
         </p>
       </GuideSection>
 
@@ -142,20 +152,14 @@ const AppGuidePage: React.FC = () => {
           <ListItem icon={<FaCoins />}>
             계산된 요금은 코인으로 환산되어 MetaMask 지갑으로 정산됩니다.
           </ListItem>
-          <ListItem icon={<FaCoins />}>
-            정산 주기 및 최소 정산 금액은 설정에서 조정할 수 있습니다.
-          </ListItem>
         </ul>
       </GuideSection>
 
       <GuideSection title="지원 및 문의">
         <ul className="space-y-4">
           <ListItem icon={<FaQuestionCircle />}>
-            설치 또는 사용 중 문제가 발생하면 support@ttalkak.com으로
+            설치 또는 사용 중 문제가 발생하면 sunsuking@gmail.com으로
             문의해주세요.
-          </ListItem>
-          <ListItem icon={<FaQuestionCircle />}>
-            자주 묻는 질문은 FAQ 페이지에서 확인할 수 있습니다.
           </ListItem>
           <ListItem icon={<FaQuestionCircle />}>
             최신 업데이트 및 공지사항은 공식 웹사이트에서 확인하세요.
@@ -170,9 +174,6 @@ const AppGuidePage: React.FC = () => {
           </ListItem>
           <ListItem icon={<FaExclamationTriangle />}>
             안전한 네트워크 환경에서 앱을 사용해주세요.
-          </ListItem>
-          <ListItem icon={<FaExclamationTriangle />}>
-            정기적으로 앱과 MetaMask를 최신 버전으로 업데이트하세요.
           </ListItem>
         </ul>
       </GuideSection>

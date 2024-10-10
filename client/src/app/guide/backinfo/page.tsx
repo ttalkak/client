@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   FaReact,
   FaGithub,
@@ -8,7 +10,17 @@ import {
   FaServer,
 } from "react-icons/fa";
 import GuideSection from "../components/GuideSection";
-import BackendDeploymentGuide from "./components/BackendGuide";
+import { Tab } from "../components/Tab";
+import { CodeBlock } from "../components/CodeBlock";
+import { SiGradle, SiApachemaven } from "react-icons/si";
+import { IconType } from "react-icons";
+import { Section } from "../components/Section";
+
+interface BuildToolOption {
+  label: string;
+  Icon: IconType;
+  code: string;
+}
 
 interface GuideStepProps {
   id: string;
@@ -27,46 +39,85 @@ const StepItem: React.FC<GuideStepProps> = ({ icon, title, description }) => (
   </div>
 );
 
+const gradleOptions: BuildToolOption[] = [
+  {
+    label: "Gradle",
+    Icon: SiGradle,
+    code: `FROM gradle:8.8-jdk17 AS build
+            WORKDIR /app
+            COPY . .
+            RUN gradle clean build -x test --no-daemon
+
+            FROM eclipse-temurin:17-jdk
+            WORKDIR /app
+            COPY --from=build /app/build/libs/*.jar /app/app.jar
+            ENTRYPOINT ["java", "-jar", "/app/app.jar"]`,
+  },
+];
+
+const mavenOptions: BuildToolOption[] = [
+  {
+    label: "Maven",
+    Icon: SiApachemaven,
+    code: `FROM maven:3.9.4-eclipse-temurin-17 AS build
+          WORKDIR /app
+          COPY . .
+          RUN mvn clean package -DskipTests
+
+          FROM eclipse-temurin:17-jdk
+          WORKDIR /app
+          COPY --from=build /app/target/*.jar /app/app.jar
+          ENTRYPOINT ["java", "-jar", "/app/app.jar"]`,
+  },
+];
+
+const steps: GuideStepProps[] = [
+  {
+    id: "github-repo",
+    icon: <FaGithub size={24} />,
+    title: "GitHub 레포지토리 연동",
+    description: "배포할 백엔드 프로젝트의 GitHub 레포지토리를 선택합니다.",
+  },
+  {
+    id: "root-directory",
+    icon: <FaServer size={24} />,
+    title: "루트 디렉토리 설정",
+    description:
+      "build.gradle 또는 pom.xml 파일이 있는 루트 디렉토리 경로를 설정합니다.",
+  },
+  {
+    id: "java-version",
+    icon: <FaJava size={24} />,
+    title: "Java 버전 설정",
+    description: "프로젝트에 적합한 Java 버전을 입력합니다.",
+  },
+  {
+    id: "dockerfile",
+    icon: <FaDocker size={24} />,
+    title: "Dockerfile 확인",
+    description:
+      "기존 Dockerfile이 있다면 사용되며, 없을 경우 자동으로 생성됩니다. 부적합 시 에러가 표시됩니다.",
+  },
+  {
+    id: "domain-port",
+    icon: <FaGlobe size={24} />,
+    title: "도메인 및 포트 매핑",
+    description:
+      "배포가 완료되면 '{프로젝트이름}.ttalkak.com' 형식의 도메인이 자동으로 생성되며, 포트 매핑이 수행됩니다.",
+  },
+];
+
 const BackendGuidePage: React.FC = () => {
-  const steps: GuideStepProps[] = [
-    {
-      id: "github-repo",
-      icon: <FaGithub size={24} />,
-      title: "GitHub 레포지토리 연동",
-      description: "배포할 백엔드 프로젝트의 GitHub 레포지토리를 선택합니다.",
-    },
-    {
-      id: "root-directory",
-      icon: <FaServer size={24} />,
-      title: "루트 디렉토리 설정",
-      description:
-        "build.gradle 또는 pom.xml 파일이 있는 루트 디렉토리 경로를 설정합니다.",
-    },
-    {
-      id: "java-version",
-      icon: <FaJava size={24} />,
-      title: "Java 버전 설정",
-      description: "프로젝트에 적합한 Java 버전을 입력합니다.",
-    },
-    {
-      id: "dockerfile",
-      icon: <FaDocker size={24} />,
-      title: "Dockerfile 확인",
-      description:
-        "기존 Dockerfile이 있다면 사용되며, 없을 경우 자동으로 생성됩니다. 부적합 시 에러가 표시됩니다.",
-    },
-    {
-      id: "domain-port",
-      icon: <FaGlobe size={24} />,
-      title: "도메인 및 포트 매핑",
-      description:
-        "배포가 완료되면 '{프로젝트이름}.ttalkak.com' 형식의 도메인이 자동으로 생성되며, 포트 매핑이 수행됩니다.",
-    },
-  ];
+  const [selectedGradle, setSelectedGradle] = useState<BuildToolOption>(
+    gradleOptions[0]
+  );
+  const [selectedMaven, setSelectedMaven] = useState<BuildToolOption>(
+    mavenOptions[0]
+  );
 
   return (
     <div>
-      <div className="w-full px-8 max-h-screen">
+      <div className="w-full px-10 max-h-screen">
         <div className="flex-grow px-4 sm:px-6 lg:px-8 grid">
           <h1 className="text-4xl font-bold text-center mb-5 mt-10">
             백엔드 배포 가이드
@@ -91,8 +142,57 @@ const BackendGuidePage: React.FC = () => {
             </ul>
           </div>
         </GuideSection>
-        <GuideSection title="배포하기">
-          <BackendDeploymentGuide />
+
+        <GuideSection title="배포 과정">
+          <ul className="list-none space-y-1 pl-6">
+            <li>GitHub 저장소를 Ttalkak과 연동합니다.</li>
+            <li>프로젝트의 빌드 도구와 Java 버전을 선택합니다.</li>
+            <li>
+              필요한 경우 환경 변수를 설정합니다 (예: 데이터베이스 URL, API 키
+              등).
+            </li>
+            <li>배포 버튼을 클릭하여 프로세스를 시작합니다.</li>
+            <li>배포 로그를 실시간으로 확인할 수 있습니다.</li>
+            <li>배포가 완료되면 접속 URL과 포트 정보가 제공됩니다.</li>
+          </ul>
+        </GuideSection>
+
+        <GuideSection title="Gradle 기반 빌드 툴 선택">
+          <p className="mb-4">Gradle을 사용하는 경우, 빌드 툴을 선택하세요:</p>
+          <div className="flex space-x-2 mb-4">
+            {gradleOptions.map((option) => (
+              <Tab
+                key={option.label}
+                label={option.label}
+                Icon={option.Icon}
+                isActive={selectedGradle.label === option.label}
+                onClick={() => setSelectedGradle(option)}
+              />
+            ))}
+          </div>
+          <p className="mb-2">
+            선택한 Gradle 빌드 툴에 따라 생성되는 Dockerfile:
+          </p>
+          <CodeBlock code={selectedGradle.code} />
+        </GuideSection>
+
+        <GuideSection title="Maven 기반 빌드 툴 선택">
+          <p className="mb-4">Maven을 사용하는 경우, 빌드 툴을 선택하세요:</p>
+          <div className="flex space-x-2 mb-4">
+            {mavenOptions.map((option) => (
+              <Tab
+                key={option.label}
+                label={option.label}
+                Icon={option.Icon}
+                isActive={selectedMaven.label === option.label}
+                onClick={() => setSelectedMaven(option)}
+              />
+            ))}
+          </div>
+          <p className="mb-2">
+            선택한 Maven 빌드 툴에 따라 생성되는 Dockerfile:
+          </p>
+          <CodeBlock code={selectedMaven.code} />
         </GuideSection>
 
         <GuideSection title="최적화 팁">
