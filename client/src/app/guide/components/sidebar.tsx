@@ -137,7 +137,7 @@ export default function Sidebar() {
         className={`${
           isSmallScreen
             ? "fixed top-24 left-4 w-72 transform transition-all shadow-md border-r duration-300 ease-in-out z-40"
-            : "min-w-48 h-screen"
+            : "min-w-60 h-screen"
         } bg-white p-4 border-r ${
           isSmallScreen && !isSidebarOpen
             ? "opacity-0 invisible"

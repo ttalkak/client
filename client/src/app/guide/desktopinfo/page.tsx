@@ -47,7 +47,7 @@ const AppGuidePage: React.FC = () => {
       id: "download",
       icon: <FaDownload size={24} />,
       title: "Win64 버전 다운로드",
-      description: "ttalkak.exe 파일을 공식 웹사이트에서 다운로드합니다.",
+      description: "딸깍 앱을 공식 웹사이트에서 다운로드합니다.",
     },
     {
       id: "install",
@@ -71,7 +71,7 @@ const AppGuidePage: React.FC = () => {
 
   return (
     <div className="container p-8 max-h-screen pb-8 ">
-      <h1 className="text-4xl font-bold text-center mb-10">
+      <h1 className="text-4xl font-bold text-center my-10">
         딸깍 데스크톱 가이드
       </h1>
 
@@ -85,7 +85,7 @@ const AppGuidePage: React.FC = () => {
         </p>
         <div className="flex justify-center">
           <a href={dowunloadUrl} download>
-            <Button label="TTalkak.exe 설치하기" primary size="large" />
+            <Button label="데스크톱 Download" primary size="large" />
           </a>
         </div>
       </section>
