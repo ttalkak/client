@@ -7,6 +7,7 @@ import {
   PaymentType,
 } from "@/types/project";
 import { Project } from "@/types/project";
+import useAuthStore from "@/store/useAuthStore";
 import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
 import { IoClose } from "react-icons/io5";
@@ -31,6 +32,8 @@ export default function Modal({
   mode,
 }: ProjectModalProps) {
   const router = useRouter();
+
+  const { isValidated } = useAuthStore();
 
   const {
     register,
@@ -108,7 +111,7 @@ export default function Modal({
         <h2 className="text-4xl font-bold mb-8 text-center">
           프로젝트 {mode === "create" ? "생성" : "수정"}
         </h2>
-        {mode === "create" && (
+        {mode === "create" && !isValidated && (
           <div className="flex items-center mb-4">
             <Tooltip
               content={
