@@ -5,7 +5,7 @@ import {
   RiArrowDropUpLine,
   RiFileTextLine,
 } from "react-icons/ri";
-import { TtalkakPolicyContent } from "./components/TtalkakPolicyContent";
+import { TtalkakPolicyContent } from "@/app/guide/license/components/ttalkakPolicyContent";
 
 interface TermsSectionProps {
   title: string;

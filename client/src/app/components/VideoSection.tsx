@@ -73,7 +73,7 @@ export default function VideoSection({
           >
             {text.description &&
               text.description.map((line, index) => (
-                <div className="mt-1 ">{line}</div>
+                <div key={index} className="mt-1 ">{line}</div>
               ))}
           </motion.p>
         </div>
