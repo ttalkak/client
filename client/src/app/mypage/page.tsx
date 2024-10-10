@@ -108,7 +108,7 @@ export default function MyPage() {
               paymentResult
                 .reduce((acc, payment) => acc + parseFloat(payment.amount), 0)
                 .toFixed(1)}{" "}
-            ssc
+            ssf
           </div>
         </div>
         {isResultLoading ? (
