@@ -6,6 +6,7 @@ import PaymentModal from "@/components/PaymentModal";
 import EmailRegistrationModal from "@/components/EmailRegistrationModal";
 import useAuthStore from "@/store/useAuthStore";
 import useGetPayment from "@/apis/payment/useGetPayment";
+import useGetConfirm from "@/apis/payment/useGetConfirm";
 
 export default function MyPage() {
   const { userInfo } = useAuthStore();
@@ -13,6 +14,7 @@ export default function MyPage() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const { data: paymentData, isLoading } = useGetPayment();
+  const { data: confirmData } = useGetConfirm();
 
   const openEmailModal = () => {
     setIsEmailModalOpen(true);
@@ -54,11 +56,13 @@ export default function MyPage() {
               <div className={thStyle}>지갑 주소</div>
               {isLoading ? (
                 <div className="text-[#cbcbcb]">데이터를 불러오는 중입니다</div>
-              ) : paymentData?.hasKey ? (
+              ) : paymentData?.hasKey &&
+                confirmData?.contract &&
+                confirmData?.admin ? (
                 <div>{paymentData.address}</div>
               ) : (
                 <div className="flex items-center">
-                  <div className="text-gray-700 text-sm">
+                  <div className="text-gray-700 text-sm min-w-44">
                     등록된 지갑이 없습니다.
                   </div>
                   <button
@@ -76,7 +80,7 @@ export default function MyPage() {
                 <div>{userInfo.email}</div>
               ) : (
                 <div className="flex items-center">
-                  <div className="text-gray-700 text-sm">
+                  <div className="text-gray-700 text-sm min-w-44">
                     등록된 이메일이 없습니다.
                   </div>
                   <button

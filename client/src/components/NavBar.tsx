@@ -45,29 +45,16 @@ export default function NavBar() {
 
   const AuthButton = () =>
     isLogin ? (
-      <div className="flex items-center">
-        <Link href={routes.mypage}>
-          {userInfo && (
-            <Image
-              src={userInfo.profileImage}
-              width={30}
-              height={30}
-              alt="profile_img"
-              className="rounded-full mr-4 bg-gray-200"
-            />
-          )}
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="px-2 py-1.5 rounded-md text-sm text-[#919191] hover:text-black"
-        >
-          로그아웃
-        </button>
-      </div>
+      <button
+        onClick={handleLogout}
+        className="px-2 py-1.5 rounded-md text-sm text-[#919191] w-full text-center hover:text-white"
+      >
+        로그아웃
+      </button>
     ) : (
       <Link
         href={routes.login}
-        className="px-2 py-1.5 rounded-md text-sm hover:text-[#919191]"
+        className="px-2 py-1.5 rounded-md text-sm lg:text-black text-white"
       >
         로그인
       </Link>
@@ -91,8 +78,21 @@ export default function NavBar() {
               ))}
             </div>
           </div>
-          <div className="hidden lg:block">
-            <AuthButton />
+          <div className="flex">
+            <Link href={routes.mypage}>
+              {userInfo && (
+                <Image
+                  src={userInfo.profileImage}
+                  width={30}
+                  height={30}
+                  alt="profile_img"
+                  className="rounded-full mr-4 bg-gray-200 hidden lg:block"
+                />
+              )}
+            </Link>
+            <div className="hidden lg:block">
+              <AuthButton />
+            </div>
           </div>
           <div className="lg:hidden">
             <button
@@ -135,6 +135,12 @@ export default function NavBar() {
                 {item.name}
               </NavLink>
             ))}
+            <Link
+              className="block px-4 py-5 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:text-[#7a7a7a] hover:border-b-2 hover:border-[#e0e0e0] hover:pt-5 hover:pb-4"
+              href={routes.mypage}
+            >
+              마이페이지
+            </Link>
           </div>
           <div className="p-4">
             <div className="bg-black px-3 py-3 rounded-md font-bold text-center cursor-pointer">
