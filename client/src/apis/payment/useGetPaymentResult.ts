@@ -7,8 +7,6 @@ const getPaymentResult = async () => {
     url: "/payment",
   });
 
-  console.log(response);
-
   return response.data;
 };
 
