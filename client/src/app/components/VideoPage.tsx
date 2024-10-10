@@ -64,6 +64,13 @@ export default function VideoPage() {
   const totalSlides = videoSources.length + 1;
 
   useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footer.style.display = "none";
+    }
+  }, []);
+
+  useEffect(() => {
     thumbnailSources.forEach((src) => {
       const img = new Image();
       img.src = src;
