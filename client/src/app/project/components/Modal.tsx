@@ -87,7 +87,7 @@ export default function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
       <div className="bg-white p-16 rounded-lg shadow-xl relative">
         <IoClose
           className="w-6 h-6 absolute top-6 right-6 cursor-pointer"
@@ -136,7 +136,9 @@ export default function Modal({
               <div className="bg-black text-white w-5 text-center rounded-[4px]">
                 2
               </div>
-              도메인명을 입력해 주세요
+              {mode === "create"
+                ? "도메인명을 입력해 주세요"
+                : "도메인명은 수정 불가능합니다"}
             </label>
             <input
               id="domainName"
@@ -152,9 +154,10 @@ export default function Modal({
                 },
               })}
               placeholder="도메인명 (영어만 사용가능)"
-              className="w-full p-2 border border-gray-300 rounded"
+              className={`w-full p-2 border rounded ${mode === "edit" ? "bg-gray-100 text-gray-500 cursor-not-allowed outline-none" : "border-gray-300"}`}
+              readOnly={mode === "edit"}
             />
-            {errors.domainName && (
+            {mode === "create" && errors.domainName && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.domainName.message}
               </p>
