@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import { throttle } from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import NavigationMenu from "@/app/components/NavigationMenu";
@@ -63,6 +62,13 @@ export default function VideoPage() {
   const isScrolling = useRef(false);
 
   const totalSlides = videoSources.length + 1;
+
+  useEffect(() => {
+    thumbnailSources.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     const handleWheel = throttle((e: WheelEvent) => {
