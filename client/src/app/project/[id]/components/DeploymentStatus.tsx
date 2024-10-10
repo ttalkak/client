@@ -59,6 +59,7 @@ export default function DeploymentStatus({
           <div className="text-md">{deploy.status}</div>
           <Tooltip
             content={getStatusTooptip(deploy.statusMessage, "프로젝트")}
+            spanClassName="ml-1"
           />
         </div>
         <div className="flex justify-between items-center">
