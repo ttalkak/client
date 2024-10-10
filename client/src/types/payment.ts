@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 // 안 쓸 수 있음
 export interface History {
   id: number;
@@ -28,4 +29,15 @@ export interface PaymentRegistrationStatus {
 export interface PaymentCreateProps {
   privateKey: string;
   address: string;
+}
+
+export interface PaymentConfirmProps {
+  fromAddress: string;
+  toAddress: string;
+  hash: string;
+}
+
+export interface ConfirmResponse {
+  contract: boolean;
+  admin: boolean;
 }
