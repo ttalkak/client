@@ -15,10 +15,10 @@ const videoSources = [
 ];
 
 const thumbnailSources = [
-  "/thumbnails/earth_thumbnail.png",
-  "/thumbnails/log_thumbnail.png",
-  "/thumbnails/pay_thumbnail.png",
-  "/thumbnails/block_thumbnail.png",
+  "/thumbnails/earth_thumbnail.webp",
+  "/thumbnails/log_thumbnail.webp",
+  "/thumbnails/pay_thumbnail.webp",
+  "/thumbnails/block_thumbnail.webp",
 ];
 
 export const texts = [
