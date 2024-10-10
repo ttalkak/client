@@ -40,9 +40,8 @@ const ListItem: React.FC<{
 );
 
 const AppGuidePage: React.FC = () => {
-  const dowunloadUrl =
-    "https://drive.google.com/file/d/1zMYAqDZ-xNYLhF6HhF1RXZN_7l3AqZDy/view?usp=drive_link";
-
+  const downloadUrl =
+    "https://drive.google.com/file/d/1uTLGHWoJJMzvW4JvsHxvDX6Qh9USj3EB/view?usp=drive_link";
   const dockerUrl = "https://docs.docker.com/desktop/install/windows-install/";
 
   const steps: GuideStepProps[] = [
@@ -73,47 +72,43 @@ const AppGuidePage: React.FC = () => {
   ];
 
   return (
-    <div className="container px-10 max-h-screen pb-8 py-14">
+    <div className="container px-10 max-h-screen pb-16 py-14">
       <h1 className="text-4xl px-4 font-bold text-center mb-10">
         딸깍 데스크톱 가이드
       </h1>
 
-      <section className="text-center border-b pb-12 mb-12">
+      <section className="text-center border-b pb-12 mb-16">
         <p className=" max-w-2xl mx-auto">
-          딸깍은 Frontend, Backend, Database를 배포하고
+          딸깍은 Frontend, Backend, Database를 배포하고 더 빠르고 개인화된 웹을
+          구축, 확장 및 보호할 수 있는 개발자 경험과 인프라를 제공합니다.
         </p>
-        <p className="mb-8 max-w-2xl mx-auto">
-          더 빠르고 개인화된 웹을 구축, 확장 및 보호할 수 있는 개발자 경험과
-          인프라를 제공합니다.
-        </p>
-        <div className="flex justify-center">
-          <a href={dowunloadUrl} download>
+        <div className="flex justify-center mt-8">
+          <a href={downloadUrl} download>
             <Button label="데스크톱 Download" primary size="large" />
           </a>
         </div>
       </section>
 
       <GuideSection title="시작하기 전에">
-        <div>
-          <div className="mb-6">
-            <p className="text-red-500 font-bold mb-3">
-              딸깍 데스크톱 앱을 설치하기 전, 아래 사항을 꼭 확인해주세요.
-            </p>
-            <p className="mb-3">
-              딸깍 데스크톱은 Windows 환경에서 Docker 기반으로 실행됩니다.
-            </p>
-            <p className="mb-3">
-              앱 실행 전에 Docker Desktop이 설치되어 있는지 확인해 주세요.
-            </p>
-            <a href={dockerUrl}>
-              <Button size="small" label="Docker Desktop 설치하기" primary />
-            </a>
-          </div>
+        <div className="space-y-6">
+          <p className="text-red-500 font-bold mb-3">
+            딸깍 데스크톱 앱을 설치하기 전, 아래 사항을 꼭 확인해주세요.
+          </p>
+          <p>
+            딸깍 데스크톱은 Windows 환경에서 Docker 기반으로 실행됩니다. 앱 실행
+            전에 Docker Desktop이 설치되어 있는지 확인해 주세요.
+          </p>
+          <a href={dockerUrl} className="block mt-4">
+            <Button size="small" label="Docker Desktop 설치하기" primary />
+          </a>
+
           <ul className="space-y-4">
             <ListItem icon={<FaCheckCircle />}>
               Windows 64비트 운영 체제를 사용하고 있는지 확인하세요.
             </ListItem>
-            <ListItem icon={<FaCheckCircle />}>MetaMask 지갑이.</ListItem>
+            <ListItem icon={<FaCheckCircle />}>
+              MetaMask 지갑 주소를 확인하세요.
+            </ListItem>
             <ListItem icon={<FaCheckCircle />}>
               안정적인 인터넷 연결이 필요합니다.
             </ListItem>
@@ -122,7 +117,7 @@ const AppGuidePage: React.FC = () => {
       </GuideSection>
 
       <GuideSection title="설치 과정">
-        <div className="space-y-8">
+        <div className="space-y-10">
           {steps.map((step) => (
             <StepItem key={step.id} {...step} />
           ))}
@@ -138,12 +133,12 @@ const AppGuidePage: React.FC = () => {
       </GuideSection>
 
       <GuideSection title="MetaMask 연동">
-        <p className="mb-4">
+        <p className="mb-6">
           Ttalkak 앱에서 회원가입시, MetaMask 지갑주소를 입력해야 합니다. 이를
           통해 서비스 이용 요금을 투명하게 정산받을 수 있습니다.
         </p>
         <p className="mb-4">
-          잘못된 주소를 요청시 sunsuking@gmail.com으로 문의주시기 바랍니다.
+          잘못된 주소를 입력한 경우 sunsuking@gmail.com으로 문의해주세요.
         </p>
       </GuideSection>
 

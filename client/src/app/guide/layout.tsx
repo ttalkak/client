@@ -1,13 +1,7 @@
 import Sidebar from "./components/sidebar";
 import NavSpacer from "./components/NavSpacer";
-export const inlinelayout =
-  "relative w-full h-full items-center justify-center";
 
-export default function GuideLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="w-full fixed top-0 left-0 ">
       <NavSpacer />
