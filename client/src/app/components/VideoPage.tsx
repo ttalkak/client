@@ -14,6 +14,13 @@ const videoSources = [
   "/videos/block.mp4",
 ];
 
+const thumbnailSources = [
+  "/thumbnails/earth_thumbnail.png",
+  "/thumbnails/log_thumbnail.png",
+  "/thumbnails/pay_thumbnail.png",
+  "/thumbnails/block_thumbnail.png",
+];
+
 export const texts = [
   {
     title: "간편한 배포 서비스",
@@ -108,6 +115,7 @@ export default function VideoPage() {
                   <VideoSection
                     videoSrc={src}
                     text={texts[index]}
+                    thumbnailSrc={thumbnailSources[index]}
                     isActive={true}
                     onScrollToTop={() => setCurrentSlide(0)}
                   />
