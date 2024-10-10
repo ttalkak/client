@@ -1,8 +1,9 @@
 import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
+import { CreateDatabaseRequest, DatabaseType } from "@/types/database";
+import useAuthStore from "@/store/useAuthStore";
 import Tooltip from "@/components/Tooltip";
 import Button from "@/components/Button";
-import { CreateDatabaseRequest, DatabaseType } from "@/types/database";
 import { databaseOptions } from "@/utils/getDatabaseIcons";
 import { IoClose } from "react-icons/io5";
 import { TbExternalLink } from "react-icons/tb";
@@ -19,6 +20,8 @@ export default function CreateModal({
   onSubmit,
 }: CreateModalProps) {
   const router = useRouter();
+
+  const { isValidated } = useAuthStore();
 
   const {
     register,
@@ -52,23 +55,25 @@ export default function CreateModal({
         <h2 className="text-4xl font-bold mb-8 text-center">
           데이터베이스 생성
         </h2>
-        <div className="flex items-center mb-4">
-          <Tooltip
-            content={
-              "지갑 정보가 등록되지 않았습니다. 서비스를 계속 이용하시려면 마이페이지에서 블록체인 지갑 정보를 등록해 주세요."
-            }
-            spanClassName="mr-2"
-            iconClassName="w-5 h-5 text-red-500"
-          />
-          <p className="text-red-500 text-sm">
-            현재 체험판 모드로 서비스가 제공되고 있어, 15분 후 서버가 자동으로
-            종료됩니다.
-          </p>
-          <TbExternalLink
-            onClick={handleLinkClick}
-            className="ml-1 text-red-500 cursor-pointer hover:scale-110"
-          />
-        </div>
+        {!isValidated && (
+          <div className="flex items-center mb-4">
+            <Tooltip
+              content={
+                "지갑 정보가 등록되지 않았습니다. 서비스를 계속 이용하시려면 마이페이지에서 블록체인 지갑 정보를 등록해 주세요."
+              }
+              spanClassName="mr-2"
+              iconClassName="w-5 h-5 text-red-500"
+            />
+            <p className="text-red-500 text-sm">
+              현재 체험판 모드로 서비스가 제공되고 있어, 15분 후 서버가 자동으로
+              종료됩니다.
+            </p>
+            <TbExternalLink
+              onClick={handleLinkClick}
+              className="ml-1 text-red-500 cursor-pointer hover:scale-110"
+            />
+          </div>
+        )}
         <form onSubmit={handleSubmit(onSubmitForm)}>
           <div className="mb-4">
             <label
