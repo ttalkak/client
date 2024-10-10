@@ -9,7 +9,7 @@ interface VideoSectionProps {
   text: {
     title: string;
     subtitle: string;
-    description: string;
+    description: string[];
   };
   isActive: boolean;
   onScrollToTop: () => void;
@@ -53,7 +53,7 @@ export default function VideoSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="text-3xl md:text-3xl lg:text-4xl font-bold mb-12"
+            className="text-5xl md:text-5xl lg:text-6xl font-bold mb-12"
           >
             {text.title}
           </motion.h2>
@@ -61,7 +61,7 @@ export default function VideoSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 1 }}
-            className="md:text-xl lg:text-2xl mb-8"
+            className="md:text-2xl lg:text-3xl mb-8"
           >
             {text.subtitle}
           </motion.p>
@@ -69,9 +69,12 @@ export default function VideoSection({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 1.5 }}
-            className="text-base lg:text-lg max-w-2xl"
+            className="text-base lg:text-lg max-w-2xl text-white/85"
           >
-            {text.description}
+            {text.description &&
+              text.description.map((line, index) => (
+                <div className="mt-1 ">{line}</div>
+              ))}
           </motion.p>
         </div>
       </motion.div>

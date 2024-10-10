@@ -14,7 +14,7 @@ const navItems = [
   { name: "프로젝트", path: routes.project },
   { name: "데이터베이스", path: routes.database },
   { name: "대시보드", path: routes.dashboard },
-  { name: "가이드", path: routes.guide },
+  { name: "가이드", path: routes.guide.root },
 ];
 
 export default function NavBar() {
@@ -112,7 +112,9 @@ export default function NavBar() {
         </div>
       </div>
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-20 transform ${isOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out lg:hidden`}
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-20 transform ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out lg:hidden`}
       >
         <div className="flex flex-col h-full">
           <div className="flex justify-end p-4">

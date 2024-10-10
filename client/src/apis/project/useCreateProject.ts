@@ -1,15 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { CreateProjectParams } from "@/types/project";
+import { CreateProjectRequest } from "@/types/project";
 import client from "@/apis/core/client";
 
-const createProject = async (data: CreateProjectParams): Promise<void> => {
+const createProject = async (data: CreateProjectRequest): Promise<void> => {
   const response = await client.post({
     url: "/project",
     data,
   });
 
-  if (!response.success) throw new Error(response.message!!);
+  if (!response.success)
+    throw new Error("프로젝트를 생성하지 못했습니다. 서버가 불안정합니다.");
 };
 
 const useCreateProject = () => {

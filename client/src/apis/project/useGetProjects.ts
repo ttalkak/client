@@ -2,11 +2,11 @@ import {
   useSuspenseQuery,
   UseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import { GetProjectsParams, GetProjectsResponse } from "@/types/project";
+import { GetProjectsRequest, GetProjectsResponse } from "@/types/project";
 import client from "@/apis/core/client";
 
 const getProjects = async (
-  params: GetProjectsParams
+  params: GetProjectsRequest
 ): Promise<GetProjectsResponse> => {
   const response = await client.get<GetProjectsResponse>({
     url: "/project/search",
@@ -17,7 +17,7 @@ const getProjects = async (
 };
 
 const useGetProjects = (
-  params: GetProjectsParams
+  params: GetProjectsRequest
 ): UseSuspenseQueryResult<GetProjectsResponse, Error> => {
   return useSuspenseQuery({
     queryKey: ["projects", params] as const,
