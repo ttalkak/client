@@ -41,6 +41,7 @@ export default function VideoSection({
         src={thumbnailSrc}
         alt={text.title}
         fill
+        priority
         style={{ objectFit: "cover" }}
       />
       <video
