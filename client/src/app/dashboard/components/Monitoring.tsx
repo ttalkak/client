@@ -80,8 +80,14 @@ const Monitoring = ({
         {monitoring ? (
           formattedText
         ) : (
-          <div className="text-center text-[#b0b0b0] h-full flex items-center justify-center">
-            조회된 데이터가 없습니다
+          <div className="relative h-full">
+            <div className="absolute w-full h-full flex items-center justify-center text-[#acacac]">
+              조회된 데이터가 없습니다
+            </div>
+            <div className="absolute text-[#cccccc] px-2 py-1">
+              <div>모니터링 데이터 분석 결과를 요약합니다.</div>
+              <div className="text-[#e3e3e3]">다. 평균 응답 시간은...</div>
+            </div>
           </div>
         )}
       </div>
