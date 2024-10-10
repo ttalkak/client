@@ -41,6 +41,8 @@ const ListItem: React.FC<{
 );
 
 const AppGuidePage: React.FC = () => {
+  const dowunloadUrl =
+    "https://drive.google.com/file/d/1r6YJwHSKujblOqVuBYeDVE0cZ71SItYI/view?usp=drive_link";
   const steps: GuideStepProps[] = [
     {
       id: "download",
@@ -83,9 +85,9 @@ const AppGuidePage: React.FC = () => {
           인프라를 제공합니다.
         </p>
         <div className="flex justify-center">
-          <Link href="/project">
+          <a href={dowunloadUrl} download>
             <Button label="TTalkak.exe 설치하기" primary size="large" />
-          </Link>
+          </a>
         </div>
       </section>
 
