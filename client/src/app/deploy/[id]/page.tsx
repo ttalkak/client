@@ -14,6 +14,7 @@ import useGetWebhooks from "@/apis/webhook/useGetWebhooks";
 import useCreateWebhook from "@/apis/webhook/useCreateWebhook";
 import useDeleteWebhook from "@/apis/webhook/useDeleteWebhook";
 import useDeleteDeploy from "@/apis/deploy/useDeleteDeploy";
+import useThrottle from "@/hooks/useThrottle";
 import useStatusColor from "@/hooks/useStatusColor";
 import { getStatusTooptip } from "@/utils/getStatusTooltip";
 import { FaExternalLinkAlt } from "react-icons/fa";
@@ -98,7 +99,8 @@ export default function DeployDetailPage() {
   };
 
   // deploy 삭제
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = useThrottle(() => {
+    console.log("클릭!");
     deleteDeploy(Number(data?.deploymentId), {
       onSuccess: () => {
         if (isToggled) {
@@ -107,7 +109,7 @@ export default function DeployDetailPage() {
         router.push(`/project/${data?.projectId}`);
       },
     });
-  };
+  }, 3000);
 
   // 도메인 처리
   const formatDomain = (serviceType?: string, detailDomainName?: string) => {
