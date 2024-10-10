@@ -175,8 +175,8 @@ const FrontGuidePage: React.FC = () => {
         <GuideSection title="시작하기 전에">
           <div className="space-y-6">
             <p>
-              딸깍을 사용하여 프론트엔드 프로젝트를 배포하기 전에 다음 사항을
-              확인하세요
+              딸깍은 React.js와 Next.js 기반의 프론트엔드 프로젝트를 배포를
+              지원합니다.
             </p>
             <ul className="list-disc space-y-3 pl-6 mt-2">
               <li>GitHub 저장소에 프로젝트가 푸시되어 있어야 합니다.</li>
@@ -207,13 +207,16 @@ const FrontGuidePage: React.FC = () => {
               등).
             </li>
             <li>배포 버튼을 클릭하여 프로세스를 시작합니다.</li>
-            <li>배포 로그를 실시간으로 확인할 수 있습니다.</li>
+            <li>배포 로그를 대시보드에서 실시간으로 확인할 수 있습니다.</li>
             <li>배포가 완료되면 접속 URL이 제공됩니다.</li>
           </ul>
         </GuideSection>
 
         <GuideSection title="React.js 배포하기">
-          <p className="mb-6">React.js 프로젝트를 배포</p>
+          <ul className="list-disc space-y-3 pl-6">
+            <li>React.js 프로젝트를 배포합니다.</li>
+            <li>vite 와 CRA 환경을 제공합니다.</li>
+          </ul>
           <SubSection title="npm 기반 빌드툴 선택">
             <div className="flex space-x-2 mb-6">
               {npmOptions.map((option) => (
@@ -274,7 +277,7 @@ const FrontGuidePage: React.FC = () => {
         </GuideSection>
 
         <GuideSection title="최적화 팁">
-          <ul className="list-disc pl-6">
+          <ul className="list-disc pl-6 space-y-3">
             <li>
               빌드 시간을 줄이기 위해 .dockerignore 파일을 사용하여 불필요한
               파일을 제외하세요.
@@ -286,7 +289,7 @@ const FrontGuidePage: React.FC = () => {
         </GuideSection>
 
         <GuideSection title="주의사항">
-          <ul className="list-disc pl-6">
+          <ul className="list-disc pl-6 space-y-3">
             <li>프로젝트 이름은 영문으로 설정해야 합니다.</li>
             <li>
               Ttalkak은 단일 컨테이너만 지원합니다 (Docker Compose 미지원).

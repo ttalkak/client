@@ -40,9 +40,6 @@ const ListItem: React.FC<{
 );
 
 const AppGuidePage: React.FC = () => {
-  const container = "px-4 py-10 border-t bg-white";
-  const containerTitle = "text-2xl font-bold mb-4";
-
   const dowunloadUrl =
     "https://drive.google.com/file/d/1zMYAqDZ-xNYLhF6HhF1RXZN_7l3AqZDy/view?usp=drive_link";
 
@@ -76,7 +73,7 @@ const AppGuidePage: React.FC = () => {
   ];
 
   return (
-    <div className="container px-10 max-h-screen pb-8 ">
+    <div className="container px-10 max-h-screen pb-8 py-14">
       <h1 className="text-4xl px-4 font-bold text-center mb-10">
         딸깍 데스크톱 가이드
       </h1>
@@ -142,15 +139,18 @@ const AppGuidePage: React.FC = () => {
 
       <GuideSection title="MetaMask 연동">
         <p className="mb-4">
-          Ttalkak 앱을 실행한 후, MetaMask 지갑 연동해야 합니다. 이를 통해
-          서비스 이용 요금을 투명하게 정산받을 수 있습니다.
+          Ttalkak 앱에서 회원가입시, MetaMask 지갑주소를 입력해야 합니다. 이를
+          통해 서비스 이용 요금을 투명하게 정산받을 수 있습니다.
+        </p>
+        <p className="mb-4">
+          잘못된 주소를 요청시 sunsuking@gmail.com으로 문의주시기 바랍니다.
         </p>
       </GuideSection>
 
       <GuideSection title="요금 정책">
         <ul className="space-y-4">
           <ListItem icon={<FaCoins />}>
-            서비스 사용량에 따라 실시간으로 요금이 계산됩니다.
+            서비스 사용량에 따라 5분 주기로 실시간으로 요금이 계산됩니다.
           </ListItem>
           <ListItem icon={<FaCoins />}>
             계산된 요금은 코인으로 환산되어 MetaMask 지갑으로 정산됩니다.
@@ -180,6 +180,7 @@ const AppGuidePage: React.FC = () => {
           </ListItem>
         </ul>
       </GuideSection>
+      <div className="h-20"></div>
     </div>
   );
 };

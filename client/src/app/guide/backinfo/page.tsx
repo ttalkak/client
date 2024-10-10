@@ -1,20 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  FaReact,
-  FaGithub,
-  FaJava,
-  FaDocker,
-  FaGlobe,
-  FaServer,
-} from "react-icons/fa";
+import { FaGithub, FaJava, FaDocker, FaGlobe, FaServer } from "react-icons/fa";
 import GuideSection from "../components/GuideSection";
 import { Tab } from "../components/Tab";
 import { CodeBlock } from "../components/CodeBlock";
 import { SiGradle, SiApachemaven } from "react-icons/si";
+import Link from "next/link";
 import { IconType } from "react-icons";
-import { Section } from "../components/Section";
 
 interface BuildToolOption {
   label: string;
@@ -108,6 +101,9 @@ const steps: GuideStepProps[] = [
 ];
 
 const BackendGuidePage: React.FC = () => {
+  const container = "px-4 py-10 border-t bg-white";
+  const containerTitle = "text-2xl font-bold mb-4";
+
   const [selectedGradle, setSelectedGradle] = useState<BuildToolOption>(
     gradleOptions[0]
   );
@@ -116,49 +112,47 @@ const BackendGuidePage: React.FC = () => {
   );
 
   return (
-    <div>
-      <div className="w-full px-10 max-h-screen">
-        <div className="flex-grow px-4 sm:px-6 lg:px-8 grid">
-          <h1 className="text-4xl font-bold text-center mb-5 mt-10">
+    <div className="container px-8 min-h-screen max-h-screen">
+      <div className="flex-grow px-4 sm:px-6 lg:px-8 pt-16 grid">
+        <div className="flex flex-col justify-center h-40 mb-6">
+          <h2 className="text-4xl font-bold mb-4 text-center">
             백엔드 배포 가이드
-          </h1>
-        </div>
-        <GuideSection title="시작하기 전에">
-          <div className="space-y-6">
-            <p>
-              Ttalkak을 사용하여 백엔드 프로젝트를 배포하기 전에 다음 사항을
-              확인하세요:
-            </p>
-            <ul className="list-disc pl-6 mt-2">
-              <li>GitHub 저장소에 프로젝트가 푸시되어 있어야 합니다.</li>
-              <li>
-                프로젝트 루트에 build.gradle 또는 pom.xml 파일이 있어야 합니다.
-              </li>
-              <li>Dockerfile이 없는 경우, Ttalkak이 자동으로 생성합니다.</li>
-              <p className="text-red-500 font-bold">
-                Database가 필요한 프로젝트의 경우 Database를 먼저 배포 후
-                Backend를 배포해야 합니다.
-              </p>
-            </ul>
+          </h2>
+          <div className="text-center mt-2 mb-4 text-gray-600">
+            Ttalkak 서비스에서 백엔드 배포 과정에 대해 안내합니다.
           </div>
-        </GuideSection>
+        </div>
 
-        <GuideSection title="배포 과정">
-          <ul className="list-none space-y-1 pl-6">
-            <li>GitHub 저장소를 Ttalkak과 연동합니다.</li>
-            <li>프로젝트의 빌드 도구와 Java 버전을 선택합니다.</li>
+        <div className={container}>
+          <h2 className={containerTitle}>시작하기 전에</h2>
+          <p className="text-gray-700 mb-4">
+            Ttalkak을 사용하여 백엔드 프로젝트를 배포하기 전에 다음 사항을
+            확인하세요:
+          </p>
+          <ul className="list-disc space-y-3 pl-6 mt-2">
+            <li>GitHub 저장소에 프로젝트가 푸시되어 있어야 합니다.</li>
             <li>
-              필요한 경우 환경 변수를 설정합니다 (예: 데이터베이스 URL, API 키
-              등).
+              프로젝트 루트에 build.gradle 또는 pom.xml 파일이 있어야 합니다.
             </li>
-            <li>배포 버튼을 클릭하여 프로세스를 시작합니다.</li>
-            <li>배포 로그를 실시간으로 확인할 수 있습니다.</li>
-            <li>배포가 완료되면 접속 URL과 포트 정보가 제공됩니다.</li>
+            <li>Dockerfile이 없는 경우, Ttalkak이 자동으로 생성합니다.</li>
+            <div>
+              <p className="text-red-500 font-bold">
+                [!] Database가 필요한 프로젝트의 경우 Database를 먼저 배포해
+                주세요.
+              </p>
+              <p>
+                자세한 사항은{" "}
+                <Link href="/guide/dbinfo" className="text-blue-500 underline">
+                  Database 가이드
+                </Link>{" "}
+                를 참고하세요
+              </p>
+            </div>
           </ul>
-        </GuideSection>
+        </div>
 
-        <GuideSection title="Gradle 기반 빌드 툴 선택">
-          <p className="mb-4">Gradle을 사용하는 경우, 빌드 툴을 선택하세요:</p>
+        <div className={container}>
+          <h2 className={containerTitle}>Gradle 빌드 도구 선택</h2>
           <div className="flex space-x-2 mb-4">
             {gradleOptions.map((option) => (
               <Tab
@@ -170,14 +164,11 @@ const BackendGuidePage: React.FC = () => {
               />
             ))}
           </div>
-          <p className="mb-2">
-            선택한 Gradle 빌드 툴에 따라 생성되는 Dockerfile:
-          </p>
           <CodeBlock code={selectedGradle.code} />
-        </GuideSection>
+        </div>
 
-        <GuideSection title="Maven 기반 빌드 툴 선택">
-          <p className="mb-4">Maven을 사용하는 경우, 빌드 툴을 선택하세요:</p>
+        <div className={container}>
+          <h2 className={containerTitle}>Maven 빌드 도구 선택</h2>
           <div className="flex space-x-2 mb-4">
             {mavenOptions.map((option) => (
               <Tab
@@ -189,11 +180,32 @@ const BackendGuidePage: React.FC = () => {
               />
             ))}
           </div>
-          <p className="mb-2">
-            선택한 Maven 빌드 툴에 따라 생성되는 Dockerfile:
-          </p>
           <CodeBlock code={selectedMaven.code} />
-        </GuideSection>
+        </div>
+
+        <div className={container}>
+          <h2 className={containerTitle}>환경 변수 설정</h2>
+          <p className="text-gray-700 mb-4">
+            배포 전 필요한 환경 변수를 설정하세요. 예를 들어 데이터베이스 URL,
+            API 키 등을 설정할 수 있습니다.
+          </p>
+        </div>
+
+        <div className={container}>
+          <h2 className={containerTitle}>배포 로그 및 실시간 확인</h2>
+          <p className="text-gray-700 mb-4">
+            배포가 진행되면서 실시간으로 로그를 확인할 수 있습니다. 배포 상태를
+            모니터링하면서 필요한 조치를 취할 수 있습니다.
+          </p>
+        </div>
+
+        <div className={container}>
+          <h2 className={containerTitle}>도메인 및 포트 매핑</h2>
+          <p className="text-gray-700 mb-4">
+            배포가 완료되면 '프로젝트이름.ttalkak.com' 형식의 도메인이 생성되며,
+            포트가 매핑됩니다.
+          </p>
+        </div>
 
         <GuideSection title="최적화 팁">
           <ul className="list-disc pl-6">
@@ -208,6 +220,7 @@ const BackendGuidePage: React.FC = () => {
             <li>데이터베이스 연결 풀 및 캐싱 전략을 최적화하세요.</li>
           </ul>
         </GuideSection>
+
         <GuideSection title="주의사항">
           <ul className="list-disc pl-6">
             <li>프로젝트 이름은 영문으로 설정해야 합니다.</li>
@@ -223,6 +236,7 @@ const BackendGuidePage: React.FC = () => {
             </li>
           </ul>
         </GuideSection>
+
         <div className="h-20"></div>
       </div>
     </div>
