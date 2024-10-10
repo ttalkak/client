@@ -12,3 +12,9 @@ export interface UserEmailForm {
   email: string;
   code: string;
 }
+
+export interface Validation {
+  hasKey: boolean;
+  hasContract: boolean;
+  hasAdmin: boolean;
+}
