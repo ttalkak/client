@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import { throttle } from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import NavigationMenu from "@/app/components/NavigationMenu";
@@ -16,10 +15,10 @@ const videoSources = [
 ];
 
 const thumbnailSources = [
-  "/thumbnails/earth_thumbnail.png",
-  "/thumbnails/log_thumbnail.png",
-  "/thumbnails/pay_thumbnail.png",
-  "/thumbnails/block_thumbnail.png",
+  "/thumbnails/earth_thumbnail.webp",
+  "/thumbnails/log_thumbnail.webp",
+  "/thumbnails/pay_thumbnail.webp",
+  "/thumbnails/block_thumbnail.webp",
 ];
 
 export const texts = [
@@ -63,6 +62,20 @@ export default function VideoPage() {
   const isScrolling = useRef(false);
 
   const totalSlides = videoSources.length + 1;
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (footer) {
+      footer.style.display = "none";
+    }
+  }, []);
+
+  useEffect(() => {
+    thumbnailSources.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     const handleWheel = throttle((e: WheelEvent) => {

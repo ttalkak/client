@@ -40,8 +40,9 @@ export default function VideoSection({
       <Image
         src={thumbnailSrc}
         alt={text.title}
-        layout="fill"
-        objectFit="cover"
+        fill
+        priority
+        style={{ objectFit: "cover" }}
       />
       <video
         ref={videoRef}
@@ -74,7 +75,7 @@ export default function VideoSection({
           >
             {text.subtitle}
           </motion.p>
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
             transition={{ duration: 1, delay: 1.5 }}
@@ -82,11 +83,11 @@ export default function VideoSection({
           >
             {text.description &&
               text.description.map((line, index) => (
-                <div key={index} className="mt-1 ">
+                <p key={index} className="mt-1 ">
                   {line}
-                </div>
+                </p>
               ))}
-          </motion.p>
+          </motion.div>
         </div>
       </motion.div>
       <motion.button
