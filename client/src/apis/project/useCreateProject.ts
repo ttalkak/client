@@ -10,7 +10,7 @@ const createProject = async (data: CreateProjectRequest): Promise<void> => {
   });
 
   if (!response.success)
-    throw new Error("프로젝트를 생성하지 못했습니다. 서버가 불안정합니다.");
+    throw new Error(response.message || "데이터베이스 생성에 실패했습니다.");
 };
 
 const useCreateProject = () => {
